@@ -23,9 +23,9 @@
 		</activity>
 
 		<!-- Segunda actividad -->
-		<activity android:name=".ProductosActivity"
-				  android:exported="true">
-		</activity>
+        <activity
+                android:name=".ContactActivity"
+                android:exported="true" />
 	</application>
 
 </manifest>

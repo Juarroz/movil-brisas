@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonGoToSecondActivity: Button = findViewById(R.id.buttonSegundaActividad)
         buttonGoToSecondActivity.setOnClickListener {
-            val intent = Intent(this, ProductosActivity::class.java)
+            val intent = Intent(this, ContactActivity::class.java)
             startActivity(intent)
         }
     }
