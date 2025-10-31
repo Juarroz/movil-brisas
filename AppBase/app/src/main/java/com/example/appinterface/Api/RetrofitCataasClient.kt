@@ -10,7 +10,7 @@ object RetrofitCataasClient {
     private const val BASE_URL = "https://cataas.com/"
 
     private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BASIC
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val okHttp = OkHttpClient.Builder()

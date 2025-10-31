@@ -59,15 +59,14 @@
             android:layout_height="166dp"
             android:gravity="center"
             android:background="@drawable/bg_recy_personas"
-            android:textColor="#212121"
-            android:textStyle="bold"
+            android:textColor="#fff"
             android:textSize="18sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintVertical_bias="0.658"/>
+            app:layout_constraintVertical_bias="0.658" android:textStyle="italic"/>
     <Button
             android:text="Formulario Contacto"
             android:layout_width="266dp"
