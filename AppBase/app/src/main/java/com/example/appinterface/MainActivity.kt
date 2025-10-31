@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun crearpersona(v: View) {
+  /* fun crearpersona(v: View) {
 
         var nombre = findViewById<EditText>(R.id.nombre)
 
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         ppersona.text = description
 
-    }
+    }*/
 
     fun crearmostrarpersonas(v: View) {
         val recyclerView = findViewById<RecyclerView>(R.id.RecyPersonas)
