@@ -1,0 +1,11 @@
+# Gradle cache
+.gradle/
+
+# Build folder
+build/
+
+# Local configuration
+local.properties
+
+# Archivos de caché del IDE
+.idea/
