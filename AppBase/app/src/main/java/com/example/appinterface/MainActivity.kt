@@ -185,5 +185,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+    fun irAPedidos(view: android.view.View) {
+        val intent = android.content.Intent(this, PedidosActivity::class.java)
+        startActivity(intent)
+    }
 }
 

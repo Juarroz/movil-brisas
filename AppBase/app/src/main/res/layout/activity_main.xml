@@ -2,57 +2,67 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:id="@+id/main" android:layout_width="match_parent"
-                                                   android:layout_height="match_parent" tools:context=".MainActivity"
+                                                   android:id="@+id/main"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".MainActivity"
                                                    android:background="@mipmap/img">
-
 
     <ImageView
             android:layout_width="56dp"
             android:layout_height="51dp"
             android:src="@drawable/rol_"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0.394" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.081">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.438"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.045"/>
 
-    </ImageView>
     <ImageView
             android:layout_width="56dp"
             android:layout_height="51dp"
             android:src="@drawable/formulario_"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="324dp" app:layout_constraintVertical_bias="0.266">
-
-    </ImageView>
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="336dp"
+            app:layout_constraintVertical_bias="0.266"/>
     <ImageView
             android:layout_width="323dp"
             android:layout_height="88dp"
             android:src="@mipmap/logo"
-            android:background="#000A7A30" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:background="#000A7A30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.082">
+            app:layout_constraintVertical_bias="0.082"/>
 
-    </ImageView>
     <ImageView
             android:layout_width="170dp"
-            android:layout_height="151dp" app:srcCompat="@android:drawable/alert_light_frame"
+            android:layout_height="151dp"
+            app:srcCompat="@android:drawable/alert_light_frame"
             android:id="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.943" app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.943"
+            app:layout_constraintHorizontal_bias="1.0"/>
+
     <Button
             android:text=" Roles"
             android:layout_width="266dp"
-            android:layout_height="45dp" android:id="@+id/MostrarApikotlin"
+            android:layout_height="45dp"
+            android:id="@+id/MostrarApikotlin"
             android:onClick="crearmostrarpersonas"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.586" app:layout_constraintVertical_bias="0.399"/>
+            app:layout_constraintHorizontal_bias="0.586"
+            app:layout_constraintVertical_bias="0.434"/>
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RecyPersonas"
             android:layout_width="150dp"
@@ -66,30 +76,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintVertical_bias="0.658" android:textStyle="italic"/>
+            app:layout_constraintVertical_bias="0.658"
+            android:textStyle="italic"/>
+
     <Button
             android:text="Formulario Contacto"
             android:layout_width="266dp"
+            android:layout_height="42dp"
+            android:id="@+id/buttonSegundaActividad"
             android:background="@drawable/bg_recy_personas"
-            android:layout_height="42dp" android:id="@+id/buttonSegundaActividad"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.586" app:layout_constraintVertical_bias="0.275"
-    />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.586"
+            app:layout_constraintVertical_bias="0.275"/>
+
+    <!-- NUEVO BOTÓN PEDIDOS -->
+
+    <Button
+            android:text="Pedidos"
+            android:layout_width="266dp"
+            android:layout_height="42dp"
+            android:id="@+id/buttonPedidos"
+            android:background="@drawable/bg_recy_personas"
+            android:onClick="irAPedidos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintVertical_bias="0.355"/>
     <Button
             android:text=" Gatito"
             android:layout_width="130dp"
-            android:layout_height="43dp" android:id="@+id/button"
+            android:layout_height="43dp"
+            android:id="@+id/button"
             android:background="#212173"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.943" app:layout_constraintVertical_bias="0.976"/>
-    <androidx.constraintlayout.widget.Barrier android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                              app:constraint_referenced_ids="RecyPersonas" android:id="@+id/barrier"
-                                              app:barrierDirection="left"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.943"
+            app:layout_constraintVertical_bias="0.976"/>
 
-
-
-
+    <androidx.constraintlayout.widget.Barrier
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="RecyPersonas"
+            android:id="@+id/barrier"
+            app:barrierDirection="left"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
