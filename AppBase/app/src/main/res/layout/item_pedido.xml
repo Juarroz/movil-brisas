@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="12dp"
+              android:background="?android:attr/selectableItemBackground">
+
+    <TextView
+            android:id="@+id/tvCodigo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Código"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
+
+    <TextView
+            android:id="@+id/tvFecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"/>
+
+    <TextView
+            android:id="@+id/tvComentarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentarios"
+            android:textSize="14sp"
+            android:layout_marginTop="6dp"
+            android:textColor="#000000"/>
+
+</LinearLayout>
