@@ -13,4 +13,7 @@ interface ApiServicesKotlin {
     fun enviarContacto(
         @Body contacto: ContactoFormularioRequestDTO
     ): Call<Void>
+
+    @GET("pedidos")
+    fun getPedidos(): Call<List<PedidoResponseDTO>>
 }

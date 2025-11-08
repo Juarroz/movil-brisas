@@ -19,6 +19,9 @@ import com.example.appinterface.Adapter.PersonaAdapter
 import com.example.appinterface.Api.DataResponse
 import com.example.appinterface.Api.RetrofitInstance
 import com.example.appinterface.Api.RolResponseDTO
+import com.bumptech.glide.Glide
+import com.example.appinterface.Api.CatResponseDTO
+import com.example.appinterface.Api.RetrofitCataasClient
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +43,19 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ContactActivity::class.java)
             startActivity(intent)
         }
+
+        val btnGatito: Button = findViewById(R.id.button)        // id del botón Gatito en tu XML
+        val imgPersona: ImageView = findViewById(R.id.imageView) // id del ImageView en tu XML
+
+        // Listener para cargar un gato cuando se presione el botón
+        btnGatito.setOnClickListener {
+            // Opcional: feedback inmediato
+            Toast.makeText(this, "Solicitando gatito...", Toast.LENGTH_SHORT).show()
+            mostrarGatito(imgPersona)
+        }
     }
+
+
 
 
   /* fun crearpersona(v: View) {
@@ -120,5 +135,60 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun mostrarGatito(imgView: ImageView) {
+        val btn = findViewById<Button>(R.id.button)
+        btn.isEnabled = false
+        btn.text = "Cargando..."
+
+        RetrofitCataasClient.api.getRandomCat().enqueue(object : Callback<CatResponseDTO> {
+            override fun onResponse(call: Call<CatResponseDTO>, response: Response<CatResponseDTO>) {
+                btn.isEnabled = true
+                btn.text = " Gatito"
+
+                if (!response.isSuccessful) {
+                    Toast.makeText(this@MainActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val cat = response.body()
+                val urlFromApi = cat?.url
+
+                if (urlFromApi.isNullOrBlank()) {
+                    Toast.makeText(this@MainActivity, "Respuesta inválida del servidor", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                // Si la URL ya comienza con http/https usamos tal cual; si no, la completamos.
+                val imageUrl = if (urlFromApi.startsWith("http://") || urlFromApi.startsWith("https://")) {
+                    urlFromApi
+                } else {
+                    "https://cataas.com$urlFromApi"
+                }
+
+                // Log para depuración: revisa que la URL sea exactamente la que probaste en Postman
+                android.util.Log.d("CATAAS", "imageUrl = $imageUrl")
+
+                // Cargar la imagen con Glide
+                Glide.with(this@MainActivity)
+                    .load(imageUrl)
+                    .centerCrop()
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(imgView)
+            }
+
+            override fun onFailure(call: Call<CatResponseDTO>, t: Throwable) {
+                btn.isEnabled = true
+                btn.text = " Gatito"
+                Toast.makeText(this@MainActivity, "Error de conexión: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
+                android.util.Log.e("CATAAS", "onFailure: ${t.localizedMessage}")
+            }
+        })
+    }
+
+    fun irAPedidos(view: android.view.View) {
+        val intent = android.content.Intent(this, PedidosActivity::class.java)
+        startActivity(intent)
+    }
 }
 

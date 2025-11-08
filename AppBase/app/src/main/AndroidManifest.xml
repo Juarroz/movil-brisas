@@ -9,7 +9,7 @@
 			android:label="@string/app_name"
 			android:supportsRtl="true"
 			android:theme="@style/Theme.AppInterface"
-            android:usesCleartextTraffic="true">
+            android:usesCleartextTraffic="true"
 			tools:targetApi="31">
 		<!-- primera Actividad -->
 		<activity
@@ -26,6 +26,9 @@
         <activity
                 android:name=".ContactActivity"
                 android:exported="true" />
+        <!-- Tercera actividad -->
+        <activity android:name=".PedidosActivity" />
 	</application>
+
 
 </manifest>
