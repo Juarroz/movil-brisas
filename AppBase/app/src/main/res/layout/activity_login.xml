@@ -1,45 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="24dp"
-              android:gravity="center"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.auth.LoginActivity">
 
-    <EditText
-            android:id="@+id/et_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Usuario o email" />
 
-    <EditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:layout_marginTop="12dp" />
+    <LinearLayout
+            android:id="@+id/container_login"
+            android:layout_width="374dp"
+            android:layout_height="356dp"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/bg_base_container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintVertical_bias="0.957"
+            app:layout_constraintHorizontal_bias="0.432">
 
-    <Button
-            android:id="@+id/btn_login"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Iniciar sesión (integrar backend luego)" />
+        <LinearLayout
+                android:id="@+id/user_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field">
 
-    <Button
-            android:id="@+id/btn_mock_login"
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Iniciar sesión MOCK (probar UI)" />
+            <EditText
+                    android:id="@+id/et_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Usuario"
+                    android:inputType="textPersonName"
+                    android:background="@android:color/transparent"/>
+        </LinearLayout>
 
-    <Button
-            android:id="@+id/btn_back"
-            android:layout_marginTop="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onBackToMain"
-            android:text="Volver" />
-</LinearLayout>
+        <LinearLayout
+                android:id="@+id/password_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field">
+
+            <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:background="@android:color/transparent"/>
+        </LinearLayout>
+
+        <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesión"
+                android:background="@drawable/bg_button_green"
+                android:textColor="#FFFFFF"
+                android:padding="12dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="8dp"/>
+        <TextView
+                android:text=" ¿No tienes una cuenta? Registrate aquí."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    </LinearLayout>
+    <ImageView
+            android:id="@+id/backgroundImage"
+            android:layout_width="530dp"
+            android:layout_height="306dp"
+            android:src="@mipmap/img_1"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:alpha="0.9"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.621" app:layout_constraintVertical_bias="0.0"
+            android:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

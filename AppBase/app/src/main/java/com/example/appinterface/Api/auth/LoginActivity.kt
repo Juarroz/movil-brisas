@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
         etUser = findViewById(R.id.et_username)
         etPass = findViewById(R.id.et_password)
         btnLogin = findViewById(R.id.btn_login)
-        btnMockLogin = findViewById(R.id.btn_mock_login)
+
 
         // Botón "real" (si implementas retrofit más adelante)
         btnLogin.setOnClickListener {
