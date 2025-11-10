@@ -1,196 +1,170 @@
 package com.example.appinterface
 
-import android.os.Bundle
-import android.view.View
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
-import android.util.Log
-import android.widget.*
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.appinterface.Api.personas.PersonaAdapter
-import com.example.appinterface.core.RetrofitInstance
-import com.example.appinterface.Api.RolResponseDTO
-import com.bumptech.glide.Glide
-import com.example.appinterface.thirdparty.CatResponseDTO
-import com.example.appinterface.thirdparty.RetrofitCataasClient
-import com.example.appinterface.Api.contacto.ContactActivity
-import com.example.appinterface.Api.pedidos.PedidosActivity
-import com.example.appinterface.Api.personas.Persona
-
+import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.example.appinterface.Api.auth.LoginActivity
+import com.example.appinterface.Api.auth.ProfileActivity
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var persona: Persona
 
-    @SuppressLint("MissingInflatedId")
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var btnMenu: ImageButton
+    private lateinit var btnNotifications: ImageButton
+    private lateinit var imgProfileTop: ImageView
+
+    // Tus botones existentes
+    private lateinit var btnRoles: Button
+    private lateinit var btnPedidos: Button
+    private lateinit var btnFormulario: Button
+    private lateinit var btnGatito: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContentView(R.layout.activity_main) // el XML nuevo
 
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navView = findViewById(R.id.navigation_view)
+        btnMenu = findViewById(R.id.btn_menu)
+        btnNotifications = findViewById(R.id.btn_notifications)
+        imgProfileTop = findViewById(R.id.img_profile_top)
+
+        // tus botones
+        btnRoles = findViewById(R.id.MostrarApikotlin)
+        btnPedidos = findViewById(R.id.buttonPedidos)
+        btnFormulario = findViewById(R.id.buttonSegundaActividad)
+        btnGatito = findViewById(R.id.button)
+
+        // listeners básicos
+        btnMenu.setOnClickListener {
+            toggleDrawer()
         }
-        val buttonGoToSecondActivity: Button = findViewById(R.id.buttonSegundaActividad)
-        buttonGoToSecondActivity.setOnClickListener {
-            val intent = Intent(this, ContactActivity::class.java)
-            startActivity(intent)
+
+        btnNotifications.setOnClickListener {
+            Toast.makeText(this, "Notificaciones (pendiente)", Toast.LENGTH_SHORT).show()
+            // startActivity(Intent(this, NotificationsActivity::class.java))
         }
 
-        val btnGatito: Button = findViewById(R.id.button)        // id del botón Gatito en tu XML
-        val imgPersona: ImageView = findViewById(R.id.imageView) // id del ImageView en tu XML
+        imgProfileTop.setOnClickListener {
+            // si está logueado abrir perfil, si no abrir login
+            val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
+            val username = prefs.getString("username", null)
+            if (username != null) {
+                startActivity(Intent(this, ProfileActivity::class.java))
+            } else {
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+        }
 
-        // Listener para cargar un gato cuando se presione el botón
-        btnGatito.setOnClickListener {
-            // Opcional: feedback inmediato
-            Toast.makeText(this, "Solicitando gatito...", Toast.LENGTH_SHORT).show()
-            mostrarGatito(imgPersona)
+        // si los onClick en XML ya llaman a crearmostrarpersonas/irAPedidos, puedes mantenerlos.
+        // Pero también enlazo listeners aquí para validación programática.
+        btnRoles.setOnClickListener { v -> crearmostrarpersonas(v) }
+        btnPedidos.setOnClickListener { irAPedidos() }
+        btnFormulario.setOnClickListener { abrirFormularioContacto() }
+        btnGatito.setOnClickListener { abrirGatito() }
+
+        setupNavHeaderAndMenu()
+    }
+
+    private fun toggleDrawer() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        } else {
+            drawerLayout.openDrawer(GravityCompat.END)
         }
     }
 
+    private fun setupNavHeaderAndMenu() {
+        val header = navView.getHeaderView(0)
+        val headerImage: ImageView = header.findViewById(R.id.header_profile_image)
+        val headerName: TextView = header.findViewById(R.id.header_name)
+        val headerEmail: TextView = header.findViewById(R.id.header_email)
 
+        val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
+        val username = prefs.getString("username", null)
+        val roles = prefs.getStringSet("roles", emptySet())
 
+        if (username != null) {
+            headerName.text = username
+            headerEmail.text = roles?.joinToString(", ") ?: ""
+            // si tuvieras URL de foto, cargar con Glide/Coil aquí
+        } else {
+            headerName.text = "Invitado"
+            headerEmail.text = "Inicia sesión para más opciones"
+        }
 
-  /* fun crearpersona(v: View) {
+        // Mostrar u ocultar grupo admin
+        navView.menu.setGroupVisible(R.id.group_admin, roles?.contains("ADMIN") == true)
 
-        var nombre = findViewById<EditText>(R.id.nombre)
+        // Login / Logout visibles según estado
+        navView.menu.findItem(R.id.nav_login).isVisible = username == null
+        navView.menu.findItem(R.id.nav_logout).isVisible = username != null
 
-        var edad = findViewById<EditText>(R.id.edad)
-
-        persona = Persona()
-
-        if (!nombre.text.isNullOrEmpty() && !edad.text.isNullOrEmpty())
-            persona.Persona(nombre.text.toString(), edad.text.toString().toInt())
-
-        var imgpersona = findViewById<ImageView>(R.id.imageView)
-        // imgpersona.setImageResource(R.mipmap.marquez)
-
-        RetrofitInstance.api.getHoundImages().enqueue(object : Callback<DataResponse> {
-            override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-                if (response.isSuccessful) {
-                    val images = response.body()?.message
-                    if (!images.isNullOrEmpty()) {
-
-                        Picasso.get().load(images[2]).into(imgpersona)
-                    }
-                } else {
-                    Toast.makeText(applicationContext, "Error al obtener los datos", Toast.LENGTH_SHORT).show()
+        navView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    Toast.makeText(this, "Ir a Inicio", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_contact -> {
+                    abrirFormularioContacto()
+                }
+                R.id.nav_orders -> {
+                    irAPedidos()
+                }
+                R.id.nav_dashboard -> {
+                    Toast.makeText(this, "Dashboard admin", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_login -> {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                }
+                R.id.nav_logout -> {
+                    logout()
                 }
             }
-
-            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-                Toast.makeText(applicationContext, "Error de conexión", Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        var ppersona = findViewById<TextView>(R.id.textView)
-        DataPersona(ppersona, persona)
-
+            drawerLayout.closeDrawer(GravityCompat.END)
+            true
+        }
     }
 
-    private fun DataPersona(ppersona: TextView, persona: Persona) {
-        var description: String = ""
-
-        description += "Nombre " + persona.getNombre() + " "
-        description += "Edad " + persona.getEdad()
-
-        ppersona.text = description
-
-    }*/
-
-    fun crearmostrarpersonas(v: View) {
-        val recyclerView = findViewById<RecyclerView>(R.id.RecyPersonas)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        RetrofitInstance.api2kotlin.getRoles().enqueue(object : Callback<List<RolResponseDTO>> {
-            override fun onResponse(
-                call: Call<List<RolResponseDTO>>,
-                response: Response<List<RolResponseDTO>>
-            ) {
-                if (response.isSuccessful) {
-                    val roles = response.body()
-                    if (roles != null && roles.isNotEmpty()) {
-                        // Tomamos solo los nombres de los roles
-                        val nombres = roles.map { it.nombre }
-                        val adapter = PersonaAdapter(nombres)
-                        recyclerView.adapter = adapter
-                    } else {
-                        Toast.makeText(this@MainActivity, "No hay roles disponibles", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this@MainActivity, "Error en la respuesta de la API", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<List<RolResponseDTO>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Error en la conexión con la API", Toast.LENGTH_SHORT).show()
-            }
-        })
+    // Métodos referenciados en XML (mantén firmas para android:onClick)
+    fun crearmostrarpersonas(view: View) {
+        // tu implementación actual o llamada a método que ya tenías
+        Toast.makeText(this, "Mostrar roles (ejecución)", Toast.LENGTH_SHORT).show()
+        // ejemplo: llamar a tu método que consume la API de roles
     }
 
-    private fun mostrarGatito(imgView: ImageView) {
-        val btn = findViewById<Button>(R.id.button)
-        btn.isEnabled = false
-        btn.text = "Cargando..."
-
-        RetrofitCataasClient.api.getRandomCat().enqueue(object : Callback<CatResponseDTO> {
-            override fun onResponse(call: Call<CatResponseDTO>, response: Response<CatResponseDTO>) {
-                btn.isEnabled = true
-                btn.text = " Gatito"
-
-                if (!response.isSuccessful) {
-                    Toast.makeText(this@MainActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                val cat = response.body()
-                val urlFromApi = cat?.url
-
-                if (urlFromApi.isNullOrBlank()) {
-                    Toast.makeText(this@MainActivity, "Respuesta inválida del servidor", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                // Si la URL ya comienza con http/https usamos tal cual; si no, la completamos.
-                val imageUrl = if (urlFromApi.startsWith("http://") || urlFromApi.startsWith("https://")) {
-                    urlFromApi
-                } else {
-                    "https://cataas.com$urlFromApi"
-                }
-
-                // Log para depuración: revisa que la URL sea exactamente la que probaste en Postman
-                Log.d("CATAAS", "imageUrl = $imageUrl")
-
-                // Cargar la imagen con Glide
-                Glide.with(this@MainActivity)
-                    .load(imageUrl)
-                    .centerCrop()
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(imgView)
-            }
-
-            override fun onFailure(call: Call<CatResponseDTO>, t: Throwable) {
-                btn.isEnabled = true
-                btn.text = " Gatito"
-                Toast.makeText(this@MainActivity, "Error de conexión: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
-                Log.e("CATAAS", "onFailure: ${t.localizedMessage}")
-            }
-        })
+    fun irAPedidos() {
+        // si en XML lo llamabas por onClick, aquí se adapta; sino crea overload con View
+        Toast.makeText(this, "Ir a Pedidos (pendiente)", Toast.LENGTH_SHORT).show()
+        // startActivity(Intent(this, PedidosActivity::class.java))
     }
 
-    fun irAPedidos(view: android.view.View) {
-        val intent = android.content.Intent(this, PedidosActivity::class.java)
-        startActivity(intent)
+    private fun abrirFormularioContacto() {
+        Toast.makeText(this, "Abrir formulario de contacto", Toast.LENGTH_SHORT).show()
+        // startActivity(Intent(this, ContactFormActivity::class.java))
+    }
+
+    private fun abrirGatito() {
+        Toast.makeText(this, "Gatito!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun logout() {
+        val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE).edit()
+        prefs.clear()
+        prefs.apply()
+        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
+        recreate()
     }
 }
-

@@ -28,6 +28,8 @@
                 android:exported="true" />
         <!-- Tercera actividad -->
         <activity android:name=".Api.pedidos.PedidosActivity" />
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.ProfileActivity" />
 	</application>
 
 
