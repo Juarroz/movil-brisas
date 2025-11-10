@@ -1,4 +1,4 @@
-package com.example.appinterface.Api
+package com.example.appinterface.thirdparty
 
 data class CatResponseDTO (
     val id: String?,

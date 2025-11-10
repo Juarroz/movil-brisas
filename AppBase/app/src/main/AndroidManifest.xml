@@ -24,10 +24,10 @@
 
 		<!-- Segunda actividad -->
         <activity
-                android:name=".ContactActivity"
+                android:name=".Api.contacto.ContactActivity"
                 android:exported="true" />
         <!-- Tercera actividad -->
-        <activity android:name=".PedidosActivity" />
+        <activity android:name=".Api.pedidos.PedidosActivity" />
 	</application>
 
 

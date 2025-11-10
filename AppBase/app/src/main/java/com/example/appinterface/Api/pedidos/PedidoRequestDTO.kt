@@ -1,4 +1,4 @@
-package com.example.appinterface.Api
+package com.example.appinterface.Api.pedidos
 
 data class PedidoRequestDTO(
     val pedCodigo: String,

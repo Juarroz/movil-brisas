@@ -1,4 +1,4 @@
-package com.example.appinterface
+package com.example.appinterface.Api.personas
 
 class Persona( private var Nombre: String = "john",
                private var Edad: Int = 24, ) {

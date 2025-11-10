@@ -1,4 +1,4 @@
-package com.example.appinterface
+package com.example.appinterface.Api.pedidos
 
 import android.os.Bundle
 import android.view.View
@@ -8,9 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appinterface.Adapter.PedidoAdapter
-import com.example.appinterface.Api.PedidoResponseDTO
-import com.example.appinterface.Api.RetrofitInstance
+import com.example.appinterface.R
+import com.example.appinterface.core.RetrofitInstance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,4 +1,4 @@
-package com.example.appinterface.Api
+package com.example.appinterface.Api.contacto
 
 data class ContactoFormularioResponseDTO(
     val id: Long? = null,

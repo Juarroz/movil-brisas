@@ -1,12 +1,13 @@
-package com.example.appinterface
+package com.example.appinterface.Api.contacto
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.appinterface.Api.ContactoFormularioRequestDTO
-import com.example.appinterface.Api.RetrofitInstance
+import androidx.appcompat.app.AppCompatActivity
+import com.example.appinterface.Api.contacto.ContactoFormularioRequestDTO
+import com.example.appinterface.R
+import com.example.appinterface.core.RetrofitInstance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,4 +90,3 @@ class ContactActivity : AppCompatActivity() {
         }
     }
 }
-

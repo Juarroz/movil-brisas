@@ -6,22 +6,24 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appinterface.Adapter.PersonaAdapter
-import com.example.appinterface.Api.DataResponse
-import com.example.appinterface.Api.RetrofitInstance
+import com.example.appinterface.Api.personas.PersonaAdapter
+import com.example.appinterface.core.RetrofitInstance
 import com.example.appinterface.Api.RolResponseDTO
 import com.bumptech.glide.Glide
-import com.example.appinterface.Api.CatResponseDTO
-import com.example.appinterface.Api.RetrofitCataasClient
+import com.example.appinterface.thirdparty.CatResponseDTO
+import com.example.appinterface.thirdparty.RetrofitCataasClient
+import com.example.appinterface.Api.contacto.ContactActivity
+import com.example.appinterface.Api.pedidos.PedidosActivity
+import com.example.appinterface.Api.personas.Persona
 
 
 class MainActivity : AppCompatActivity() {
@@ -166,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // Log para depuración: revisa que la URL sea exactamente la que probaste en Postman
-                android.util.Log.d("CATAAS", "imageUrl = $imageUrl")
+                Log.d("CATAAS", "imageUrl = $imageUrl")
 
                 // Cargar la imagen con Glide
                 Glide.with(this@MainActivity)
@@ -181,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                 btn.isEnabled = true
                 btn.text = " Gatito"
                 Toast.makeText(this@MainActivity, "Error de conexión: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
-                android.util.Log.e("CATAAS", "onFailure: ${t.localizedMessage}")
+                Log.e("CATAAS", "onFailure: ${t.localizedMessage}")
             }
         })
     }
