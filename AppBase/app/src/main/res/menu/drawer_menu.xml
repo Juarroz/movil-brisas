@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_home" android:title="Inicio" android:icon="@drawable/ic_home"/>
+    <item android:id="@+id/nav_contact" android:title="Contacto" android:icon="@drawable/ic_phone"/>
+    <item android:id="@+id/nav_orders" android:title="Mis pedidos" android:icon="@drawable/ic_orders"/>
+    <group android:id="@+id/group_admin" android:visible="false">
+        <item android:id="@+id/nav_dashboard" android:title="Dashboard" android:icon="@drawable/ic_dashboard"/>
+    </group>
+    <item android:id="@+id/nav_login" android:title="Iniciar sesión" android:icon="@drawable/ic_login"/>
+    <item android:id="@+id/nav_logout" android:title="Cerrar sesión" android:icon="@drawable/ic_logout" android:visible="false"/>
+</menu>
