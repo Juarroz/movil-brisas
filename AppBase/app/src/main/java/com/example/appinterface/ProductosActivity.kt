@@ -9,7 +9,7 @@ ProductosActivity : AppCompatActivity() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_productos)
+            setContentView(R.layout.activity_formulario)
         }
 
     fun volverpag(v: View) {

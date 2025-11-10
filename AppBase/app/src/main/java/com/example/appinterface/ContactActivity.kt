@@ -16,7 +16,7 @@ class ContactActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // usamos el layout que reciclamos
-        setContentView(R.layout.activity_productos)
+        setContentView(R.layout.activity_formulario)
 
         // referenciar vistas
         val txtNombre = findViewById<EditText>(R.id.txtNombre)
