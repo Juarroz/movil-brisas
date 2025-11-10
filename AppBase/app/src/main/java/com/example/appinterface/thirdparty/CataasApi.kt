@@ -1,5 +1,6 @@
-package com.example.appinterface.Api
+package com.example.appinterface.thirdparty
 
+import com.example.appinterface.thirdparty.CatResponseDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers

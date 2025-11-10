@@ -1,5 +1,6 @@
-package com.example.appinterface.Adapter
+package com.example.appinterface.Api.personas
 
+import android.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 class PersonaAdapter(private val personas: List<String>) : RecyclerView.Adapter<PersonaAdapter.PersonaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonaViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.simple_list_item_1, parent, false)
         return PersonaViewHolder(view)
     }
 

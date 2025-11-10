@@ -1,11 +1,11 @@
-package com.example.appinterface.Adapter
+package com.example.appinterface.Api.pedidos
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appinterface.Api.PedidoResponseDTO
+import com.example.appinterface.Api.pedidos.PedidoResponseDTO
 import com.example.appinterface.R
 
 class PedidoAdapter(private val items: MutableList<PedidoResponseDTO> = mutableListOf()) :

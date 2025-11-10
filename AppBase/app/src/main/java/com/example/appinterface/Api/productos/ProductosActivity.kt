@@ -1,8 +1,9 @@
-package com.example.appinterface
+package com.example.appinterface.Api.productos
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.appinterface.R
 
 class
 ProductosActivity : AppCompatActivity() {
