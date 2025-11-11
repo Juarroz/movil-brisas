@@ -5,22 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.Toast
-import com.example.appinterface.Api.auth.LoginActivity
-import com.example.appinterface.Api.auth.ProfileActivity
 import com.example.appinterface.Api.contacto.ContactActivity
-import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.R
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayout
 
 class MainActivity : BaseActivity() {
-
-    private lateinit var btnNotifications: ImageButton
-    private lateinit var imgProfileTop: ImageView
 
     private lateinit var btnRoles: Button
     private lateinit var btnPedidos: Button
@@ -31,42 +21,23 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // referencias UI
-        btnNotifications = findViewById(R.id.btn_notifications)
-        imgProfileTop = findViewById(R.id.img_profile_top)
+        // Inicializar UI común (toolbar, tabs, listeners comunes)
+        initCommonUI()
 
+        // Referencias propias de esta pantalla
         btnRoles = findViewById(R.id.MostrarApikotlin)
         btnPedidos = findViewById(R.id.buttonPedidos)
         btnFormulario = findViewById(R.id.buttonSegundaActividad)
         btnGatito = findViewById(R.id.button)
 
-        // Inicializar pestañas (BaseActivity hace la lógica de mostrar/ocultar y listeners)
-        val topTabLayout = findViewById<TabLayout?>(R.id.topTabLayout)
-        val mainAppBar = findViewById<AppBarLayout?>(R.id.appBarLayout)
-        setupTabs(topTabLayout, mainAppBar)
-
-        // listeners
-        btnNotifications.setOnClickListener {
-            Toast.makeText(this, "Notificaciones (pendiente)", Toast.LENGTH_SHORT).show()
-        }
-
-        imgProfileTop.setOnClickListener {
-            val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
-            val username = prefs.getString("username", null)
-            if (username != null) {
-                startActivity(Intent(this, ProfileActivity::class.java))
-            } else {
-                startActivity(Intent(this, LoginActivity::class.java))
-            }
-        }
-
+        // listeners específicos
         btnRoles.setOnClickListener { v -> crearmostrarpersonas(v) }
         btnPedidos.setOnClickListener { irAPedidos() }
         btnFormulario.setOnClickListener { abrirFormularioContacto() }
         btnGatito.setOnClickListener { abrirGatito() }
     }
 
-    // Métodos referenciados en XML (mantén firmas para android:onClick)
+    // Mantener firmas usadas desde XML
     fun crearmostrarpersonas(view: View) {
         Toast.makeText(this, "Mostrar roles (ejecución)", Toast.LENGTH_SHORT).show()
     }
@@ -92,5 +63,6 @@ class MainActivity : BaseActivity() {
         recreate()
     }
 
+    // Para fines de pruebas: devolver true (admin). Cambiar según auth real.
     override fun isAdmin(): Boolean = true
 }

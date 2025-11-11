@@ -1,65 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:app="http://schemas.android.com/apk/res-auto">
+<com.google.android.material.appbar.MaterialToolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent" >
 
-    <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#173622"
-            android:elevation="10dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="bottom|center_vertical"
+            android:layout_marginBottom="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
+        <ImageView
+                android:id="@+id/toolbar_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/logo_reducido"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="8dp" />
 
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="bottom|center_vertical"
-                    android:layout_marginBottom="4dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp">
+        <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-                <ImageView
-                        android:id="@+id/toolbar_logo"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@mipmap/logo_reducido"
-                        android:contentDescription="@string/app_name"
-                        android:scaleType="centerCrop"
-                        android:layout_marginEnd="8dp" />
+        <ImageButton
+                android:id="@+id/btn_notifications"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_notifications"
+                android:contentDescription="@string/notifications" />
 
-                <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+        <ImageButton
+                android:id="@+id/img_profile_top"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_profile_placeholder"
+                android:contentDescription="@string/profile" />
 
-                <ImageButton
-                        android:id="@+id/btn_notifications"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_notifications"
-                        android:contentDescription="@string/notifications" />
+    </LinearLayout>
 
-                <ImageButton
-                        android:id="@+id/img_profile_top"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_profile_placeholder"
-                        android:contentDescription="@string/profile" />
-
-            </LinearLayout>
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-        <!-- incluimos la TabLayout (ahora top_tab_bar.xml solo contiene TabLayout) -->
-        <include layout="@layout/top_tab_bar" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-</merge>
+</com.google.android.material.appbar.MaterialToolbar>

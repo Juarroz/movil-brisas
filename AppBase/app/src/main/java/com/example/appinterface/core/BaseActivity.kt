@@ -4,24 +4,32 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayout
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.appinterface.Api.auth.LoginActivity
+import com.example.appinterface.Api.auth.ProfileActivity
 import com.example.appinterface.Api.contacto.ContactActivity
 import com.example.appinterface.Api.usuarios.UsuarioActivity
+import com.example.appinterface.R
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 
 /**
- * Clase base para Activities que usan las barras superior y de pestañas.
- * Centraliza lógica común: inicializar pestañas, mostrar/ocultar según roles,
- * y sincronizar el "ocultado más lento" de la TabLayout con el AppBar principal.
+ * BaseActivity: centraliza la UI y la lógica común de top bar y tabs.
+ *
+ * Uso:
+ *  - En la Activity hija, después de setContentView(...) llamar initCommonUI()
+ *  - Override isAdmin() según el mecanismo de auth si es necesario.
  */
 open class BaseActivity : AppCompatActivity() {
 
-    /**
-     * Determina si el usuario es ADMIN.
-     * Por defecto intenta leer SharedPreferences. Puedes overridear este método
-     * en Activities de prueba o cuando cambies tu mecanismo de autenticación.
-     */
+    // Vistas comunes accesibles por subclases
+    protected var topTabLayout: TabLayout? = null
+    protected var mainAppBar: AppBarLayout? = null
+    protected var btnNotifications: ImageButton? = null
+    protected var imgProfileTop: ImageView? = null
+
     protected open fun isAdmin(): Boolean {
         val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
         val roles = prefs.getStringSet("roles", emptySet())
@@ -29,9 +37,57 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     /**
+     * Inicializa las vistas comunes. LLAMAR desde la Activity hija
+     * **después** de setContentView(...).
+     */
+    protected fun initCommonUI() {
+        // localizar vistas (pueden ser null si layout no las contiene)
+        topTabLayout = findViewById(R.id.topTabLayout)
+        mainAppBar = findViewById(R.id.appBarLayout)
+        btnNotifications = findViewById(R.id.btn_notifications)
+        imgProfileTop = findViewById(R.id.img_profile_top)
+
+        // inicializar tabs (si existe TabLayout)
+        setupTabs(topTabLayout, mainAppBar)
+
+        // listeners comunes de la barra superior
+        setupTopBarListeners()
+    }
+
+    /**
+     * Configura listeners por defecto para los botones de la toolbar.
+     * Subclases pueden sobrescribir onNotificationClicked() u onProfileClicked().
+     */
+    private fun setupTopBarListeners() {
+        btnNotifications?.setOnClickListener {
+            onNotificationClicked()
+        }
+
+        imgProfileTop?.setOnClickListener {
+            onProfileClicked()
+        }
+    }
+
+    // Comportamiento por defecto al pulsar notificaciones (se puede override)
+    protected open fun onNotificationClicked() {
+        // por defecto: mostrar toast ligero
+        android.widget.Toast.makeText(this, getString(R.string.notifications), android.widget.Toast.LENGTH_SHORT).show()
+    }
+
+    // Comportamiento por defecto al pulsar perfil: abrir Profile o Login
+    protected open fun onProfileClicked() {
+        val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
+        val username = prefs.getString("username", null)
+        if (username != null) {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
+
+    /**
      * Inicializa y muestra u oculta las pestañas según isAdmin().
-     * @param tabLayout TabLayout ya localizado (findViewById)
-     * @param mainAppBar AppBarLayout principal (para sync del offset)
+     * Mantuve tu implementación funcional y añadí pequeños comentarios.
      */
     protected fun setupTabs(tabLayout: TabLayout?, mainAppBar: AppBarLayout?) {
         if (tabLayout == null) return
@@ -44,15 +100,14 @@ open class BaseActivity : AppCompatActivity() {
             return
         }
 
-        // mostrar y poblar pestañas
         tabLayout.visibility = View.VISIBLE
         tabLayout.removeAllTabs()
-        tabLayout.addTab(tabLayout.newTab().setText(getString(com.example.appinterface.R.string.tab_users)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(com.example.appinterface.R.string.tab_contacts)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(com.example.appinterface.R.string.tab_orders)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(com.example.appinterface.R.string.tab_custom)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
 
-        // comportamiento por selección: navegación simple (intents)
+        // navegación simple por selección de pestaña
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
@@ -70,10 +125,9 @@ open class BaseActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        // sincronizar ocultado más lento: mover TabLayout a mitad de velocidad
+        // efecto: las tabs se mueven a media velocidad respecto al appbar
         if (mainAppBar != null) {
             mainAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                // verticalOffset es negativo cuando se oculta hacia arriba
                 tabLayout.translationY = verticalOffset * 0.5f
             })
         }

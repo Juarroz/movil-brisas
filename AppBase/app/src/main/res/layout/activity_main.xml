@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <!-- Barra superior: Toolbar + pestañas -->
+    <!-- Barra superior: AppBarLayout contiene los includes de toolbar y tabs -->
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -16,73 +16,15 @@
             android:background="#173622"
             android:elevation="8dp">
 
-        <!-- Toolbar -->
-        <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
+        <!-- Toolbar (reutilizable) -->
+        <include layout="@layout/top_app_bar" />
 
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="bottom|center_vertical"
-                    android:layout_marginBottom="4dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp">
-
-                <ImageView
-                        android:id="@+id/toolbar_logo"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@mipmap/logo_reducido"
-                        android:contentDescription="@string/app_name"
-                        android:scaleType="centerCrop"
-                        android:layout_marginEnd="8dp" />
-
-                <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                <ImageButton
-                        android:id="@+id/btn_notifications"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_notifications"
-                        android:contentDescription="@string/notifications" />
-
-                <ImageButton
-                        android:id="@+id/img_profile_top"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_profile_placeholder"
-                        android:contentDescription="@string/profile" />
-
-            </LinearLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
-
-        <!-- Barra de pestañas (visible solo si el usuario es admin) -->
-        <com.google.android.material.tabs.TabLayout
-                android:id="@+id/topTabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="#173622"
-                app:tabMode="scrollable"
-                app:tabIndicatorHeight="3dp"
-                app:tabIndicatorColor="@android:color/white"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="#BBD2C5"
-                app:tabPaddingStart="16dp"
-                app:tabPaddingEnd="16dp"
-                app:tabIndicatorFullWidth="false" />
+        <!-- TabLayout (reutilizable) -->
+        <include layout="@layout/top_tab_bar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Contenido principal -->
+    <!-- Contenido principal (usa appbar_scrolling_view_behavior para scroll) -->
     <include
             layout="@layout/content_main"
             android:layout_width="match_parent"
