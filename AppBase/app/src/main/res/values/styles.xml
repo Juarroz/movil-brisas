@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BaseContainer">
+        <item name="android:background">@drawable/bg_base_container</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="InputField">
+        <item name="android:background">@drawable/bg_input_field</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="GreenButton">
+        <item name="android:background">@drawable/bg_button_green</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>
