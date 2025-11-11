@@ -11,7 +11,6 @@
 			android:theme="@style/Theme.AppInterface"
             android:usesCleartextTraffic="true"
 			tools:targetApi="31">
-		<!-- primera Actividad -->
 		<activity
 				android:name=".MainActivity"
 				android:exported="true">
@@ -22,14 +21,12 @@
 			</intent-filter>
 		</activity>
 
-		<!-- Segunda actividad -->
         <activity
                 android:name=".Api.contacto.ContactActivity"
                 android:exported="true" />
-        <!-- Tercera actividad -->
         <activity android:name=".Api.pedidos.PedidosActivity" />
-        <activity android:name=".ui.LoginActivity" />
-        <activity android:name=".ui.ProfileActivity" />
+        <activity android:name=".Api.usuarios.UsuarioActivity" />
+
 	</application>
 
 

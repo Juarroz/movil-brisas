@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.Api.auth.LoginActivity
 import com.example.appinterface.Api.auth.ProfileActivity
 import com.example.appinterface.Api.contacto.ContactActivity
+import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.R
 
 class MainActivity : AppCompatActivity() {
@@ -69,7 +70,8 @@ class MainActivity : AppCompatActivity() {
             topTabLayout?.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                     when (tab.position) {
-                        0 -> { /* Usuarios */ }
+                        0 -> { val intent = Intent(this@MainActivity, UsuarioActivity::class.java)
+                            startActivity(intent)}
                         1 -> { /* Contactos */ }
                         2 -> { /* Pedidos */ }
                         3 -> { /* Personalizaciones */ }
