@@ -38,7 +38,62 @@ class MainActivity : AppCompatActivity() {
         btnFormulario = findViewById(R.id.buttonSegundaActividad)
         btnGatito = findViewById(R.id.button)
 
-        // listeners
+        // referencias (asegúrate que los ids coinciden con tus layouts)
+        val topTabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.topTabLayout)
+        val mainAppBar = findViewById<com.google.android.material.appbar.AppBarLayout>(R.id.appBarLayout)
+
+        // TODO: habilitar cuando el login y roles estén implementados
+        /*
+        val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
+        val roles = prefs.getStringSet("roles", emptySet()) // usar el set que guardes en login
+        val isAdmin = roles?.contains("ADMIN") == true
+        */
+
+        // Por ahora, puedes forzar isAdmin a false o true según necesites probar
+        val isAdmin = true  // cambia a true para ver la barra de pestañas
+
+        if (isAdmin) {
+            // mostrar la barra de pestañas
+            topTabLayout?.visibility = View.VISIBLE
+
+            // crear pestañas usando strings.xml
+            topTabLayout?.apply {
+                removeAllTabs()
+                addTab(newTab().setText(getString(R.string.tab_users)))
+                addTab(newTab().setText(getString(R.string.tab_contacts)))
+                addTab(newTab().setText(getString(R.string.tab_orders)))
+                addTab(newTab().setText(getString(R.string.tab_custom)))
+            }
+
+            // listener para selección (opcional)
+            topTabLayout?.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
+                    when (tab.position) {
+                        0 -> { /* Usuarios */ }
+                        1 -> { /* Contactos */ }
+                        2 -> { /* Pedidos */ }
+                        3 -> { /* Personalizaciones */ }
+                    }
+                }
+                override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab) {}
+                override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {}
+            })
+
+            // sincronizar ocultado más lento
+            if (mainAppBar != null && topTabLayout != null) {
+                mainAppBar.addOnOffsetChangedListener(
+                    com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                        topTabLayout.translationY = verticalOffset * 0.5f
+                    }
+                )
+            }
+        } else {
+            // ocultar la barra para usuarios normales
+            topTabLayout?.visibility = View.GONE
+            topTabLayout?.removeAllTabs()
+        }
+
+        // listeners existentes
         btnNotifications.setOnClickListener {
             Toast.makeText(this, "Notificaciones (pendiente)", Toast.LENGTH_SHORT).show()
         }

@@ -58,5 +58,8 @@
 
         </com.google.android.material.appbar.MaterialToolbar>
 
+        <!-- incluimos la TabLayout (ahora top_tab_bar.xml solo contiene TabLayout) -->
+        <include layout="@layout/top_tab_bar" />
+
     </com.google.android.material.appbar.AppBarLayout>
 </merge>

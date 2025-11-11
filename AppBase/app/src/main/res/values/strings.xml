@@ -6,4 +6,8 @@
     <string name="login">Entrar</string>
     <string name="profile">Perfil</string>
     <string name="notifications">Notificaciones</string>
+    <string name="tab_users">Usuarios</string>
+    <string name="tab_contacts">Contactos</string>
+    <string name="tab_orders">Pedidos</string>
+    <string name="tab_custom">Personalizaciones</string>
 </resources>
