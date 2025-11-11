@@ -2,5 +2,8 @@
 <resources>
 	<color name="black">#FF000000</color>
 	<color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#0D47A1</color>        <!-- azul oscuro ejemplo -->
+    <color name="colorOnPrimary">#FFFFFF</color>      <!-- texto/iconos sobre primary -->
+    <color name="colorPrimaryVariant">#0B3D91</color>
 
 </resources>

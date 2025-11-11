@@ -1,3 +1,9 @@
 <resources>
-	<string name="app_name">AppInterface</string>
+    <string name="app_name">Brisas Gems</string>
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Entrar</string>
+    <string name="profile">Perfil</string>
+    <string name="notifications">Notificaciones</string>
 </resources>
