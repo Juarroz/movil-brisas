@@ -1,10 +1,12 @@
 package com.example.appinterface.Api.usuarios
 
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.R
 import com.example.appinterface.core.RetrofitInstance
+import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +38,23 @@ class UsuarioActivity : AppCompatActivity() {
         btnGuardar.setOnClickListener { crearUsuario() }
         btnCargar.setOnClickListener { cargarUsuarios() }
         btnEliminar.setOnClickListener { eliminarUsuario() }
+
+
+        val topTabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.topTabLayout)
+        val isAdmin = true  // cámbialo según el caso real
+
+        if (isAdmin) {
+            topTabLayout?.visibility = View.VISIBLE
+            topTabLayout?.apply {
+                removeAllTabs()
+                addTab(newTab().setText(getString(R.string.tab_users)))
+                addTab(newTab().setText(getString(R.string.tab_contacts)))
+                addTab(newTab().setText(getString(R.string.tab_orders)))
+                addTab(newTab().setText(getString(R.string.tab_custom)))
+            }
+        } else {
+            topTabLayout?.visibility = View.GONE
+        }
     }
 
     private fun crearUsuario() {

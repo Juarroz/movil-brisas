@@ -30,7 +30,6 @@ interface ApiServicesKotlin {
 
   //CRUD DE CONTACTO
 
-
       @POST("contactos")
       fun enviarContacto(@Body contacto: ContactoFormularioRequestDTO): Call<ContactoFormularioResponseDTO>
 
