@@ -2,8 +2,11 @@
 <resources>
 	<color name="black">#FF000000</color>
 	<color name="white">#FFFFFFFF</color>
-    <color name="colorPrimary">#0D47A1</color>        <!-- azul oscuro ejemplo -->
-    <color name="colorOnPrimary">#FFFFFF</color>      <!-- texto/iconos sobre primary -->
-    <color name="colorPrimaryVariant">#0B3D91</color>
+    <color name="green_dark">#006644</color>
+    <color name="green_medium">#009955</color>
+    <color name="green_light">#33cc88</color>
+    <color name="green_gradient_start">#009955</color>
+    <color name="green_gradient_end">#33cc88</color>
+    <color name="gray_border">#DDDDDD</color>
 
 </resources>
