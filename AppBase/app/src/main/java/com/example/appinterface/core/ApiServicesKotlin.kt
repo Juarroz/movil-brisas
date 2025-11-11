@@ -5,10 +5,15 @@ import com.example.appinterface.Api.pedidos.PedidoResponseDTO
 import com.example.appinterface.Api.RolResponseDTO
 import com.example.appinterface.Api.auth.LoginRequestDTO
 import com.example.appinterface.Api.auth.LoginResponseDTO
+import com.example.appinterface.Api.contacto.ContactoFormularioResponseDTO
+import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.DELETE
+import retrofit2.http.Path
 
 interface ApiServicesKotlin {
 
@@ -19,10 +24,26 @@ interface ApiServicesKotlin {
     @GET("roles")
     fun getRoles(): Call<List<RolResponseDTO>>
 
-    @POST("contactos")
-    fun enviarContacto(
-        @Body contacto: ContactoFormularioRequestDTO
-    ): Call<Void>
+
+  //CRUD DE CONTACTO
+
+
+      @POST("contactos")
+      fun enviarContacto(@Body contacto: ContactoFormularioRequestDTO): Call<ContactoFormularioResponseDTO>
+
+      @GET("contactos")
+      fun listarContactos(): Call<List<ContactoFormularioResponseDTO>>
+
+    @PUT("contactos/{id}")
+    fun actualizarContacto(
+        @Path("id") id: Int,
+        @Body datos: Map<String, @JvmSuppressWildcards Any>
+    ): Call<ContactoFormularioResponseDTO>
+
+      @DELETE("contactos/{id}")
+      fun eliminarContacto(@Path("id") id: Int): Call<Void>
+
+
 
     @GET("pedidos")
     fun getPedidos(): Call<List<PedidoResponseDTO>>
