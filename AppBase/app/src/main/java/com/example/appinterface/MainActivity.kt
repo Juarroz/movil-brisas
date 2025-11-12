@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import com.example.appinterface.Api.contacto.ContactActivity
+import com.example.appinterface.Api.contacto.ContactCreateActivity
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.R
 

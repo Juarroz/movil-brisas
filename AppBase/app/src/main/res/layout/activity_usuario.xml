@@ -2,84 +2,58 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Api.usuarios.UsuarioActivity">
+        android:layout_height="match_parent">
 
-    <!-- AppBarLayout: incluye toolbar + tabs -->
+    <!-- AppBarLayout: toolbar + tabs (mantén tus includes si ya existen) -->
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#173622"
             android:elevation="4dp">
-
         <include layout="@layout/top_app_bar" />
         <include layout="@layout/top_tab_bar" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Contenido desplazable -->
-    <ScrollView
+    <!-- Contenido principal -->
+    <LinearLayout
+            android:id="@+id/content_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:padding="12dp">
 
-        <LinearLayout
+        <!-- Recycler horizontal -->
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUsuarios"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:overScrollMode="never"
+                android:clipToPadding="false"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp" />
+
+        <!-- Espacio para estado / lista larga -->
+        <TextView
+                android:id="@+id/tvEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="Cargando usuarios..."
+                android:visibility="gone"
+                android:paddingTop="12dp" />
+    </LinearLayout>
 
-            <EditText
-                    android:id="@+id/txtNombre"
-                    android:hint="Nombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <EditText
-                    android:id="@+id/txtCorreo"
-                    android:hint="Correo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <EditText
-                    android:id="@+id/txtTelefono"
-                    android:hint="Teléfono"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <EditText
-                    android:id="@+id/txtDocnum"
-                    android:hint="Docnum o ID"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <Button
-                    android:id="@+id/btnGuardar"
-                    android:text="Crear Usuario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <Button
-                    android:id="@+id/btnCargar"
-                    android:text="Cargar Usuarios"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <Button
-                    android:id="@+id/btnEliminar"
-                    android:text="Eliminar Usuario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <TextView
-                    android:id="@+id/txtListaUsuarios"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lista de usuarios"
-                    android:paddingTop="16dp" />
-        </LinearLayout>
-    </ScrollView>
+    <!-- FAB para crear usuario -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabCrearUsuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Crear usuario"
+            app:srcCompat="@android:drawable/ic_input_add"
+            app:layout_anchor="@id/content_root"
+            app:layout_anchorGravity="bottom|end"
+            android:layout_margin="16dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
