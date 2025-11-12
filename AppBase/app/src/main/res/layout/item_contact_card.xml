@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/card_root"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="16dp"
+              android:layout_marginBottom="12dp"
+              android:background="@drawable/bg_base_container"
+              android:elevation="4dp">
+
+    <TextView
+            android:id="@+id/txtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+    <TextView
+            android:id="@+id/txtCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Correo"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black" />
+
+    <TextView
+            android:id="@+id/txtTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teléfono"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black" />
+
+    <TextView
+            android:id="@+id/txtMensaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mensaje"
+            android:textSize="14sp"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/black" />
+
+    <TextView
+            android:id="@+id/txtEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estado"
+            android:textSize="13sp"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/black" />
+
+    <TextView
+            android:id="@+id/txtNotas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notas"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black" />
+
+    <TextView
+            android:id="@+id/txtVia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vía"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="8dp">
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Editar"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_button_green"
+                app:backgroundTint="@null"
+                app:cornerRadius="18dp"
+                android:paddingHorizontal="14dp" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Eliminar"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_button_green"
+                app:backgroundTint="@null"
+                app:cornerRadius="18dp"
+                android:paddingHorizontal="14dp" />
+    </LinearLayout>
+</LinearLayout>

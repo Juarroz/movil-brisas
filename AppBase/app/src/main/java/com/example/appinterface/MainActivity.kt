@@ -47,8 +47,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun abrirFormularioContacto() {
-        Toast.makeText(this, "Abrir formulario de contacto", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, ContactActivity::class.java))
+        startActivity(Intent(this, ContactCreateActivity::class.java))
     }
 
     private fun abrirGatito() {

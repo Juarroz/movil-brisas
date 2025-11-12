@@ -8,5 +8,7 @@
     <color name="green_gradient_start">#009955</color>
     <color name="green_gradient_end">#33cc88</color>
     <color name="gray_border">#DDDDDD</color>
+    <color name="gray_medium">#655D5DCE</color>
+
 
 </resources>

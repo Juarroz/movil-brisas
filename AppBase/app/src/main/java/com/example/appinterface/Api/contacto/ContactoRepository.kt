@@ -13,15 +13,12 @@ class ContactoRepository {
         return RetrofitInstance.api2kotlin.listarContactos()
     }
 
-    fun actualizarContacto(id: Int, datos: Map<String, Any>): Call<ContactoFormularioResponseDTO> {
-        return RetrofitInstance.api2kotlin.actualizarContacto(id, datos)
+
+    fun actualizarContacto(id: Int, update: ContactoFormularioUpdateDTO): Call<ContactoFormularioResponseDTO> {
+        return RetrofitInstance.api2kotlin.actualizarContactoDTO(id, update)
     }
-
-
-
 
     fun eliminarContacto(id: Int): Call<Void> {
-        return RetrofitInstance.api2kotlin.eliminarContacto(id)
-    }
+        return RetrofitInstance.api2kotlin.eliminarContacto(id) }
 }
 

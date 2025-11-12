@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:fillViewport="true">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+        <EditText
+                android:id="@+id/dialog_txtNombre"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Nombre"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:inputType="textPersonName" />
+
+        <EditText
+                android:id="@+id/dialog_txtCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Correo"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:inputType="textEmailAddress"
+                android:layout_marginTop="8dp" />
+
+        <EditText
+                android:id="@+id/dialog_txtTelefono"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Teléfono"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:inputType="phone"
+                android:layout_marginTop="8dp" />
+
+        <EditText
+                android:id="@+id/dialog_txtMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:hint="Mensaje"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:layout_marginTop="8dp" />
+
+        <EditText
+                android:id="@+id/dialog_txtEstado"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Estado"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:layout_marginTop="8dp" />
+
+        <EditText
+                android:id="@+id/dialog_txtNotas"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:hint="Notas"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="8dp" />
+
+        <EditText
+                android:id="@+id/dialog_txtVia"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Vía"
+                android:background="@drawable/bg_input_field"
+                android:padding="12dp"
+                android:layout_marginTop="8dp" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_marginTop="12dp">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/dialog_btnActualizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="Actualizar"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/bg_button_green"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="18dp" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/dialog_btnEliminar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Eliminar"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/bg_button_green"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="18dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
