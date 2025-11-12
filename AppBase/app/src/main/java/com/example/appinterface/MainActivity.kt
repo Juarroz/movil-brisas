@@ -11,15 +11,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.Api.auth.LoginActivity
 import com.example.appinterface.Api.auth.ProfileActivity
-import com.example.appinterface.Api.contacto.ContactActivity
+import com.example.appinterface.Api.contacto.ContactCreateActivity
 import com.example.appinterface.R
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var btnNotifications: ImageButton
     private lateinit var imgProfileTop: ImageView
-
-    // Tus botones existentes
     private lateinit var btnRoles: Button
     private lateinit var btnPedidos: Button
     private lateinit var btnFormulario: Button
@@ -29,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // referencias UI
         btnNotifications = findViewById(R.id.btn_notifications)
         imgProfileTop = findViewById(R.id.img_profile_top)
 
@@ -38,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         btnFormulario = findViewById(R.id.buttonSegundaActividad)
         btnGatito = findViewById(R.id.button)
 
-        // listeners
         btnNotifications.setOnClickListener {
             Toast.makeText(this, "Notificaciones (pendiente)", Toast.LENGTH_SHORT).show()
         }
@@ -59,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         btnGatito.setOnClickListener { abrirGatito() }
     }
 
-    // Métodos referenciados en XML (mantén firmas para android:onClick)
     fun crearmostrarpersonas(view: View) {
         Toast.makeText(this, "Mostrar roles (ejecución)", Toast.LENGTH_SHORT).show()
     }
@@ -69,8 +64,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun abrirFormularioContacto() {
-        Toast.makeText(this, "Abrir formulario de contacto", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, ContactActivity::class.java))
+        startActivity(Intent(this, ContactCreateActivity::class.java))
     }
 
     private fun abrirGatito() {

@@ -35,16 +35,6 @@
                     app:layout_constraintHorizontal_bias="0.045"/>
 
             <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="51dp"
-                    android:src="@drawable/formulario_"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="336dp"
-                    app:layout_constraintVertical_bias="0.266"/>
-
-            <ImageView
                     android:layout_width="323dp"
                     android:layout_height="88dp"
                     android:src="@mipmap/logo"
@@ -86,7 +76,7 @@
                     android:layout_height="166dp"
                     android:gravity="center"
                     android:background="@drawable/bg_recy_personas"
-                    android:textColor="#fff"
+                    android:textColor="#CE655D5D"
                     android:textSize="18sp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"

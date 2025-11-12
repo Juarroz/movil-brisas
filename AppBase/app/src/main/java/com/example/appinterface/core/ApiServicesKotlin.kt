@@ -27,22 +27,23 @@ interface ApiServicesKotlin {
 
   //CRUD DE CONTACTO
 
-
       @POST("contactos")
       fun enviarContacto(@Body contacto: ContactoFormularioRequestDTO): Call<ContactoFormularioResponseDTO>
 
       @GET("contactos")
       fun listarContactos(): Call<List<ContactoFormularioResponseDTO>>
 
+
     @PUT("contactos/{id}")
-    fun actualizarContacto(
+    fun actualizarContactoDTO(
         @Path("id") id: Int,
-        @Body datos: Map<String, @JvmSuppressWildcards Any>
+        @Body update: ContactoFormularioUpdateDTO
     ): Call<ContactoFormularioResponseDTO>
 
-      @DELETE("contactos/{id}")
-      fun eliminarContacto(@Path("id") id: Int): Call<Void>
-
+    @DELETE("contactos/{id}")
+    fun eliminarContacto(
+        @Path("id") id: Int
+    ): Call<Void>
 
 
     @GET("pedidos")
