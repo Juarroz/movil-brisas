@@ -1,8 +1,12 @@
 package com.example.appinterface.Api.usuarios
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appinterface.R
@@ -34,8 +38,83 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
         rvUsuarios.adapter = adapter
 
         fabCrear.setOnClickListener {
-            // abrir pantalla de creación (placeholder)
-            Toast.makeText(this, "Abrir crear usuario (pendiente)", Toast.LENGTH_SHORT).show()
+            // Inflar vista del diálogo
+            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_user, null)
+            val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
+            val etCorreo = dialogView.findViewById<EditText>(R.id.etCorreo)
+            val etTelefono = dialogView.findViewById<EditText>(R.id.etTelefono)
+            val etDocnum = dialogView.findViewById<EditText>(R.id.etDocnum)
+            val btnCancel = dialogView.findViewById<Button>(R.id.btnCancelCreate)
+            val btnCreate = dialogView.findViewById<Button>(R.id.btnCreateUser)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create()
+
+            btnCancel.setOnClickListener { dialog.dismiss() }
+
+            btnCreate.setOnClickListener {
+                val nombre = etNombre.text.toString().trim()
+                val correo = etCorreo.text.toString().trim()
+                val telefono = etTelefono.text.toString().trim().ifEmpty { null }
+                val docnum = etDocnum.text.toString().trim().ifEmpty { null }
+
+                // Validaciones mínimas
+                if (nombre.isEmpty()) {
+                    etNombre.error = "Requerido"
+                    etNombre.requestFocus()
+                    return@setOnClickListener
+                }
+                if (correo.isEmpty()) {
+                    etCorreo.error = "Requerido"
+                    etCorreo.requestFocus()
+                    return@setOnClickListener
+                }
+
+                // Construir DTO (ajusta rolId/tipdocId si lo necesitas)
+                val nuevo = UsuarioRequestDTO(
+                    nombre = nombre,
+                    correo = correo,
+                    telefono = telefono,
+                    password = "ClaveSegura123", // si tu API requiere password
+                    docnum = docnum,
+                    rolId = 1,   // por defecto 'usuario'; cambia si quieres spinner
+                    tipdocId = 1,
+                    origen = "registro",
+                    activo = true
+                )
+
+                // Llamada Retrofit
+                btnCreate.isEnabled = false
+                RetrofitInstance.api2kotlin.createUsuario(nuevo)
+                    .enqueue(object : Callback<UsuarioResponseDTO> {
+                        override fun onResponse(call: Call<UsuarioResponseDTO>, response: Response<UsuarioResponseDTO>) {
+                            btnCreate.isEnabled = true
+                            if (response.isSuccessful) {
+                                val created = response.body()
+                                if (created != null) {
+                                    // insertar en la lista local y refrescar Recycler
+                                    adapter.addItem(created)
+                                    rvUsuarios.scrollToPosition(0)
+                                    Toast.makeText(this@UsuarioActivity, "Usuario creado", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                } else {
+                                    Toast.makeText(this@UsuarioActivity, "Respuesta vacía", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                Toast.makeText(this@UsuarioActivity, "Error servidor: ${response.code()}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<UsuarioResponseDTO>, t: Throwable) {
+                            btnCreate.isEnabled = true
+                            Toast.makeText(this@UsuarioActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+            }
+
+            dialog.show()
         }
 
         // cargar datos al inicio

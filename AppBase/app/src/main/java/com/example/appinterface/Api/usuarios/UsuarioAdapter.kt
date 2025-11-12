@@ -20,7 +20,10 @@ class UsuarioAdapter(
         fun onDelete(user: UsuarioResponseDTO, position: Int)
         fun onViewHistory(user: UsuarioResponseDTO, position: Int)
     }
-
+    fun addItem(user: UsuarioResponseDTO) {
+        items.add(0, user)            // inserta al inicio (puedes cambiar la posición)
+        notifyItemInserted(0)
+    }
     fun updateList(newItems: List<UsuarioResponseDTO>) {
         items.clear()
         items.addAll(newItems)
