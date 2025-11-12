@@ -2,113 +2,107 @@ package com.example.appinterface.Api.usuarios
 
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UsuarioActivity : BaseActivity() {
+class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
 
-    private lateinit var txtNombre: EditText
-    private lateinit var txtCorreo: EditText
-    private lateinit var txtTelefono: EditText
-    private lateinit var txtDocnum: EditText
-    private lateinit var btnGuardar: Button
-    private lateinit var btnCargar: Button
-    private lateinit var btnEliminar: Button
-    private lateinit var listaUsuarios: TextView
+    private lateinit var rvUsuarios: RecyclerView
+    private lateinit var adapter: UsuarioAdapter
+    private lateinit var fabCrear: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_usuario)
 
-        // Inicializar toolbar + tabs + listeners comunes
         initCommonUI()
 
-        // referencias de la pantalla
-        txtNombre = findViewById(R.id.txtNombre)
-        txtCorreo = findViewById(R.id.txtCorreo)
-        txtTelefono = findViewById(R.id.txtTelefono)
-        txtDocnum = findViewById(R.id.txtDocnum)
-        btnGuardar = findViewById(R.id.btnGuardar)
-        btnCargar = findViewById(R.id.btnCargar)
-        btnEliminar = findViewById(R.id.btnEliminar)
-        listaUsuarios = findViewById(R.id.txtListaUsuarios)
+        rvUsuarios = findViewById(R.id.rvUsuarios)
+        fabCrear = findViewById(R.id.fabCrearUsuario)
 
-        // listeners específicos
-        btnGuardar.setOnClickListener { crearUsuario() }
-        btnCargar.setOnClickListener { cargarUsuarios() }
-        btnEliminar.setOnClickListener { eliminarUsuario() }
+        // Recycler horizontal
+        rvUsuarios.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        adapter = UsuarioAdapter(mutableListOf(), this)
+        rvUsuarios.adapter = adapter
 
-        // Opcional: si quieres manipular topTabLayout desde aquí:
-        // topTabLayout?.let { /* modificar tabs si necesitas */ }
+        fabCrear.setOnClickListener {
+            // abrir pantalla de creación (placeholder)
+            Toast.makeText(this, "Abrir crear usuario (pendiente)", Toast.LENGTH_SHORT).show()
+        }
+
+        // cargar datos al inicio
+        cargarUsuarios()
     }
 
-    private fun crearUsuario() {
-        val usuario = UsuarioRequestDTO(
-            nombre = txtNombre.text.toString(),
-            correo = txtCorreo.text.toString(),
-            telefono = txtTelefono.text.toString(),
-            password = "ClaveSegura123",
-            docnum = txtDocnum.text.toString(),
-            rolId = 1,
-            tipdocId = 1
-        )
-
-        RetrofitInstance.api2kotlin.createUsuario(usuario)
-            .enqueue(object : Callback<UsuarioResponseDTO> {
-                override fun onResponse(
-                    call: Call<UsuarioResponseDTO>,
-                    response: Response<UsuarioResponseDTO>
-                ) {
+    private fun cargarUsuarios() {
+        RetrofitInstance.api2kotlin.getUsuarios()
+            .enqueue(object : Callback<PageWrapperDTO> {
+                override fun onResponse(call: Call<PageWrapperDTO>, response: Response<PageWrapperDTO>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@UsuarioActivity, "Usuario creado", Toast.LENGTH_SHORT).show()
+                        // 1. Obtiene el cuerpo del objeto PageWrapperDTO
+                        val wrapper = response.body()
+
+                        // 2. Extrae la lista del campo 'content'
+                        val lista = wrapper?.content ?: emptyList()
+
+                        adapter.updateList(lista)
+                        findViewById<View>(R.id.tvEmpty).visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
                     } else {
                         Toast.makeText(this@UsuarioActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                override fun onFailure(call: Call<UsuarioResponseDTO>, t: Throwable) {
+                // ¡LÍNEA CORREGIDA! Cambiar List<UsuarioResponseDTO> por PageWrapperDTO
+                override fun onFailure(call: Call<PageWrapperDTO>, t: Throwable) {
+                    Toast.makeText(this@UsuarioActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    // --- UserAdapter.Listener implementation ---
+
+    override fun onToggleActivo(user: UsuarioResponseDTO, position: Int) {
+        val nuevoEstado = !user.activo
+        RetrofitInstance.api2kotlin.cambiarEstadoUsuario(user.id, nuevoEstado)
+            .enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        // actualizar UI localmente
+                        val updated = user.copy(activo = nuevoEstado)
+                        adapter.updateItem(position, updated)
+                        Toast.makeText(this@UsuarioActivity, if (nuevoEstado) "Usuario activado" else "Usuario desactivado", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@UsuarioActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     Toast.makeText(this@UsuarioActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
-    private fun cargarUsuarios() {
-        RetrofitInstance.api2kotlin.getUsuarios()
-            .enqueue(object : Callback<List<UsuarioResponseDTO>> {
-                override fun onResponse(
-                    call: Call<List<UsuarioResponseDTO>>,
-                    response: Response<List<UsuarioResponseDTO>>
-                ) {
-                    if (response.isSuccessful) {
-                        val lista = response.body()?.joinToString("\n") { u -> "${u.id} - ${u.nombre}" }
-                        listaUsuarios.text = lista
-                    } else {
-                        listaUsuarios.text = "Error al cargar usuarios"
-                    }
-                }
-
-                override fun onFailure(call: Call<List<UsuarioResponseDTO>>, t: Throwable) {
-                    listaUsuarios.text = "Fallo: ${t.message}"
-                }
-            })
+    override fun onEdit(user: UsuarioResponseDTO, position: Int) {
+        // placeholder: abrir pantalla de edición
+        Toast.makeText(this, "Editar usuario: ${user.nombre}", Toast.LENGTH_SHORT).show()
+        // aquí puedes lanzar UserEditActivity con extras
     }
 
-    private fun eliminarUsuario() {
-        val id = txtDocnum.text.toString().toLongOrNull()
-        if (id == null) {
-            Toast.makeText(this, "Ingresa un ID válido en docnum", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        RetrofitInstance.api2kotlin.deleteUsuario(id)
+    override fun onDelete(user: UsuarioResponseDTO, position: Int) {
+        RetrofitInstance.api2kotlin.deleteUsuario(user.id)
             .enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
+                        // eliminar localmente
+                        adapter.removeItem(position)
                         Toast.makeText(this@UsuarioActivity, "Usuario eliminado", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this@UsuarioActivity, "Error: ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -121,6 +115,11 @@ class UsuarioActivity : BaseActivity() {
             })
     }
 
-    // Si quieres forzar admin en esta pantalla durante pruebas:
+    override fun onViewHistory(user: UsuarioResponseDTO, position: Int) {
+        // placeholder: abrir modal/detail
+        Toast.makeText(this, "Ver historial: ${user.nombre}", Toast.LENGTH_SHORT).show()
+    }
+
+    // Forzar admin durante pruebas
     override fun isAdmin(): Boolean = true
 }

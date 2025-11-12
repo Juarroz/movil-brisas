@@ -9,6 +9,7 @@ import com.example.appinterface.Api.usuarios.UsuarioRequestDTO
 import com.example.appinterface.Api.usuarios.UsuarioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
+import com.example.appinterface.Api.usuarios.PageWrapperDTO
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -55,7 +56,7 @@ interface ApiServicesKotlin {
     // --- USUARIOS CRUD ---
 
     @GET("usuarios")
-    fun getUsuarios(): Call<List<UsuarioResponseDTO>>
+    fun getUsuarios(): Call<PageWrapperDTO>
 
     @POST("usuarios")
     fun createUsuario(
