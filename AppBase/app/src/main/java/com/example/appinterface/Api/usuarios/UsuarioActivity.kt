@@ -3,15 +3,14 @@ package com.example.appinterface.Api.usuarios
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.R
+import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
-import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UsuarioActivity : AppCompatActivity() {
+class UsuarioActivity : BaseActivity() {
 
     private lateinit var txtNombre: EditText
     private lateinit var txtCorreo: EditText
@@ -26,6 +25,10 @@ class UsuarioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_usuario)
 
+        // Inicializar toolbar + tabs + listeners comunes
+        initCommonUI()
+
+        // referencias de la pantalla
         txtNombre = findViewById(R.id.txtNombre)
         txtCorreo = findViewById(R.id.txtCorreo)
         txtTelefono = findViewById(R.id.txtTelefono)
@@ -35,26 +38,13 @@ class UsuarioActivity : AppCompatActivity() {
         btnEliminar = findViewById(R.id.btnEliminar)
         listaUsuarios = findViewById(R.id.txtListaUsuarios)
 
+        // listeners específicos
         btnGuardar.setOnClickListener { crearUsuario() }
         btnCargar.setOnClickListener { cargarUsuarios() }
         btnEliminar.setOnClickListener { eliminarUsuario() }
 
-
-        val topTabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.topTabLayout)
-        val isAdmin = true  // cámbialo según el caso real
-
-        if (isAdmin) {
-            topTabLayout?.visibility = View.VISIBLE
-            topTabLayout?.apply {
-                removeAllTabs()
-                addTab(newTab().setText(getString(R.string.tab_users)))
-                addTab(newTab().setText(getString(R.string.tab_contacts)))
-                addTab(newTab().setText(getString(R.string.tab_orders)))
-                addTab(newTab().setText(getString(R.string.tab_custom)))
-            }
-        } else {
-            topTabLayout?.visibility = View.GONE
-        }
+        // Opcional: si quieres manipular topTabLayout desde aquí:
+        // topTabLayout?.let { /* modificar tabs si necesitas */ }
     }
 
     private fun crearUsuario() {
@@ -130,4 +120,7 @@ class UsuarioActivity : AppCompatActivity() {
                 }
             })
     }
+
+    // Si quieres forzar admin en esta pantalla durante pruebas:
+    override fun isAdmin(): Boolean = true
 }

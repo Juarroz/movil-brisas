@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,11 +7,20 @@
         android:layout_height="match_parent"
         tools:context=".Api.usuarios.UsuarioActivity">
 
-    <!-- Incluimos la barra superior (toolbar + pestañas) -->
-    <include layout="@layout/top_app_bar" />
-    <include layout="@layout/top_tab_bar" />
+    <!-- AppBarLayout: incluye toolbar + tabs -->
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#173622"
+            android:elevation="4dp">
 
-    <!-- Tu contenido anterior (formulario de usuarios) -->
+        <include layout="@layout/top_app_bar" />
+        <include layout="@layout/top_tab_bar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Contenido desplazable -->
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
