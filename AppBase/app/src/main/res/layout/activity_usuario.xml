@@ -1,0 +1,75 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Api.usuarios.UsuarioActivity">
+
+    <!-- Incluimos la barra superior (toolbar + pestañas) -->
+    <include layout="@layout/top_app_bar" />
+    <include layout="@layout/top_tab_bar" />
+
+    <!-- Tu contenido anterior (formulario de usuarios) -->
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <EditText
+                    android:id="@+id/txtNombre"
+                    android:hint="Nombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <EditText
+                    android:id="@+id/txtCorreo"
+                    android:hint="Correo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <EditText
+                    android:id="@+id/txtTelefono"
+                    android:hint="Teléfono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <EditText
+                    android:id="@+id/txtDocnum"
+                    android:hint="Docnum o ID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <Button
+                    android:id="@+id/btnGuardar"
+                    android:text="Crear Usuario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <Button
+                    android:id="@+id/btnCargar"
+                    android:text="Cargar Usuarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <Button
+                    android:id="@+id/btnEliminar"
+                    android:text="Eliminar Usuario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <TextView
+                    android:id="@+id/txtListaUsuarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lista de usuarios"
+                    android:paddingTop="16dp" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
