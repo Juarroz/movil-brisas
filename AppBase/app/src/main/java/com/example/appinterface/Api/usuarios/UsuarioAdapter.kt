@@ -14,12 +14,16 @@ class UsuarioAdapter(
     private val listener: Listener
 ) : RecyclerView.Adapter<UsuarioAdapter.UserVH>() {
 
+    // --- INTERFAZ LISTENER MODIFICADA ---
     interface Listener {
         fun onToggleActivo(user: UsuarioResponseDTO, position: Int)
-        fun onEdit(user: UsuarioResponseDTO, position: Int)
+        // Eliminados: onEdit, onViewHistory
         fun onDelete(user: UsuarioResponseDTO, position: Int)
-        fun onViewHistory(user: UsuarioResponseDTO, position: Int)
+        // Añadido:
+        fun onChangeRole(user: UsuarioResponseDTO, position: Int)
     }
+    // ------------------------------------
+
     fun addItem(user: UsuarioResponseDTO) {
         items.add(0, user)            // inserta al inicio (puedes cambiar la posición)
         notifyItemInserted(0)
@@ -43,9 +47,6 @@ class UsuarioAdapter(
         if (position >= 0 && position < items.size) {
             items.removeAt(position)
             notifyItemRemoved(position)
-
-            // Opcional pero recomendado: notifica al recycler que el rango cambió
-            // para evitar "IndexOutOfBoundsException" si se elimina rápido.
             notifyItemRangeChanged(position, items.size)
         }
     }
@@ -66,14 +67,17 @@ class UsuarioAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            // abrir detalle - opcional
-            listener.onViewHistory(user, position)
+            // Si el comportamiento de click directo era ver historial,
+            // ahora puedes quitarlo o reasignarlo. Lo dejo en blanco por ahora.
+            // listener.onViewHistory(user, position) // ELIMINADO
         }
     }
 
     private fun showPopup(anchor: View, user: UsuarioResponseDTO, position: Int) {
         val popup = PopupMenu(anchor.context, anchor)
+        // Asume que R.menu.user_item_menu ya fue modificado
         popup.menuInflater.inflate(R.menu.user_item_menu, popup.menu)
+
         // Ajustar título dinámico para activar/desactivar
         val toggle = popup.menu.findItem(R.id.menu_toggle_active)
         toggle.title = if (user.activo) "Desactivar" else "Activar"
@@ -84,16 +88,14 @@ class UsuarioAdapter(
                     listener.onToggleActivo(user, position)
                     true
                 }
-                R.id.menu_edit -> {
-                    listener.onEdit(user, position)
-                    true
-                }
+                // ELIMINADOS: R.id.menu_edit, R.id.menu_history
                 R.id.menu_delete -> {
                     listener.onDelete(user, position)
                     true
                 }
-                R.id.menu_history -> {
-                    listener.onViewHistory(user, position)
+                // AÑADIDO:
+                R.id.menu_change_role -> {
+                    listener.onChangeRole(user, position)
                     true
                 }
                 else -> false
@@ -110,6 +112,4 @@ class UsuarioAdapter(
         val tvStatus: TextView = view.findViewById(R.id.tvStatus)
         val btnMore: ImageButton = view.findViewById(R.id.btnMore)
     }
-
-
 }

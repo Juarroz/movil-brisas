@@ -62,6 +62,13 @@ class MainActivity : BaseActivity() {
         recreate()
     }
 
+    override fun navigateHome() {
+        // Si ya hay una MainActivity en el stack, la traerá al frente en vez de crear otra.
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
+    }
     // Para fines de pruebas: devolver true (admin). Cambiar según auth real.
     override fun isAdmin(): Boolean = true
 }
