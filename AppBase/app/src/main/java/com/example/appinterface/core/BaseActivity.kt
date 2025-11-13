@@ -9,9 +9,10 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.Api.auth.LoginActivity
 import com.example.appinterface.Api.auth.ProfileActivity
-import com.example.appinterface.Api.contacto.ContactActivity
 import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.R
+import com.example.appinterface.Api.contacto.ContactCreateActivity
+import com.example.appinterface.Api.contacto.ContactListActivity
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 
@@ -112,7 +113,7 @@ open class BaseActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> startActivity(Intent(this@BaseActivity, UsuarioActivity::class.java))
-                    1 -> startActivity(Intent(this@BaseActivity, ContactActivity::class.java))
+                    1 -> startActivity(Intent(this@BaseActivity, ContactListActivity::class.java))
                     2 -> {
                         // TODO: Start PedidosActivity cuando exista
                     }

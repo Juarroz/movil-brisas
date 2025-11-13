@@ -6,10 +6,9 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-
     <TextView
             android:id="@+id/tvTitulo"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Gestión de Contacto"
             android:textAlignment="center"
@@ -22,100 +21,181 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-
     <ScrollView
             android:id="@+id/scrollContainer"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="12dp"
             android:fillViewport="true"
             app:layout_constraintTop_toBottomOf="@id/tvTitulo"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
                 android:id="@+id/listContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center_horizontal">
-
+                android:padding="20dp">
 
             <LinearLayout
                     android:id="@+id/exampleCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:background="@drawable/bg_base_container"
                     android:elevation="6dp">
 
+                <!-- Campos no editables (solo lectura) -->
+                <TextView
+                        android:id="@+id/labelNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
                 <TextView
                         android:id="@+id/tvNombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Nombre: "
+                        android:text="—"
                         android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="4dp" />
+                        android:layout_marginBottom="10dp" />
+
+                <TextView
+                        android:id="@+id/labelCorreo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Correo"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
 
                 <TextView
                         android:id="@+id/tvCorreo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Correo:"
+                        android:text="—"
                         android:textSize="14sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="2dp" />
+                        android:layout_marginBottom="10dp" />
+
+                <TextView
+                        android:id="@+id/labelTelefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Teléfono"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
 
                 <TextView
                         android:id="@+id/tvTelefono"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Teléfono:"
+                        android:text="—"
                         android:textSize="14sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="2dp" />
+                        android:layout_marginBottom="10dp" />
+
+                <TextView
+                        android:id="@+id/labelMensaje"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Mensaje"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
 
                 <TextView
                         android:id="@+id/tvMensaje"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Mensaje:"
+                        android:text="—"
                         android:textSize="14sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="14dp" />
 
+                <!-- Campos editables (pertenecen al DTO) -->
                 <TextView
-                        android:id="@+id/tvEstado"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Estado:"
+                        android:text="Usuario ID"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="2dp" />
+                        android:textColor="@color/black" />
 
-                <TextView
-                        android:id="@+id/tvNotas"
+                <EditText
+                        android:id="@+id/etUsuarioId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Notas:"
-                        android:textSize="14sp"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="2dp" />
+                        android:inputType="number"
+                        android:hint="ID Usuario"
+                        android:layout_marginBottom="10dp" />
 
                 <TextView
-                        android:id="@+id/tvVia"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Vía:"
+                        android:text="Usuario Admin ID"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="12dp" />
+                        android:textColor="@color/black" />
 
-                <!-- Botones de acción -->
+                <EditText
+                        android:id="@+id/etUsuarioIdAdmin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="ID Usuario Admin"
+                        android:layout_marginBottom="10dp" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Vía"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+
+                <Spinner
+                        android:id="@+id/spinnerVia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/via_options"
+                        android:layout_marginBottom="10dp" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Estado"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+
+                <Spinner
+                        android:id="@+id/spinnerEstado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/estado_options"
+                        android:layout_marginBottom="10dp" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Notas"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+
+                <EditText
+                        android:id="@+id/etNotas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Notas (máx. 500)"
+                        android:inputType="textMultiLine"
+                        android:minLines="3"
+                        android:maxLines="6"
+                        android:layout_marginBottom="12dp"
+                        android:maxLength="500" />
+
+                <!-- Botones -->
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -128,11 +208,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:layout_marginEnd="8dp"
-                            android:text="Editar"
+                            android:text="Guardar"
                             android:textSize="14sp"
                             android:textColor="@android:color/white"
-                            android:background="@drawable/bg_button_green"
-                            app:backgroundTint="@null"
                             app:cornerRadius="20dp"
                             android:paddingHorizontal="16dp" />
 
@@ -143,8 +221,6 @@
                             android:text="Eliminar"
                             android:textSize="14sp"
                             android:textColor="@android:color/white"
-                            android:background="@drawable/bg_button_green"
-                            app:backgroundTint="@null"
                             app:cornerRadius="20dp"
                             android:paddingHorizontal="16dp" />
                 </LinearLayout>

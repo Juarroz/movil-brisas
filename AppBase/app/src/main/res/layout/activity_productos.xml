@@ -115,7 +115,7 @@
                     android:layout_marginTop="6dp">
 
                 <Button
-                        android:id="@+id/btnEnviar"
+                        android:id="@+id/btnFormulario"
                         android:layout_width="200dp"
                         android:layout_height="48dp"
                         android:text="ENVIAR"
