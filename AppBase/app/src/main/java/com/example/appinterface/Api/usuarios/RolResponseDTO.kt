@@ -1,4 +1,4 @@
-package com.example.appinterface.Api
+package com.example.appinterface.Api.usuarios
 
 data class RolResponseDTO(
     val id: Long,

@@ -17,11 +17,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
 
     private lateinit var rvUsuarios: RecyclerView
     private lateinit var adapter: UsuarioAdapter
     private lateinit var fabCrear: FloatingActionButton
+
+    private var rolesList: List<RolResponseDTO> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +122,8 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
 
         // cargar datos al inicio
         cargarUsuarios()
+        //  carga de roles
+        cargarRolesDisponibles()
     }
 
     private fun cargarUsuarios() {
@@ -189,37 +194,87 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
             })
     }
 
-    override fun onChangeRole(user: UsuarioResponseDTO, position: Int) {
-        // Aquí deberías abrir un diálogo o una nueva actividad para seleccionar un nuevo rol.
-        // Necesitarás una lista de roles (si es que la tienes) y una llamada a la API.
-
-        // Ejemplo de placeholder (debes implementar la lógica de la UI y la API)
-        Toast.makeText(this, "Abrir diálogo para cambiar rol de: ${user.nombre}", Toast.LENGTH_LONG).show()
-
-        // **Ejemplo de lógica a implementar (requiere API call):**
-        /*
-        val newRoleId = 2 // Ejemplo: obtener del diálogo
-        RetrofitInstance.api2kotlin.cambiarRolUsuario(user.id, newRoleId)
-            .enqueue(object : Callback<UsuarioResponseDTO> {
-                override fun onResponse(call: Call<UsuarioResponseDTO>, response: Response<UsuarioResponseDTO>) {
+    private fun cargarRolesDisponibles() {
+        RetrofitInstance.api2kotlin.getRoles()
+            .enqueue(object : Callback<List<RolResponseDTO>> {
+                override fun onResponse(call: Call<List<RolResponseDTO>>, response: Response<List<RolResponseDTO>>) {
                     if (response.isSuccessful) {
-                        val updatedUser = response.body()
-                        if (updatedUser != null) {
-                            adapter.updateItem(position, updatedUser)
-                            Toast.makeText(this@UsuarioActivity, "Rol de ${updatedUser.nombre} cambiado a ${updatedUser.rolNombre}", Toast.LENGTH_SHORT).show()
-                        }
+                        rolesList = response.body() ?: emptyList()
                     } else {
-                        Toast.makeText(this@UsuarioActivity, "Error al cambiar rol: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@UsuarioActivity, "Error cargando roles: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                override fun onFailure(call: Call<UsuarioResponseDTO>, t: Throwable) {
-                     Toast.makeText(this@UsuarioActivity, "Fallo al cambiar rol: ${t.message}", Toast.LENGTH_SHORT).show()
+                override fun onFailure(call: Call<List<RolResponseDTO>>, t: Throwable) {
+                    Toast.makeText(this@UsuarioActivity, "Fallo de red al cargar roles: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
-        */
     }
 
+    override fun onChangeRole(user: UsuarioResponseDTO, position: Int) {
+        // 1. Verificar que la lista de roles esté disponible
+        if (rolesList.isEmpty()) {
+            Toast.makeText(this, "Cargando roles disponibles, intente de nuevo.", Toast.LENGTH_SHORT).show()
+            // Opcional: Llamar a cargarRolesDisponibles() aquí si es necesario
+            return
+        }
+
+        // 2. Preparar datos para el diálogo
+        val rolesNames = rolesList.map { it.nombre }.toTypedArray()
+
+        // Encuentra el índice del rol actual para la preselección
+        val currentRoleIndex = rolesList.indexOfFirst { it.id.toLong() == user.rolId?.toLong() }
+        // Usamos una variable mutable para rastrear la selección del usuario
+        var selectedRoleIndex = currentRoleIndex
+
+        // 3. Crear el Diálogo de Selección
+        AlertDialog.Builder(this)
+            .setTitle("Cambiar Rol para ${user.nombre}")
+            .setSingleChoiceItems(rolesNames, currentRoleIndex) { _, which ->
+                // Se actualiza el índice seleccionado cuando el usuario toca una opción
+                selectedRoleIndex = which
+            }
+            .setPositiveButton("Guardar") { dialog, _ ->
+                // Verificar si se seleccionó un rol y si es diferente al actual
+                if (selectedRoleIndex >= 0 && selectedRoleIndex != currentRoleIndex) {
+
+                    val newRole = rolesList[selectedRoleIndex]
+                    val newRoleId = newRole.id.toInt() // Asumiendo que el ID del rol es Integer/Int
+
+                    // Crear el DTO que espera el Backend
+                    val rolUpdateBody = RolUpdateBody(rolId = newRoleId)
+
+                    // 4. Llamada a la API de Retrofit
+                    RetrofitInstance.api2kotlin.cambiarRolUsuario(user.id, rolUpdateBody)
+                        .enqueue(object : Callback<UsuarioResponseDTO> {
+                            override fun onResponse(call: Call<UsuarioResponseDTO>, response: Response<UsuarioResponseDTO>) {
+                                if (response.isSuccessful) {
+                                    val updatedUser = response.body()
+                                    if (updatedUser != null) {
+                                        // 5. Actualizar la UI localmente con el usuario modificado
+                                        adapter.updateItem(position, updatedUser)
+                                        Toast.makeText(this@UsuarioActivity, "Rol de ${updatedUser.nombre} cambiado a ${updatedUser.rolNombre}", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(this@UsuarioActivity, "Respuesta vacía al cambiar rol", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    Toast.makeText(this@UsuarioActivity, "Error servidor al cambiar rol: ${response.code()}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<UsuarioResponseDTO>, t: Throwable) {
+                                Toast.makeText(this@UsuarioActivity, "Fallo de conexión al cambiar rol: ${t.message}", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                } else {
+                    Toast.makeText(this, "El rol no fue modificado.", Toast.LENGTH_SHORT).show()
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
     // Forzar admin durante pruebas
     override fun isAdmin(): Boolean = true
 }

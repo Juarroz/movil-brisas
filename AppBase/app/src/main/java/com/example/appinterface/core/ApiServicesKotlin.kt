@@ -2,7 +2,7 @@ package com.example.appinterface.core
 
 import com.example.appinterface.Api.contacto.ContactoFormularioRequestDTO
 import com.example.appinterface.Api.pedidos.PedidoResponseDTO
-import com.example.appinterface.Api.RolResponseDTO
+import com.example.appinterface.Api.usuarios.RolResponseDTO
 import com.example.appinterface.Api.auth.LoginRequestDTO
 import com.example.appinterface.Api.auth.LoginResponseDTO
 import com.example.appinterface.Api.usuarios.UsuarioRequestDTO
@@ -10,6 +10,7 @@ import com.example.appinterface.Api.usuarios.UsuarioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
 import com.example.appinterface.Api.usuarios.PageWrapperDTO
+import com.example.appinterface.Api.usuarios.RolUpdateBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -74,6 +75,12 @@ interface ApiServicesKotlin {
         @retrofit2.http.Path("id") id: Long,
         @retrofit2.http.Query("activo") activo: Boolean
     ): Call<Void>
+
+    @PATCH("usuarios/{id}/rol")
+    fun cambiarRolUsuario(
+        @retrofit2.http.Path("id") id: Long,
+        @Body rolUpdate: RolUpdateBody // Ahora se envía en el cuerpo, no en Query
+    ): Call<UsuarioResponseDTO>
 
     @DELETE("usuarios/{id}")
     fun deleteUsuario(

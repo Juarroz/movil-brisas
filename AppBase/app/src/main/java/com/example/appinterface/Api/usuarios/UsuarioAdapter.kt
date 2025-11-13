@@ -67,9 +67,6 @@ class UsuarioAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            // Si el comportamiento de click directo era ver historial,
-            // ahora puedes quitarlo o reasignarlo. Lo dejo en blanco por ahora.
-            // listener.onViewHistory(user, position) // ELIMINADO
         }
     }
 
