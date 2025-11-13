@@ -169,11 +169,6 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
             })
     }
 
-    override fun onEdit(user: UsuarioResponseDTO, position: Int) {
-        // placeholder: abrir pantalla de edición
-        Toast.makeText(this, "Editar usuario: ${user.nombre}", Toast.LENGTH_SHORT).show()
-        // aquí puedes lanzar UserEditActivity con extras
-    }
 
     override fun onDelete(user: UsuarioResponseDTO, position: Int) {
         RetrofitInstance.api2kotlin.deleteUsuario(user.id)
@@ -194,9 +189,35 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
             })
     }
 
-    override fun onViewHistory(user: UsuarioResponseDTO, position: Int) {
-        // placeholder: abrir modal/detail
-        Toast.makeText(this, "Ver historial: ${user.nombre}", Toast.LENGTH_SHORT).show()
+    override fun onChangeRole(user: UsuarioResponseDTO, position: Int) {
+        // Aquí deberías abrir un diálogo o una nueva actividad para seleccionar un nuevo rol.
+        // Necesitarás una lista de roles (si es que la tienes) y una llamada a la API.
+
+        // Ejemplo de placeholder (debes implementar la lógica de la UI y la API)
+        Toast.makeText(this, "Abrir diálogo para cambiar rol de: ${user.nombre}", Toast.LENGTH_LONG).show()
+
+        // **Ejemplo de lógica a implementar (requiere API call):**
+        /*
+        val newRoleId = 2 // Ejemplo: obtener del diálogo
+        RetrofitInstance.api2kotlin.cambiarRolUsuario(user.id, newRoleId)
+            .enqueue(object : Callback<UsuarioResponseDTO> {
+                override fun onResponse(call: Call<UsuarioResponseDTO>, response: Response<UsuarioResponseDTO>) {
+                    if (response.isSuccessful) {
+                        val updatedUser = response.body()
+                        if (updatedUser != null) {
+                            adapter.updateItem(position, updatedUser)
+                            Toast.makeText(this@UsuarioActivity, "Rol de ${updatedUser.nombre} cambiado a ${updatedUser.rolNombre}", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(this@UsuarioActivity, "Error al cambiar rol: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<UsuarioResponseDTO>, t: Throwable) {
+                     Toast.makeText(this@UsuarioActivity, "Fallo al cambiar rol: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        */
     }
 
     // Forzar admin durante pruebas

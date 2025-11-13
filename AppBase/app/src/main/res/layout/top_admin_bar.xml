@@ -5,7 +5,7 @@
         android:id="@+id/topTabLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#173622"
+        android:background="@color/green_brisas"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         app:tabMode="scrollable"
