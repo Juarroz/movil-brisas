@@ -95,7 +95,13 @@ open class BaseActivity : AppCompatActivity() {
         if (username != null) {
             startActivity(Intent(this, ProfileActivity::class.java))
         } else {
-            startActivity(Intent(this, LoginActivity::class.java))
+            // Mostrar bottom sheet de login
+            val fm = (this as androidx.fragment.app.FragmentActivity).supportFragmentManager
+            val bottom = com.example.appinterface.Api.auth.LoginBottomSheetFragment()
+            bottom.show(fm, "login_bottom_sheet")
+
+            // Alternativa: si no quieres bottom sheet, usa la Activity de pantalla completa:
+            // startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 
