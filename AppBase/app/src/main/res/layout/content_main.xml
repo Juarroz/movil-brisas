@@ -2,21 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/img">
+        android:background="@mipmap/img_2">
 
-    <ImageView
-            android:layout_width="56dp"
-            android:layout_height="51dp"
-            android:src="@drawable/rol_"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0.438"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.045"/>
 
     <ImageView
             android:layout_width="56dp"
@@ -66,63 +56,22 @@
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RecyPersonas"
             android:layout_width="150dp"
-            android:layout_height="166dp"
-            android:gravity="center"
-            android:background="@drawable/bg_recy_personas"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintVertical_bias="0.658"
-            android:textStyle="italic"/>
-
-    <Button
-            android:text="Formulario Contacto"
-            android:layout_width="266dp"
-            android:layout_height="42dp"
-            android:id="@+id/buttonSegundaActividad"
-            android:background="@drawable/bg_recy_personas"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.586"
-            app:layout_constraintVertical_bias="0.275"/>
-
-    <Button
-            android:text="Pedidos"
-            android:layout_width="266dp"
-            android:layout_height="42dp"
-            android:id="@+id/buttonPedidos"
-            android:background="@drawable/bg_recy_personas"
-            android:onClick="irAPedidos"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.6"
-            app:layout_constraintVertical_bias="0.355"/>
-
-    <Button
-            android:text=" Gatito"
-            android:layout_width="130dp"
-            android:layout_height="43dp"
-            android:id="@+id/button"
-            android:background="#212173"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.943"
-            app:layout_constraintVertical_bias="0.976"/>
-
+            android:layout_height="30dp"
+            android:text=" ¡CONTACTANOS!"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:contentDescription="Enviar formulario"
+            android:background="@drawable/bg_button_green"
+            app:backgroundTint="@null"
+            android:stateListAnimator="@null"
+            app:cornerRadius="24dp" tools:ignore="MissingConstraints" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.873"
+            app:layout_constraintVertical_bias="0.727"/>
     <androidx.constraintlayout.widget.Barrier
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="RecyPersonas"
             android:id="@+id/barrier"
             app:barrierDirection="left"/>
 

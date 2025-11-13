@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="via_options">
+        <item>formulario</item>
+        <item>whatsapp</item>
+    </string-array>
+
+
+    <string-array name="estado_options">
+        <item>pendiente</item>
+        <item>atendido</item>
+        <item>archivado</item>
+    </string-array>
+</resources>

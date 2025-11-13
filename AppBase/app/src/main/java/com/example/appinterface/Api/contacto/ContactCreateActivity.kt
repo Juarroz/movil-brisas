@@ -1,13 +1,11 @@
 package com.example.appinterface.Api.contacto
 
-import android.app.Activity
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.R
 import retrofit2.Call
@@ -53,7 +51,7 @@ class ContactCreateActivity : AppCompatActivity() {
         txtCorreo = findViewById(R.id.txtCorreo)
         txtTelefono = findViewById(R.id.txtTelefono)
         txtMensaje = findViewById(R.id.txtMensaje)
-        btnEnviar = findViewById(R.id.btnEnviar)
+        btnEnviar = findViewById(R.id.btnFormulario)
 
         btnEnviar.setOnClickListener { safeEnviarContacto() }
     }

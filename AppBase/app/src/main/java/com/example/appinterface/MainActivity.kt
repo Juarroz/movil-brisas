@@ -12,32 +12,16 @@ import com.example.appinterface.R
 
 class MainActivity : BaseActivity() {
 
-    private lateinit var btnRoles: Button
-    private lateinit var btnPedidos: Button
     private lateinit var btnFormulario: Button
-    private lateinit var btnGatito: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Inicializar UI común (toolbar, tabs, listeners comunes)
         initCommonUI()
-
-        // Referencias propias de esta pantalla
-        btnRoles = findViewById(R.id.MostrarApikotlin)
-        btnPedidos = findViewById(R.id.buttonPedidos)
-        btnFormulario = findViewById(R.id.buttonSegundaActividad)
-        btnGatito = findViewById(R.id.button)
-
-        // listeners específicos
-        btnRoles.setOnClickListener { v -> crearmostrarpersonas(v) }
-        btnPedidos.setOnClickListener { irAPedidos() }
+        btnFormulario = findViewById(R.id.btnFormulario)
         btnFormulario.setOnClickListener { abrirFormularioContacto() }
-        btnGatito.setOnClickListener { abrirGatito() }
     }
 
-    // Mantener firmas usadas desde XML
     fun crearmostrarpersonas(view: View) {
         Toast.makeText(this, "Mostrar roles (ejecución)", Toast.LENGTH_SHORT).show()
     }
