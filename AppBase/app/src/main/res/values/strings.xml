@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">Brisas Gems</string>
-    <string name="sign_in">Iniciar sesión</string>
-    <string name="username">Usuario</string>
-    <string name="password">Contraseña</string>
-    <string name="login">Entrar</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="hint_username">Correo</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="action_login">Iniciar sesión</string>
+    <string name="action_cancel">Cancelar</string>
     <string name="profile">Perfil</string>
     <string name="notifications">Notificaciones</string>
     <string name="tab_users">Usuarios</string>
     <string name="tab_contacts">Contactos</string>
     <string name="tab_orders">Pedidos</string>
     <string name="tab_custom">Personalizaciones</string>
+    <string name="no_account_register">No tienes cuenta? Registrate</string>
+    <string name="forgot_password">Olvidaste la Contraseña?</string>
+
 </resources>

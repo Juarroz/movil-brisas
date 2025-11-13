@@ -37,6 +37,10 @@
                 android:name=".Api.pedidos.PedidosActivity"
                 android:exported="false" />
 
+        <activity
+                android:name=".Api.usuarios.UsuarioActivity"
+                android:exported="false" />
+
 
     </application>
 </manifest>

@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.Api.auth.LoginActivity
 import com.example.appinterface.Api.auth.ProfileActivity
+import com.example.appinterface.Api.contacto.ContactListActivity
 import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.R
 import com.example.appinterface.Api.contacto.ContactCreateActivity
@@ -30,6 +31,7 @@ open class BaseActivity : AppCompatActivity() {
     protected var mainAppBar: AppBarLayout? = null
     protected var btnNotifications: ImageButton? = null
     protected var imgProfileTop: ImageView? = null
+    protected var toolbarLogo: ImageView? = null
 
     protected open fun isAdmin(): Boolean {
         val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
@@ -47,6 +49,7 @@ open class BaseActivity : AppCompatActivity() {
         mainAppBar = findViewById(R.id.appBarLayout)
         btnNotifications = findViewById(R.id.btn_notifications)
         imgProfileTop = findViewById(R.id.img_profile_top)
+        toolbarLogo = findViewById(R.id.toolbar_logo)
 
         // inicializar tabs (si existe TabLayout)
         setupTabs(topTabLayout, mainAppBar)
@@ -67,6 +70,18 @@ open class BaseActivity : AppCompatActivity() {
         imgProfileTop?.setOnClickListener {
             onProfileClicked()
         }
+
+        toolbarLogo?.setOnClickListener {
+            navigateHome()
+        }
+    }
+    // Acción por defecto al pulsar el logo.
+    protected open fun navigateHome() {
+        // Comportamiento por defecto: abrir MainActivity trayéndola al frente
+        val intent = Intent(this, com.example.appinterface.MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
     }
 
     // Comportamiento por defecto al pulsar notificaciones (se puede override)
@@ -82,7 +97,13 @@ open class BaseActivity : AppCompatActivity() {
         if (username != null) {
             startActivity(Intent(this, ProfileActivity::class.java))
         } else {
-            startActivity(Intent(this, LoginActivity::class.java))
+            // Mostrar bottom sheet de login
+            val fm = (this as androidx.fragment.app.FragmentActivity).supportFragmentManager
+            val bottom = com.example.appinterface.Api.auth.LoginBottomSheetFragment()
+            bottom.show(fm, "login_bottom_sheet")
+
+            // Alternativa: si no quieres bottom sheet, usa la Activity de pantalla completa:
+            // startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 

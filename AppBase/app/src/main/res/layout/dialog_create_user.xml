@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="18dp">
+
+    <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre"
+            android:inputType="textPersonName" />
+
+    <EditText
+            android:id="@+id/etCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Correo"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="8dp"/>
+
+    <EditText
+            android:id="@+id/etTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teléfono (opcional)"
+            android:inputType="phone"
+            android:layout_marginTop="8dp"/>
+
+    <EditText
+            android:id="@+id/etDocnum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Docnum (opcional)"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+    <!-- Si prefieres seleccionar rol, cambia a Spinner; aquí usamos rolId fijo por simplicidad -->
+    <TextView
+            android:id="@+id/tvInfoRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rol: usuario (rolId = 1)"
+            android:textSize="12sp"
+            android:layout_marginTop="10dp"/>
+
+    <!-- Botones -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="12dp">
+
+        <Button
+                android:id="@+id/btnCancelCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar" />
+
+        <Button
+                android:id="@+id/btnCreateUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crear"
+                android:layout_marginStart="8dp"/>
+    </LinearLayout>
+</LinearLayout>

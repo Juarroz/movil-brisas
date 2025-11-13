@@ -20,7 +20,7 @@
         <include layout="@layout/top_app_bar" />
 
         <!-- TabLayout (reutilizable) -->
-        <include layout="@layout/top_tab_bar" />
+        <include layout="@layout/top_admin_bar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
