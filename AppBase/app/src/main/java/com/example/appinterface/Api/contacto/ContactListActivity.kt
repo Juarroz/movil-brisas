@@ -29,6 +29,8 @@ class ContactListActivity : BaseActivity() {
         initCommonUI()
     }
 
+    override fun getCurrentTabIndex(): Int = 1
+
     private fun cargarContactos() {
         listContainer.removeAllViews()
         repository.listarContactos().enqueue(object : Callback<List<ContactoFormularioResponseDTO>> {

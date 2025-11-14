@@ -106,6 +106,12 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    protected open fun getCurrentTabIndex(): Int? {
+        // Por defecto, ninguna pestaña está seleccionada si no se sobreescribe.
+        // Opcional: podrías definir la pestaña 0 (Usuarios) como predeterminada aquí si es la principal.
+        return null
+    }
+
     /**
      * Inicializa y muestra u oculta las pestañas según isAdmin().
      * Mantuve tu implementación funcional y añadí pequeños comentarios.
@@ -126,7 +132,15 @@ open class BaseActivity : AppCompatActivity() {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
+        //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
+
+
+        // Selecionador de pestañas
+        val currentTab = getCurrentTabIndex()
+        if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
+            // selectTab(pos, reselect = true)
+            tabLayout.getTabAt(currentTab)?.select()
+        }
 
         // navegación simple por selección de pestaña
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

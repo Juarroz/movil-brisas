@@ -126,6 +126,9 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
         cargarRolesDisponibles()
     }
 
+    override fun getCurrentTabIndex(): Int = 0
+
+
     private fun cargarUsuarios() {
         RetrofitInstance.api2kotlin.getUsuarios()
             .enqueue(object : Callback<PageWrapperDTO> {
