@@ -8,13 +8,13 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ContactListActivity : AppCompatActivity() {
+class ContactListActivity : BaseActivity() {
 
     private lateinit var listContainer: LinearLayout
     private val repository = ContactoRepository()
@@ -25,7 +25,11 @@ class ContactListActivity : AppCompatActivity() {
 
         listContainer = findViewById(R.id.listContainer)
         cargarContactos()
+
+        initCommonUI()
     }
+
+    override fun getCurrentTabIndex(): Int = 1
 
     private fun cargarContactos() {
         listContainer.removeAllViews()
@@ -169,4 +173,6 @@ class ContactListActivity : AppCompatActivity() {
 
         dialog.show()
     }
+
+    override fun isAdmin(): Boolean = true
 }
