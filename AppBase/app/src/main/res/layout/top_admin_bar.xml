@@ -8,6 +8,7 @@
         android:background="@color/green_brisas"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
+        app:layout_scrollFlags="scroll|enterAlways"
         app:tabMode="scrollable"
         app:tabIndicatorHeight="3dp"
         app:tabIndicatorColor="@android:color/white"
