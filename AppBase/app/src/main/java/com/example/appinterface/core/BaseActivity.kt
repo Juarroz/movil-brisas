@@ -16,13 +16,7 @@ import com.example.appinterface.Api.contacto.ContactListActivity
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 
-/**
- * BaseActivity: centraliza la UI y la lógica común de top bar y tabs.
- *
- * Uso:
- *  - En la Activity hija, después de setContentView(...) llamar initCommonUI()
- *  - Override isAdmin() según el mecanismo de auth si es necesario.
- */
+
 open class BaseActivity : AppCompatActivity() {
 
     // Vistas comunes accesibles por subclases
@@ -38,10 +32,7 @@ open class BaseActivity : AppCompatActivity() {
         return roles?.contains("ADMIN") == true
     }
 
-    /**
-     * Inicializa las vistas comunes. LLAMAR desde la Activity hija
-     * **después** de setContentView(...).
-     */
+
     protected fun initCommonUI() {
         // localizar vistas (pueden ser null si layout no las contiene)
         topTabLayout = findViewById(R.id.topTabLayout)
@@ -57,10 +48,6 @@ open class BaseActivity : AppCompatActivity() {
         setupTopBarListeners()
     }
 
-    /**
-     * Configura listeners por defecto para los botones de la toolbar.
-     * Subclases pueden sobrescribir onNotificationClicked() u onProfileClicked().
-     */
     private fun setupTopBarListeners() {
         btnNotifications?.setOnClickListener {
             onNotificationClicked()
@@ -112,10 +99,6 @@ open class BaseActivity : AppCompatActivity() {
         return null
     }
 
-    /**
-     * Inicializa y muestra u oculta las pestañas según isAdmin().
-     * Mantuve tu implementación funcional y añadí pequeños comentarios.
-     */
     protected fun setupTabs(tabLayout: TabLayout?, mainAppBar: AppBarLayout?) {
         if (tabLayout == null) return
 
@@ -131,7 +114,7 @@ open class BaseActivity : AppCompatActivity() {
         tabLayout.removeAllTabs()
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
+        //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
         //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
 
 
