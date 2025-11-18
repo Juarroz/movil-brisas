@@ -181,7 +181,7 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun navigateBasedOnRole(roles: List<String>) {
-        val intent = if (roles.contains("ADMIN")) {
+        val intent = if (roles.contains("ROLE_ADMINISTRADOR")) {
             // ADMIN → Ir a UsuarioActivity (muestra top_admin_bar.xml)
             Intent(requireActivity(), UsuarioActivity::class.java)
         } else {

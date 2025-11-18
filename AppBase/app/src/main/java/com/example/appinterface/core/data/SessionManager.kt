@@ -80,7 +80,7 @@ class SessionManager(context: Context) {
      * Verifica si el usuario tiene rol de ADMIN
      */
     fun isAdmin(): Boolean {
-        return getRoles().contains("ADMIN")
+        return getRoles().contains("ROLE_ADMINISTRADOR")
     }
 
     /**
@@ -97,10 +97,4 @@ class SessionManager(context: Context) {
         }
     }
 
-    /**
-     * Limpia completamente las preferencias (para debugging)
-     */
-    fun clearAll() {
-        prefs.edit().clear().apply()
-    }
 }
