@@ -11,12 +11,20 @@ import com.example.appinterface.Api.auth.LoginActivity
 import com.example.appinterface.Api.auth.ProfileActivity
 import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.R
-import com.example.appinterface.Api.contacto.ContactCreateActivity
 import com.example.appinterface.Api.contacto.ContactListActivity
+import com.example.appinterface.core.data.SessionManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 
-
+/**
+ * BaseActivity - Actividad base con funcionalidad común para todas las pantallas
+ *
+ * Características:
+ * - Manejo de sesión (verifica si el usuario está logueado)
+ * - Barra superior (admin o user) según el rol
+ * - Tabs de navegación (solo para admins)
+ * - Listeners comunes (perfil, notificaciones, logo)
+ */
 open class BaseActivity : AppCompatActivity() {
 
     // Vistas comunes accesibles por subclases
@@ -26,25 +34,52 @@ open class BaseActivity : AppCompatActivity() {
     protected var imgProfileTop: ImageView? = null
     protected var toolbarLogo: ImageView? = null
 
-    protected open fun isAdmin(): Boolean {
-        val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
-        val roles = prefs.getStringSet("roles", emptySet())
-        return roles?.contains("ADMIN") == true
+    // Session Manager
+    protected lateinit var sessionManager: SessionManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Inicializar SessionManager
+        sessionManager = SessionManager(this)
     }
 
+    /**
+     * Verifica si el usuario actual es admin
+     */
+    protected open fun isAdmin(): Boolean {
+        return sessionManager.isAdmin()
+    }
 
+    /**
+     * Verifica si hay sesión activa
+     */
+    protected fun isLoggedIn(): Boolean {
+        return sessionManager.isLoggedIn()
+    }
+
+    /**
+     * Obtiene el username del usuario logueado
+     */
+    protected fun getCurrentUsername(): String? {
+        return sessionManager.getUsername()
+    }
+
+    /**
+     * Inicializa la UI común (barra superior, tabs, listeners)
+     */
     protected fun initCommonUI() {
-        // localizar vistas (pueden ser null si layout no las contiene)
+        // Localizar vistas (pueden ser null si layout no las contiene)
         topTabLayout = findViewById(R.id.topTabLayout)
         mainAppBar = findViewById(R.id.appBarLayout)
         btnNotifications = findViewById(R.id.btn_notifications)
         imgProfileTop = findViewById(R.id.img_profile_top)
         toolbarLogo = findViewById(R.id.toolbar_logo)
 
-        // inicializar tabs (si existe TabLayout)
+        // Inicializar tabs (si existe TabLayout)
         setupTabs(topTabLayout, mainAppBar)
 
-        // listeners comunes de la barra superior
+        // Listeners comunes de la barra superior
         setupTopBarListeners()
     }
 
@@ -61,71 +96,90 @@ open class BaseActivity : AppCompatActivity() {
             navigateHome()
         }
     }
-    // Acción por defecto al pulsar el logo.
+
+    /**
+     * Acción por defecto al pulsar el logo
+     */
     protected open fun navigateHome() {
-        // Comportamiento por defecto: abrir MainActivity trayéndola al frente
         val intent = Intent(this, com.example.appinterface.MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
         startActivity(intent)
     }
 
-    // Comportamiento por defecto al pulsar notificaciones (se puede override)
+    /**
+     * Comportamiento por defecto al pulsar notificaciones
+     */
     protected open fun onNotificationClicked() {
-        // por defecto: mostrar toast ligero
-        android.widget.Toast.makeText(this, getString(R.string.notifications), android.widget.Toast.LENGTH_SHORT).show()
+        android.widget.Toast.makeText(
+            this,
+            getString(R.string.notifications),
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
     }
 
-    // Comportamiento por defecto al pulsar perfil: abrir Profile o Login
+    /**
+     * Comportamiento por defecto al pulsar perfil
+     * - Si está logueado → Abrir perfil
+     * - Si NO está logueado → Mostrar login
+     */
     protected open fun onProfileClicked() {
-        val prefs = getSharedPreferences("brisas_prefs", Context.MODE_PRIVATE)
-        val username = prefs.getString("username", null)
-        if (username != null) {
+        if (isLoggedIn()) {
+            // Usuario logueado → Ir a perfil
             startActivity(Intent(this, ProfileActivity::class.java))
         } else {
-            // Mostrar bottom sheet de login
-            val fm = (this as androidx.fragment.app.FragmentActivity).supportFragmentManager
-            val bottom = com.example.appinterface.Api.auth.LoginBottomSheetFragment()
-            bottom.show(fm, "login_bottom_sheet")
-
-            // Alternativa: si no quieres bottom sheet, usa la Activity de pantalla completa:
-            // startActivity(Intent(this, LoginActivity::class.java))
+            // Usuario NO logueado → Mostrar login
+            showLoginBottomSheet()
         }
     }
 
+    /**
+     * Muestra el bottom sheet de login
+     */
+    private fun showLoginBottomSheet() {
+        val fm = (this as androidx.fragment.app.FragmentActivity).supportFragmentManager
+        val loginBottomSheet = com.example.appinterface.Api.auth.LoginBottomSheetFragment()
+        loginBottomSheet.show(fm, "login_bottom_sheet")
+    }
+
+    /**
+     * Retorna el índice de la pestaña actual (para resaltar en tabs)
+     * Debe ser sobreescrito por las subclases
+     */
     protected open fun getCurrentTabIndex(): Int? {
-        // Por defecto, ninguna pestaña está seleccionada si no se sobreescribe.
-        // Opcional: podrías definir la pestaña 0 (Usuarios) como predeterminada aquí si es la principal.
         return null
     }
 
+    /**
+     * Configura las pestañas de navegación (solo para admins)
+     */
     protected fun setupTabs(tabLayout: TabLayout?, mainAppBar: AppBarLayout?) {
         if (tabLayout == null) return
 
         val admin = isAdmin()
 
         if (!admin) {
+            // Si no es admin, ocultar las tabs
             tabLayout.visibility = View.GONE
             tabLayout.removeAllTabs()
             return
         }
 
+        // Es admin → Mostrar tabs
         tabLayout.visibility = View.VISIBLE
         tabLayout.removeAllTabs()
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))
-        //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
-        //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
+        // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
+        // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
 
-
-        // Selecionador de pestañas
+        // Seleccionar la pestaña actual
         val currentTab = getCurrentTabIndex()
         if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
-            // selectTab(pos, reselect = true)
             tabLayout.getTabAt(currentTab)?.select()
         }
 
-        // navegación simple por selección de pestaña
+        // Navegación por selección de pestaña
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
@@ -143,11 +197,32 @@ open class BaseActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        // efecto: las tabs se mueven a media velocidad respecto al appbar
+        // Efecto: las tabs se mueven a media velocidad respecto al appbar
         if (mainAppBar != null) {
             mainAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 tabLayout.translationY = verticalOffset * 0.5f
             })
         }
+    }
+
+    /**
+     * Cierra la sesión del usuario
+     */
+    protected fun logout() {
+        sessionManager.logout()
+
+        // Mostrar mensaje
+        android.widget.Toast.makeText(
+            this,
+            "Sesión cerrada correctamente",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
+
+        // Redirigir al MainActivity
+        val intent = Intent(this, com.example.appinterface.MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        startActivity(intent)
+        finish()
     }
 }
