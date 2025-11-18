@@ -22,7 +22,7 @@ import retrofit2.http.Path
 
 interface ApiServicesKotlin {
 
-    @POST("api/auth")
+    @POST("auth/login")
     fun login(@Body request: LoginRequestDTO): Call<LoginResponseDTO>
 
 

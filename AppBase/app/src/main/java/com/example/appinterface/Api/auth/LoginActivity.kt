@@ -11,11 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.MainActivity
 import com.example.appinterface.R
 
-/**
- * LoginActivity de validación:
- * - permite probar UI y guardar sesión mock (sin backend).
- * - más abajo incluyo comentario para integrar Retrofit cuando estés listo.
- */
+
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var etUser: EditText

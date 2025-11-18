@@ -20,10 +20,13 @@ import retrofit2.Response
 
 class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
 
+    //contenedor
     private lateinit var rvUsuarios: RecyclerView
+    //presentador
     private lateinit var adapter: UsuarioAdapter
+    //acccion boton
     private lateinit var fabCrear: FloatingActionButton
-
+    //cache de roles
     private var rolesList: List<RolResponseDTO> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +44,7 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
         rvUsuarios.adapter = adapter
 
         fabCrear.setOnClickListener {
-            // Inflar vista del diálogo
+            // FAB inflado
             val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_user, null)
             val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
             val etCorreo = dialogView.findViewById<EditText>(R.id.etCorreo)
@@ -147,14 +150,14 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
                     }
                 }
 
-                // ¡LÍNEA CORREGIDA! Cambiar List<UsuarioResponseDTO> por PageWrapperDTO
+                // ahora se usa PageWrapperDTO
                 override fun onFailure(call: Call<PageWrapperDTO>, t: Throwable) {
                     Toast.makeText(this@UsuarioActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
-    // --- UserAdapter.Listener implementation ---
+    //  UserAdapter.Listener
 
     override fun onToggleActivo(user: UsuarioResponseDTO, position: Int) {
         val nuevoEstado = !user.activo

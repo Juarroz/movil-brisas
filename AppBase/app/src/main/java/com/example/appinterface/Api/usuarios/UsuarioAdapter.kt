@@ -14,7 +14,6 @@ class UsuarioAdapter(
     private val listener: Listener
 ) : RecyclerView.Adapter<UsuarioAdapter.UserVH>() {
 
-    // --- INTERFAZ LISTENER MODIFICADA ---
     interface Listener {
         fun onToggleActivo(user: UsuarioResponseDTO, position: Int)
         // Eliminados: onEdit, onViewHistory
@@ -22,10 +21,10 @@ class UsuarioAdapter(
         // Añadido:
         fun onChangeRole(user: UsuarioResponseDTO, position: Int)
     }
-    // ------------------------------------
+
 
     fun addItem(user: UsuarioResponseDTO) {
-        items.add(0, user)            // inserta al inicio (puedes cambiar la posición)
+        items.add(0, user)
         notifyItemInserted(0)
     }
     fun updateList(newItems: List<UsuarioResponseDTO>) {
