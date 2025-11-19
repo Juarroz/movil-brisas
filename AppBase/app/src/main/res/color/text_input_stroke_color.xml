@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Cuando tiene foco -->
+    <item android:color="@color/green_brisas" android:state_focused="true"/>
+
+    <!-- Cuando está presionado -->
+    <item android:color="@color/green_medium" android:state_pressed="true"/>
+
+    <!-- Por defecto (sin foco) -->
+    <item android:color="@color/gray_border"/>
+
+</selector>

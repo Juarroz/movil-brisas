@@ -155,7 +155,7 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
         if (isLoading) {
             btnLogin.text = "Iniciando sesión..."
             // Si tienes un ProgressBar en el layout, úsalo:
-            // progressBar.visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
         } else {
             btnLogin.text = getString(R.string.action_login)
             // progressBar.visibility = View.GONE
