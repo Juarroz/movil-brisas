@@ -12,10 +12,10 @@ import com.example.appinterface.R
 /**
  * MainActivity - Pantalla principal de la aplicación
  *
- * Comportamiento según sesión:
- * - Usuario NO logueado → Muestra top_app_bar.xml (sin sesión)
- * - Usuario logueado (USER) → Muestra top_user_bar.xml (con perfil)
- * - Usuario logueado (ADMIN) → Muestra top_admin_bar.xml (con tabs)
+ * Carga diferentes layouts según el estado de sesión:
+ * - Sin sesión → activity_main.xml (solo top_app_bar)
+ * - Admin → activity_main_admin.xml (top_app_bar + top_admin_bar)
+ * - User → activity_main_user.xml (top_app_bar + top_user_bar)
  */
 class MainActivity : BaseActivity() {
 
@@ -24,8 +24,8 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Establecer el layout según el rol del usuario
-        setContentLayoutBasedOnRole()
+        // Cargar el layout según el rol del usuario
+        loadLayoutBasedOnRole()
 
         // Inicializar UI común (barra superior, tabs si es admin)
         initCommonUI()
@@ -35,20 +35,20 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * Establece el layout correcto según el rol del usuario
+     * Carga el layout correcto según el rol del usuario
      */
-    private fun setContentLayoutBasedOnRole() {
+    private fun loadLayoutBasedOnRole() {
         when {
             !isLoggedIn() -> {
-                // Usuario NO logueado → Layout sin sesión
+                // Sin sesión → Layout básico
                 setContentView(R.layout.activity_main)
             }
             isAdmin() -> {
-                // Usuario ADMIN → Layout con admin bar y tabs
+                // Admin → Layout con admin bar
                 setContentView(R.layout.activity_main_admin)
             }
             else -> {
-                // Usuario normal (USER) → Layout con user bar
+                // User normal → Layout con user bar
                 setContentView(R.layout.activity_main_user)
             }
         }
@@ -93,13 +93,21 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * Cierra la sesión del usuario
-     * (Ya está implementado en BaseActivity, pero lo puedes usar aquí)
+     * Cierra la sesión del usuario desde un botón
      */
     fun cerrarSesion(view: View) {
         logout() // Método heredado de BaseActivity
     }
 
-    // No necesitas override isAdmin() aquí, usa el de BaseActivity
-    // que ya lee correctamente de SessionManager
+    /**
+     * Se llama cuando se reanuda la actividad
+     * (por ejemplo, después de cerrar sesión desde ProfileActivity)
+     */
+    override fun onResume() {
+        super.onResume()
+        // Recargar el layout por si cambió el estado de sesión
+        loadLayoutBasedOnRole()
+        initCommonUI()
+        initMainViews()
+    }
 }

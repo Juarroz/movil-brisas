@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.appinterface.Api.auth.LoginActivity
 import com.example.appinterface.Api.auth.ProfileActivity
 import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.R
@@ -27,8 +26,8 @@ import com.google.android.material.tabs.TabLayout
  */
 open class BaseActivity : AppCompatActivity() {
 
-    // Vistas comunes accesibles por subclases
-    protected var topTabLayout: TabLayout? = null
+    protected var topAdminTabLayout: TabLayout? = null // Para R.id.topAdminTabLayout (Admin)
+    protected var topUserTabLayout: TabLayout? = null  // Para R.id.topUserTabLayout (Usuario)
     protected var mainAppBar: AppBarLayout? = null
     protected var btnNotifications: ImageButton? = null
     protected var imgProfileTop: ImageView? = null
@@ -69,15 +68,18 @@ open class BaseActivity : AppCompatActivity() {
      * Inicializa la UI común (barra superior, tabs, listeners)
      */
     protected fun initCommonUI() {
-        // Localizar vistas (pueden ser null si layout no las contiene)
-        topTabLayout = findViewById(R.id.topTabLayout)
+        // Localizar vistas comunes (Toolbar)
         mainAppBar = findViewById(R.id.appBarLayout)
         btnNotifications = findViewById(R.id.btn_notifications)
         imgProfileTop = findViewById(R.id.img_profile_top)
         toolbarLogo = findViewById(R.id.toolbar_logo)
 
-        // Inicializar tabs (si existe TabLayout)
-        setupTabs(topTabLayout, mainAppBar)
+        // Localizar Vistas de Rol (usando los IDs únicos)
+        topAdminTabLayout = findViewById(R.id.topAdminTabLayout) // Asumiendo que cambiaste el ID en top_admin_bar.xml
+        topUserTabLayout = findViewById(R.id.topUserTabLayout) // Buscamos el TextView dentro del LinearLayout de top_user_bar.xml
+
+        // Inicializar barras según el rol (NUEVA LÓGICA)
+        setupRoleBars()
 
         // Listeners comunes de la barra superior
         setupTopBarListeners()
@@ -150,22 +152,70 @@ open class BaseActivity : AppCompatActivity() {
         return null
     }
 
-    /**
-     * Configura las pestañas de navegación (solo para admins)
-     */
-    protected fun setupTabs(tabLayout: TabLayout?, mainAppBar: AppBarLayout?) {
-        if (tabLayout == null) return
+    // BaseActivity.kt
 
+    /**
+     * Configura las barras específicas de rol. Este es el NUEVO método principal.
+     */
+    /**
+     * Configura las barras específicas de rol. Este es el NUEVO método principal.
+     */
+    /**
+     * Configura las barras específicas de rol. Este es el NUEVO método principal.
+     */
+    protected fun setupRoleBars() {
         val admin = isAdmin()
 
-        if (!admin) {
-            // Si no es admin, ocultar las tabs
-            tabLayout.visibility = View.GONE
-            tabLayout.removeAllTabs()
-            return
+        // DEBUG: Verificar estado y vistas disponibles
+        android.util.Log.d("BaseActivity", "=== setupRoleBars INICIO ===")
+        android.util.Log.d("BaseActivity", "isAdmin: $admin")
+        android.util.Log.d("BaseActivity", "isLoggedIn: ${isLoggedIn()}")
+        android.util.Log.d("BaseActivity", "topAdminTabLayout encontrado: ${topAdminTabLayout != null}")
+        android.util.Log.d("BaseActivity", "topUserTabLayout encontrado: ${topUserTabLayout != null}")
+
+        if (topAdminTabLayout != null) {
+            android.util.Log.d("BaseActivity", "topAdminTabLayout.visibility ACTUAL: ${topAdminTabLayout!!.visibility}")
+        }
+        if (topUserTabLayout != null) {
+            android.util.Log.d("BaseActivity", "topUserTabLayout.visibility ACTUAL: ${topUserTabLayout!!.visibility}")
         }
 
-        // Es admin → Mostrar tabs
+        // 1. Lógica para la barra ADMIN (TabLayout)
+        if (admin) {
+            if (topAdminTabLayout != null) {
+                android.util.Log.d("BaseActivity", "→ Configurando barra ADMIN")
+                setupAdminTabs(topAdminTabLayout!!)
+                topUserTabLayout?.let {
+                    it.visibility = View.GONE
+                    android.util.Log.d("BaseActivity", "→ topUserTabLayout ocultado")
+                }
+            } else {
+                android.util.Log.e("BaseActivity", "❌ ERROR: Usuario es admin pero topAdminTabLayout es NULL")
+                android.util.Log.e("BaseActivity", "Layout actual probablemente NO es activity_main_admin")
+            }
+        }
+        // 2. Lógica para la barra USER/SIN SESIÓN (TabLayout)
+        else {
+            android.util.Log.d("BaseActivity", "→ Configurando barra USER/SIN SESIÓN")
+            topUserTabLayout?.let {
+                it.visibility = View.VISIBLE
+                android.util.Log.d("BaseActivity", "→ topUserTabLayout mostrado")
+            }
+            topAdminTabLayout?.let {
+                it.visibility = View.GONE
+                android.util.Log.d("BaseActivity", "→ topAdminTabLayout ocultado")
+            }
+        }
+
+        android.util.Log.d("BaseActivity", "=== setupRoleBars FIN ===")
+    }
+
+    /**
+     * Configura el TabLayout de navegación SOLAMENTE para administradores.
+     * (Contiene la lógica que antes estaba en setupTabs)
+     */
+    private fun setupAdminTabs(tabLayout: TabLayout) {
+        // 1. Mostrar y configurar pestañas
         tabLayout.visibility = View.VISIBLE
         tabLayout.removeAllTabs()
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))
@@ -173,37 +223,33 @@ open class BaseActivity : AppCompatActivity() {
         // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_orders)))
         // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_custom)))
 
-        // Seleccionar la pestaña actual
+        // 2. Seleccionar la pestaña actual
         val currentTab = getCurrentTabIndex()
         if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
             tabLayout.getTabAt(currentTab)?.select()
         }
 
-        // Navegación por selección de pestaña
+        // 3. Navegación por selección de pestaña (Listener de Admin)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> startActivity(Intent(this@BaseActivity, UsuarioActivity::class.java))
                     1 -> startActivity(Intent(this@BaseActivity, ContactListActivity::class.java))
-                    2 -> {
-                        // TODO: Start PedidosActivity cuando exista
-                    }
-                    3 -> {
-                        // TODO: Start PersonalizacionesActivity cuando exista
-                    }
+                    // ...
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        // Efecto: las tabs se mueven a media velocidad respecto al appbar
+        // 4. Efecto de desplazamiento
         if (mainAppBar != null) {
-            mainAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            mainAppBar!!.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 tabLayout.translationY = verticalOffset * 0.5f
             })
         }
     }
+
 
     /**
      * Cierra la sesión del usuario

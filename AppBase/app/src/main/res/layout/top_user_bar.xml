@@ -1,58 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.MaterialToolbar
+<com.google.android.material.tabs.TabLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/topAppBar"
+        android:id="@+id/topUserTabLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="42dp"
         android:background="@color/green_brisas"
-        app:layout_scrollFlags="scroll|snap">
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp">
-
-        <!-- Logo -->
-        <ImageView
-                android:id="@+id/toolbar_logo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@mipmap/logo_40_white"
-                android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true" />
-
-        <!-- Espaciador -->
-        <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-        <!-- Botón de notificaciones -->
-        <ImageButton
-                android:id="@+id/btn_notifications"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_notifications"
-                android:contentDescription="@string/notifications" />
-
-        <!-- Botón de perfil -->
-        <ImageButton
-                android:id="@+id/img_profile_top"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_profile_placeholder"
-                android:contentDescription="@string/profile" />
-
-    </LinearLayout>
-
-</com.google.android.material.appbar.MaterialToolbar>
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:tabMode="scrollable"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabTextColor="#BBD2C5"
+        app:tabPaddingStart="14dp"
+        app:tabPaddingEnd="14dp"
+        app:tabIndicatorFullWidth="false" />

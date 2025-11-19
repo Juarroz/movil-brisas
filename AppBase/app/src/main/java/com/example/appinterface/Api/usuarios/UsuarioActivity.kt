@@ -281,6 +281,5 @@ class UsuarioActivity : BaseActivity(), UsuarioAdapter.Listener {
             }
             .show()
     }
-    // Forzar admin durante pruebas
-    override fun isAdmin(): Boolean = true
+
 }
