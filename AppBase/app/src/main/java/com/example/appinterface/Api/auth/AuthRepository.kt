@@ -41,17 +41,11 @@ class AuthRepository(
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
-                        // Guardar sesión automáticamente
-                        // Convertir "ROLE_ADMINISTRADOR" a "ADMIN" para compatibilidad
-                        val rolesSimplificados = loginResponse.roles.map {
-                            it.replace("ROLE_", "")
-                        }
 
                         sessionManager.saveSession(
+                            username = loginResponse.userName,  // Nombre completo para mostrar
                             token = loginResponse.token,
-                            tokenType = "Bearer",
-                            username = loginResponse.email, // Usar email como username
-                            roles = rolesSimplificados
+                            roles = loginResponse.roles  // ← SIN MODIFICAR: ["ROLE_ADMINISTRADOR"]
                         )
                         onSuccess(loginResponse)
                     } else {
