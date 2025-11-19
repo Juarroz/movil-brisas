@@ -14,4 +14,17 @@
     <string name="no_account_register">No tienes cuenta? Registrate</string>
     <string name="forgot_password">Olvidaste la Contraseña?</string>
 
+    <!-- Registro -->
+    <string name="register_title">Crear cuenta</string>
+    <string name="register_subtitle">Únete a Brisas Gems</string>
+    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_nombre">Nombre completo</string>
+    <string name="hint_telefono">Teléfono (opcional)</string>
+    <string name="hint_docnum">Documento (opcional)</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="action_register">Crear cuenta</string>
+    <string name="already_have_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="optional_field">Opcional</string>
+    <string name="password_hint">Mínimo 8 caracteres</string>
+
 </resources>

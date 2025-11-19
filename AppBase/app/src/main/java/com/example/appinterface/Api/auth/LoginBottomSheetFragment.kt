@@ -16,17 +16,7 @@ import com.example.appinterface.core.RetrofitInstance
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 
-/**
- * LoginBottomSheetFragment - Bottom Sheet para iniciar sesión
- *
- * Características:
- * - Validación de campos
- * - Loading state durante login
- * - Manejo de errores del backend
- * - Navegación automática según rol del usuario
- * - Opción para registrarse
- * - Opción para recuperar contraseña
- */
+
 class LoginBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var etUsername: EditText
@@ -76,15 +66,18 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
             handleLogin()
         }
 
-        // Link de registro
         tvRegisterPrompt.setOnClickListener {
-            // TODO: Abrir RegisterBottomSheetFragment (FASE 2)
-            Toast.makeText(requireContext(), "Registro disponible pronto", Toast.LENGTH_SHORT).show()
+            // Cerrar el login sheet
+            dismiss()
+
+            // Abrir el registro sheet
+            val registerSheet = RegisterBottomSheetFragment()
+            registerSheet.show(parentFragmentManager, "RegisterBottomSheet")
         }
 
         // Link de recuperar contraseña
         tvForgotPassword.setOnClickListener {
-            // TODO: Abrir ForgotPasswordBottomSheetFragment (FASE 3)
+            // TODO: Abrir ForgotPasswordBottomSheetFragment
             Toast.makeText(requireContext(), "Recuperación disponible pronto", Toast.LENGTH_SHORT).show()
         }
     }
