@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.appinterface.R
+import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,11 +17,12 @@ class ContactCreateActivity : AppCompatActivity() {
 
     private val TAG = "ContactCreateActivity"
 
-    private lateinit var txtNombre: EditText
-    private lateinit var txtCorreo: EditText
-    private lateinit var txtTelefono: EditText
-    private lateinit var txtMensaje: EditText
+    private lateinit var txtNombre: TextInputEditText
+    private lateinit var txtCorreo: TextInputEditText
+    private lateinit var txtTelefono: TextInputEditText
+    private lateinit var txtMensaje: TextInputEditText
     private lateinit var btnEnviar: Button
+    private lateinit var toolbar: Toolbar
 
     private val repository = ContactoRepository()
 
@@ -47,6 +49,21 @@ class ContactCreateActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_contact_create)
 
+        // Configurar toolbar
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = "Contáctanos"
+        }
+
+        // Configurar el botón de navegación para volver atrás
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
+        // Inicializar vistas
         txtNombre = findViewById(R.id.txtNombre)
         txtCorreo = findViewById(R.id.txtCorreo)
         txtTelefono = findViewById(R.id.txtTelefono)
@@ -54,6 +71,11 @@ class ContactCreateActivity : AppCompatActivity() {
         btnEnviar = findViewById(R.id.btnFormulario)
 
         btnEnviar.setOnClickListener { safeEnviarContacto() }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun safeEnviarContacto() {
@@ -101,6 +123,8 @@ class ContactCreateActivity : AppCompatActivity() {
                         if (response.isSuccessful) {
                             Toast.makeText(this@ContactCreateActivity, "Contacto enviado correctamente", Toast.LENGTH_SHORT).show()
                             limpiarCampos()
+                            // Opcional: Volver a la actividad anterior después de enviar
+                            // finish()
                         } else {
                             Log.e(TAG, "Server error code=${response.code()} errorBody=${response.errorBody()}")
                             Toast.makeText(this@ContactCreateActivity, "Error servidor: ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -127,9 +151,9 @@ class ContactCreateActivity : AppCompatActivity() {
     }
 
     private fun limpiarCampos() {
-        txtNombre.text.clear()
-        txtCorreo.text.clear()
-        txtTelefono.text.clear()
-        txtMensaje.text.clear()
+        txtNombre.text?.clear()
+        txtCorreo.text?.clear()
+        txtTelefono.text?.clear()
+        txtMensaje.text?.clear()
     }
 }

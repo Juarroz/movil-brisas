@@ -27,4 +27,11 @@
     <string name="optional_field">Opcional</string>
     <string name="password_hint">Mínimo 8 caracteres</string>
 
+
+    <!-- Formulario de contacto -->
+    <string name="contact_title">Contáctanos</string>
+    <string name="contact_subtitle">Déjanos tu mensaje y te responderemos pronto</string>
+    <string name="hint_mensaje">Mensaje</string>
+    <string name="action_send">Enviar</string>
+
 </resources>
