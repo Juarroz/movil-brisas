@@ -248,60 +248,29 @@ class RegisterBottomSheetFragment : BottomSheetDialogFragment() {
         password: String,
         response: UsuarioResponseDTO
     ) {
+        // Mostrar mensaje de éxito
         Toast.makeText(
             requireContext(),
-            "¡Registro exitoso! Iniciando sesión...",
-            Toast.LENGTH_SHORT
+            "¡Cuenta creada exitosamente! Ahora inicia sesión",
+            Toast.LENGTH_LONG
         ).show()
 
-        // Cerrar el bottom sheet de registro
+        // Abrir el login ANTES de cerrar este sheet
+        openLoginSheet(correo)
+
+        // Cerrar el bottom sheet de registro después
         dismiss()
-
-        // Hacer login automático
-        performAutoLogin(correo, password)
     }
 
-    private fun performAutoLogin(correo: String, password: String) {
-        authRepository.login(
-            username = correo,
-            password = password,
-            onSuccess = { loginResponse ->
-                val username = loginResponse.userName ?: "Usuario"
-                val roles = loginResponse.roles ?: emptyList()
-
-                Toast.makeText(
-                    requireContext(),
-                    "¡Bienvenido, $username!",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                // Navegar según el rol
-                navigateBasedOnRole(roles)
-            },
-            onError = { errorMsg ->
-                // Si falla el auto-login, mostrar login manual
-                Toast.makeText(
-                    requireContext(),
-                    "Registro exitoso. Por favor inicia sesión.",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                val loginSheet = LoginBottomSheetFragment()
-                loginSheet.show(parentFragmentManager, "LoginBottomSheet")
-            }
-        )
-    }
-
-    private fun navigateBasedOnRole(roles: List<String>) {
-        val intent = if (roles.contains("ROLE_ADMINISTRADOR")) {
-            Intent(requireActivity(), UsuarioActivity::class.java)
-        } else {
-            Intent(requireActivity(), MainActivity::class.java)
+    private fun openLoginSheet(correo: String) {
+        // Abrir directamente sin delay ya que dismiss() será después
+        try {
+            val loginSheet = LoginBottomSheetFragment.newInstance(correo)
+            loginSheet.show(parentFragmentManager, "LoginBottomSheet")
+        } catch (e: Exception) {
+            // Log del error para debug
+            e.printStackTrace()
         }
-
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        requireActivity().finish()
     }
 
     private fun handleRegisterError(errorMsg: String) {
@@ -319,6 +288,18 @@ class RegisterBottomSheetFragment : BottomSheetDialogFragment() {
             else -> {
                 Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    companion object {
+        fun newInstance(correo: String? = null): RegisterBottomSheetFragment {
+            val fragment = RegisterBottomSheetFragment()
+            correo?.let {
+                val bundle = Bundle()
+                bundle.putString("pre_filled_correo", it)
+                fragment.arguments = bundle
+            }
+            return fragment
         }
     }
 }

@@ -16,7 +16,18 @@ import com.example.appinterface.core.RetrofitInstance
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 
-
+/**
+ * LoginBottomSheetFragment - Bottom Sheet para iniciar sesión
+ *
+ * Características:
+ * - Validación de campos
+ * - Loading state durante login
+ * - Manejo de errores del backend
+ * - Navegación automática según rol del usuario
+ * - Opción para registrarse
+ * - Opción para recuperar contraseña
+ * - Soporte para pre-llenar correo (cuando viene de registro)
+ */
 class LoginBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var etUsername: EditText
@@ -46,6 +57,19 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
         tvRegisterPrompt = view.findViewById(R.id.tv_register_prompt)
         tvForgotPassword = view.findViewById(R.id.tv_forgot_password)
 
+        // 🆕 Pre-llenar el correo si viene de registro
+        arguments?.getString("pre_filled_email")?.let { correo ->
+            etUsername.setText(correo)
+            etPassword.requestFocus()  // Enfocar en password para que usuario solo escriba eso
+
+            // Mostrar un hint visual (opcional)
+            Toast.makeText(
+                requireContext(),
+                "Ahora ingresa tu contraseña",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
         // Crear ProgressBar programáticamente (o añádelo al layout)
         progressBar = ProgressBar(requireContext()).apply {
             visibility = View.GONE
@@ -66,8 +90,8 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
             handleLogin()
         }
 
+        // Link de registro - 🆕 Cerrar este sheet y abrir el de registro
         tvRegisterPrompt.setOnClickListener {
-            // Cerrar el login sheet
             dismiss()
 
             // Abrir el registro sheet
@@ -77,7 +101,7 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
 
         // Link de recuperar contraseña
         tvForgotPassword.setOnClickListener {
-            // TODO: Abrir ForgotPasswordBottomSheetFragment
+            // TODO: Abrir ForgotPasswordBottomSheetFragment (FASE 3)
             Toast.makeText(requireContext(), "Recuperación disponible pronto", Toast.LENGTH_SHORT).show()
         }
     }
@@ -147,11 +171,10 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
 
         if (isLoading) {
             btnLogin.text = "Iniciando sesión..."
-            // Si tienes un ProgressBar en el layout, úsalo:
             progressBar.visibility = View.VISIBLE
         } else {
             btnLogin.text = getString(R.string.action_login)
-            // progressBar.visibility = View.GONE
+            progressBar.visibility = View.GONE
         }
     }
 
@@ -199,8 +222,19 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
         etPassword.requestFocus()
     }
 
-    /*override fun getTheme(): Int {
-        // Personaliza el estilo del bottom sheet si lo deseas
-        return R.style.BottomSheetDialogTheme
-    }*/
+    companion object {
+        /**
+         * 🆕 Crea una instancia con el correo pre-llenado
+         * Útil cuando el usuario viene del registro exitoso
+         */
+        fun newInstance(correo: String? = null): LoginBottomSheetFragment {
+            val fragment = LoginBottomSheetFragment()
+            correo?.let {
+                val bundle = Bundle()
+                bundle.putString("pre_filled_email", it)
+                fragment.arguments = bundle
+            }
+            return fragment
+        }
+    }
 }
