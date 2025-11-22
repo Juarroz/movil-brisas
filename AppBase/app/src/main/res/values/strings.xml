@@ -34,4 +34,23 @@
     <string name="hint_mensaje">Mensaje</string>
     <string name="action_send">Enviar</string>
 
+    !-- Personalización -->
+    <string name="personalizacion_titulo">Personaliza tu Joya</string>
+    <string name="vista_superior">Vista Superior</string>
+    <string name="vista_frontal">Vista Frontal</string>
+    <string name="vista_perfil">Vista Perfil</string>
+    <string name="forma_gema">Forma de la gema</string>
+    <string name="gema_central">Gema central</string>
+    <string name="material">Material</string>
+    <string name="tamano">Tamaño</string>
+    <string name="talla">Talla</string>
+    <string name="tu_diseno">TU DISEÑO</string>
+    <string name="continuar_asesor">Continuar con asesor</string>
+    <string name="guardando">Guardando personalización...</string>
+    <string name="personalización_guardada">¡Personalización guardada con éxito!</string>
+    <string name="error_guardar">Error al guardar la personalización</string>
+    <string name="error_cargar_opciones">Error al cargar las opciones</string>
+    <string name="selecciona_todas">Debes seleccionar todas las opciones</string>
+    <string name="combinacion_no_disponible">Esta combinación no está disponible</string>
+
 </resources>

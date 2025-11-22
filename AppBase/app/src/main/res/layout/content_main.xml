@@ -25,4 +25,25 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.735" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.881"/>
+
+    <!-- Botón de Personalización -->
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPersonalizar"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:text="✨ PERSONALIZA"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:contentDescription="Personalizar joya"
+            android:background="@drawable/bg_button_green"
+            app:backgroundTint="@null"
+            android:stateListAnimator="@null"
+            app:cornerRadius="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.65"
+            app:layout_constraintHorizontal_bias="0.881" />
 </androidx.constraintlayout.widget.ConstraintLayout>

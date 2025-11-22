@@ -21,9 +21,7 @@ class AuthRepository(
     private val sessionManager: SessionManager
 ) {
 
-    /**
-     * Realiza el login y guarda la sesión si es exitoso
-     */
+
     fun login(
         username: String,
         password: String,
@@ -47,6 +45,7 @@ class AuthRepository(
                         sessionManager.saveSession(
                             username = loginResponse.userName,  // Nombre completo para mostrar
                             token = loginResponse.token,
+                            userId = 0,
                             roles = loginResponse.roles  // ← SIN MODIFICAR: ["ROLE_ADMINISTRADOR"]
                         )
                         onSuccess(loginResponse)

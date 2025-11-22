@@ -8,8 +8,18 @@
     <color name="green_gradient_start">#009955</color>
     <color name="green_gradient_end">#33cc88</color>
     <color name="gray_border">#DDDDDD</color>
-    <color name="gray_medium">#496649</color>
+    <color name="gray_dark">#576457</color>
+    <color name="gray_medium">#576457</color>
+    <color name="gray_light">#7D877D</color>
     <color name="green_brisas">#173622</color>
+
+    <!-- Nuevos colores para personalización -->
+    <color name="background_light">#F5F5F5</color>
+    <color name="background_summary">#E8F5E9</color>
+
+    <!-- Colores para chips -->
+    <color name="chip_selected">#C8E6C9</color>
+    <color name="chip_unselected">#FFFFFF</color>
 
 
 </resources>

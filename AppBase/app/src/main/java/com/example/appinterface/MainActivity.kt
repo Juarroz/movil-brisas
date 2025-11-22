@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.appinterface.Api.contacto.ContactCreateActivity
 import com.example.appinterface.core.BaseActivity
+import com.example.appinterface.Api.personalizacion.PersonalizacionActivity
 import com.example.appinterface.R
 
 /**
@@ -20,6 +21,7 @@ import com.example.appinterface.R
 class MainActivity : BaseActivity() {
 
     private lateinit var btnFormulario: Button
+    private lateinit var btnPersonalizar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +64,11 @@ class MainActivity : BaseActivity() {
         btnFormulario.setOnClickListener {
             abrirFormularioContacto()
         }
+
+        btnPersonalizar = findViewById(R.id.btnPersonalizar)
+        btnPersonalizar.setOnClickListener {
+            abrirPersonalizacion()
+        }
     }
 
     /**
@@ -69,6 +76,13 @@ class MainActivity : BaseActivity() {
      */
     private fun abrirFormularioContacto() {
         startActivity(Intent(this, ContactCreateActivity::class.java))
+    }
+
+    /**
+     * Abre la pantalla de personalización de joyas
+     */
+    private fun abrirPersonalizacion() {
+        startActivity(Intent(this, PersonalizacionActivity::class.java))
     }
 
     /**
