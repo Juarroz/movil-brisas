@@ -1,7 +1,6 @@
 package com.example.appinterface.core
 
 import com.example.appinterface.Api.contacto.ContactoFormularioRequestDTO
-import com.example.appinterface.Api.pedidos.PedidoResponseDTO
 import com.example.appinterface.Api.usuarios.RolResponseDTO
 import com.example.appinterface.Api.auth.LoginRequestDTO
 import com.example.appinterface.Api.auth.LoginResponseDTO
@@ -11,6 +10,7 @@ import com.example.appinterface.Api.contacto.ContactoFormularioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
 import com.example.appinterface.Api.usuarios.PageWrapperDTO
 import com.example.appinterface.Api.usuarios.RolUpdateBody
+import com.example.appinterface.core.model.Pedido
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -52,7 +52,7 @@ interface ApiServicesKotlin {
 
 
     @GET("pedidos")
-    fun getPedidos(): Call<List<PedidoResponseDTO>>
+    fun getPedidos(): Call<List<Pedido>>
 
     // --- USUARIOS CRUD ---
 
@@ -86,5 +86,26 @@ interface ApiServicesKotlin {
     fun deleteUsuario(
         @retrofit2.http.Path("id") id: Long
     ): Call<Void>
+
+    // ... tus otros endpoints ...
+
+    // Actualizar un pedido (PUT)
+    @PUT("pedidos/{id}")
+    fun actualizarPedido(
+        @Path("id") id: Int,
+        @Body request: com.example.appinterface.core.model.PedidoRequest
+    ): Call<com.example.appinterface.core.model.Pedido>
+
+    // Eliminar un pedido (DELETE)
+    @DELETE("pedidos/{id}")
+    fun eliminarPedido(
+        @Path("id") id: Int
+    ): Call<Void>
+
+    // Crear un nuevo pedido (POST)
+    @POST("pedidos")
+    fun crearPedido(
+        @Body request: com.example.appinterface.core.model.PedidoRequest
+    ): Call<com.example.appinterface.core.model.Pedido>
 
 }

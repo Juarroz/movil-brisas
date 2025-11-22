@@ -46,6 +46,17 @@
                 android:name=".Api.auth.ProfileActivity"
                 android:exported="false" />
 
+        <activity
+                android:name=".Api.pedidos.PedidoDetailActivity"
+                android:exported="false"
+                android:label="Detalle del Pedido"
+                android:screenOrientation="portrait" />
+
+        <activity
+                android:name=".Api.pedidos.PedidoCreateActivity"
+                android:exported="false"
+                android:label="Crear Pedido Nuevo"
+                android:screenOrientation="portrait" />
 
     </application>
 </manifest>
