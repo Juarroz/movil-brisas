@@ -5,7 +5,7 @@ package com.example.appinterface.Api.personalizacion
  */
 data class PersonalizacionState(
     val selecciones: MutableMap<String, PersonalizacionValor> = mutableMapOf(),
-    var vistaActual: String = "frontal"
+    var vistaActual: String = "superior"
 ) {
 
     // Getters de slugs
