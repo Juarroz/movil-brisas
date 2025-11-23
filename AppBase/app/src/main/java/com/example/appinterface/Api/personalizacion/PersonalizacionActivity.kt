@@ -42,8 +42,8 @@ class PersonalizacionActivity : BaseActivity() {
 
     // Vistas - Preview (MODIFICADO: sin miniaturas)
     private lateinit var ivMainPreview: ImageView
-    private lateinit var btnPrevView: ImageButton
-    private lateinit var btnNextView: ImageButton
+    private lateinit var btnPrevView: ImageView
+    private lateinit var btnNextView: ImageView
     private lateinit var tvCurrentView: TextView
     private lateinit var progressLoading: ProgressBar
 
