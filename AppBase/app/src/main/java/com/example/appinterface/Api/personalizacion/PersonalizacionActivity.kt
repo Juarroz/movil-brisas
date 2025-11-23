@@ -1,6 +1,8 @@
 package com.example.appinterface.Api.personalizacion
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -268,6 +270,12 @@ class PersonalizacionActivity : BaseActivity() {
 
                 val opciones = opcionesResult.getOrNull() ?: emptyList()
 
+                // NUEVO: Log de opciones cargadas
+                Log.d(TAG, "=== OPCIONES CARGADAS ===")
+                opciones.forEach { opcion ->
+                    Log.d(TAG, "ID: ${opcion.id}, Nombre: '${opcion.nombre}', Clave: '${opcion.obtenerClave()}'")
+                }
+
                 // Cargar valores de cada opción
                 val valoresMap = mutableMapOf<String, List<PersonalizacionValor>>()
 
@@ -276,11 +284,25 @@ class PersonalizacionActivity : BaseActivity() {
                     val valoresResult = repository.obtenerValoresDisponibles(opcion.id)
 
                     if (valoresResult.isSuccess) {
-                        valoresMap[clave] = valoresResult.getOrNull() ?: emptyList()
+                        val valores = valoresResult.getOrNull() ?: emptyList()
+                        valoresMap[clave] = valores
+
+                        // NUEVO: Log de valores por opción
+                        Log.d(TAG, "Opcion ID ${opcion.id} ('${opcion.nombre}') -> Clave '$clave' -> ${valores.size} valores:")
+                        valores.forEach { v ->
+                            Log.d(TAG, "  - ${v.nombre} (ID: ${v.id})")
+                        }
                     }
                 }
 
                 valoresPorCategoria = valoresMap
+
+                // NUEVO: Log del mapa final
+                Log.d(TAG, "=== MAPA FINAL ===")
+                valoresPorCategoria.forEach { (clave, valores) ->
+                    Log.d(TAG, "'$clave' -> ${valores.size} valores")
+                }
+                Log.d(TAG, "==================")
 
                 // Configurar UI con los datos
                 configurarUIConDatos()

@@ -102,7 +102,7 @@ interface ApiServicesKotlin {
      * }
      */
     @GET("opciones")
-    suspend fun obtenerOpciones(): Response<OpcionesResponseDTO>
+    suspend fun obtenerOpciones(): Response<List<PersonalizacionOption>>
 
     /**
      * Obtiene una opción específica por ID
@@ -139,7 +139,7 @@ interface ApiServicesKotlin {
     suspend fun obtenerValores(
         @Query("opcId") opcionId: Int? = null,
         @Query("buscar") busqueda: String? = null
-    ): Response<ValoresResponseDTO>
+    ): Response<List<PersonalizacionValor>>
 
     /**
      * Obtiene un valor específico por ID

@@ -4,11 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 /**
  * Representa una categoría de personalización
- * Ejemplo: "Forma de la gema", "Gema central", "Material"
- *
- * Corresponde a la tabla: opcion_personalizacion
+ * Coincide con GET /api/opciones:
+ * {"id": 1, "nombre": "Forma de la gema"}
  */
-data class PersonalizacionOpcion(
+data class PersonalizacionOption(
     @SerializedName("id")
     val id: Int,
 
@@ -16,46 +15,28 @@ data class PersonalizacionOpcion(
     val nombre: String
 ) {
     /**
-     * Determina la clave interna para mapeo
-     * Ejemplos: "forma", "gema", "material", "tamano", "talla"
+     * Obtiene el slug normalizado para identificar la categoría
+     * "Forma de la gema" → "forma"
+     * "Gema central" → "gema"
      */
     fun obtenerClave(): String {
         return when {
-            nombre.contains("forma", ignoreCase = true) -> "forma"
-            nombre.contains("gema", ignoreCase = true) -> "gema"
-            nombre.contains("material", ignoreCase = true) -> "material"
-            nombre.contains("tamaño", ignoreCase = true) ||
-                    nombre.contains("tamano", ignoreCase = true) -> "tamano"
-            nombre.contains("talla", ignoreCase = true) -> "talla"
-            else -> "otros"
-        }
-    }
-
-    /**
-     * Obtiene el emoji asociado a la categoría
-     */
-    fun obtenerEmoji(): String {
-        return when (obtenerClave()) {
-            "forma" -> "📦"
-            "gema" -> "💎"
-            "material" -> "🏅"
-            "tamano" -> "📏"
-            "talla" -> "💍"
-            else -> "⚙️"
+            nombre.equals("Forma de la gema", ignoreCase = true) -> "forma"
+            nombre.equals("Gema central", ignoreCase = true) -> "gema"
+            nombre.equals("Material", ignoreCase = true) -> "material"
+            nombre.equals("Tamaño de la gema", ignoreCase = true) -> "tamano"
+            nombre.equals("Talla del anillo", ignoreCase = true) -> "talla"
+            else -> {
+                // Fallback más específico
+                when {
+                    nombre.contains("forma", ignoreCase = true) -> "forma"
+                    nombre.startsWith("Gema", ignoreCase = true) -> "gema" // EXACTO al inicio
+                    nombre.contains("material", ignoreCase = true) -> "material"
+                    nombre.contains("tamaño", ignoreCase = true) -> "tamano"
+                    nombre.contains("talla", ignoreCase = true) -> "talla"
+                    else -> nombre.lowercase().replace(" ", "")
+                }
+            }
         }
     }
 }
-
-/**
- * Respuesta del endpoint GET /api/opciones
- */
-data class OpcionesResponseDTO(
-    @SerializedName("success")
-    val success: Boolean = false,
-
-    @SerializedName("data")
-    val data: List<PersonalizacionOpcion> = emptyList(),
-
-    @SerializedName("message")
-    val message: String? = null
-)
