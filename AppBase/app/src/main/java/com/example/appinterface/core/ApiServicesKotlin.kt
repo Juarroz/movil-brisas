@@ -11,7 +11,8 @@ import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
 import com.example.appinterface.Api.usuarios.PageWrapperDTO
 import com.example.appinterface.Api.usuarios.RolUpdateBody
 import com.example.appinterface.Api.personalizacion.*
-import com.example.appinterface.core.model.Pedido
+import com.example.appinterface.Api.pedidos.model.Pedido
+import com.example.appinterface.Api.pedidos.model.PedidoRequest
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -295,8 +296,8 @@ interface ApiServicesKotlin {
     @PUT("pedidos/{id}")
     fun actualizarPedido(
         @Path("id") id: Int,
-        @Body request: com.example.appinterface.core.model.PedidoRequest
-    ): Call<com.example.appinterface.core.model.Pedido>
+        @Body request: PedidoRequest
+    ): Call<Pedido>
 
     // Eliminar un pedido (DELETE)
     @DELETE("pedidos/{id}")
@@ -307,7 +308,7 @@ interface ApiServicesKotlin {
     // Crear un nuevo pedido (POST)
     @POST("pedidos")
     fun crearPedido(
-        @Body request: com.example.appinterface.core.model.PedidoRequest
-    ): Call<com.example.appinterface.core.model.Pedido>
+        @Body request: PedidoRequest
+    ): Call<Pedido>
 
 }

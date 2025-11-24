@@ -14,7 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
-import com.example.appinterface.core.data.PedidoRepository
+import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
 import androidx.appcompat.widget.Toolbar // Aseguramos el import
 
 class PedidosActivity : BaseActivity() {
