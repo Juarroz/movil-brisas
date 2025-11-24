@@ -1,4 +1,4 @@
-package com.example.appinterface.Api.pedidos.data.data
+package com.example.appinterface.core.data
 
 import android.content.Context
 import android.content.SharedPreferences

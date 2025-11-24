@@ -1,7 +1,7 @@
 package com.example.appinterface.core
 
 import android.content.Context
-import com.example.appinterface.Api.pedidos.data.data.SessionManager
+import com.example.appinterface.core.data.SessionManager
 import com.example.appinterface.core.network.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

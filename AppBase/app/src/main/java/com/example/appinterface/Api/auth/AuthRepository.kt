@@ -3,7 +3,7 @@ package com.example.appinterface.Api.auth
 import com.example.appinterface.Api.usuarios.UsuarioRequestDTO
 import com.example.appinterface.Api.usuarios.UsuarioResponseDTO
 import com.example.appinterface.core.ApiServicesKotlin
-import com.example.appinterface.Api.pedidos.data.data.SessionManager
+import com.example.appinterface.core.data.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
