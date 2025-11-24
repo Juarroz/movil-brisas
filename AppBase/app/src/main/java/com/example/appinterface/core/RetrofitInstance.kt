@@ -50,17 +50,6 @@ object RetrofitInstance {
     }
 
     /**
-     * API original (sin autenticación necesaria)
-     */
-    val api: ApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
-    }
-
-    /**
      * API de tu backend (CON interceptor de autenticación)
      */
     val api2kotlin: ApiServicesKotlin by lazy {

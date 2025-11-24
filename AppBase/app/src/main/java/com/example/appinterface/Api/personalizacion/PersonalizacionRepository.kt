@@ -88,16 +88,16 @@ class PersonalizacionRepository {
         usuarioId: Int?
     ): Result<PersonalizacionGuardada> = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "💾 Guardando personalización...")
+            Log.d(TAG, "Guardando personalizacion...")
 
-            // Extraer IDs de los valores seleccionados
             val valoresIds = estado.obtenerIdsSeleccionados()
 
             Log.d(TAG, "Usuario: $usuarioId")
             Log.d(TAG, "Valores: ${valoresIds.joinToString(", ")}")
 
-            val request = PersonalizacionRequestDTO(
-                usuarioClienteId = usuarioId,
+            // Usar el método factory
+            val request = PersonalizacionRequestDTO.crearConFechaActual(
+                usuarioId = usuarioId,
                 valores = valoresIds
             )
 
