@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.appinterface.core.data.PedidoRepository
-import com.example.appinterface.core.model.Pedido
+import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
+import com.example.appinterface.Api.pedidos.model.Pedido
 // IMPORTANTE: Agregamos este import que faltaba
-import com.example.appinterface.core.model.PedidoRequest
+import com.example.appinterface.Api.pedidos.model.PedidoRequest
 import kotlinx.coroutines.launch
 
 class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {

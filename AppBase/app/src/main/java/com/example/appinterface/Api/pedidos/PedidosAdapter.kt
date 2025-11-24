@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appinterface.R
-import com.example.appinterface.core.model.Pedido
+import com.example.appinterface.Api.pedidos.model.Pedido
 import android.graphics.Color
 
 class PedidosAdapter(

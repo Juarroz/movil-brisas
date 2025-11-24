@@ -1,7 +1,8 @@
-package com.example.appinterface.core.data
+package com.example.appinterface.Api.pedidos.data.data
 
 import com.example.appinterface.core.ApiServicesKotlin
-import com.example.appinterface.core.model.Pedido
+import com.example.appinterface.Api.pedidos.model.Pedido
+import com.example.appinterface.Api.pedidos.model.PedidoRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,9 +31,9 @@ class PedidoRepository(private val api: ApiServicesKotlin) {
     // ... código anterior (obtenerPedidos) ...
 
     // Función para actualizar
-    suspend fun actualizarPedido(id: Int, request: com.example.appinterface.core.model.PedidoRequest): Result<Boolean> = suspendCoroutine { continuation ->
-        api.actualizarPedido(id, request).enqueue(object : Callback<com.example.appinterface.core.model.Pedido> {
-            override fun onResponse(call: Call<com.example.appinterface.core.model.Pedido>, response: Response<com.example.appinterface.core.model.Pedido>) {
+    suspend fun actualizarPedido(id: Int, request: PedidoRequest): Result<Boolean> = suspendCoroutine { continuation ->
+        api.actualizarPedido(id, request).enqueue(object : Callback<Pedido> {
+            override fun onResponse(call: Call<Pedido>, response: Response<Pedido>) {
                 if (response.isSuccessful) {
                     continuation.resume(Result.success(true))
                 } else {
@@ -40,7 +41,7 @@ class PedidoRepository(private val api: ApiServicesKotlin) {
                 }
             }
 
-            override fun onFailure(call: Call<com.example.appinterface.core.model.Pedido>, t: Throwable) {
+            override fun onFailure(call: Call<Pedido>, t: Throwable) {
                 continuation.resume(Result.failure(t))
             }
         })
@@ -65,9 +66,9 @@ class PedidoRepository(private val api: ApiServicesKotlin) {
 
     // ... código anterior ...
 
-    suspend fun crearPedido(request: com.example.appinterface.core.model.PedidoRequest): Result<Boolean> = suspendCoroutine { continuation ->
-        api.crearPedido(request).enqueue(object : Callback<com.example.appinterface.core.model.Pedido> {
-            override fun onResponse(call: Call<com.example.appinterface.core.model.Pedido>, response: Response<com.example.appinterface.core.model.Pedido>) {
+    suspend fun crearPedido(request: PedidoRequest): Result<Boolean> = suspendCoroutine { continuation ->
+        api.crearPedido(request).enqueue(object : Callback<Pedido> {
+            override fun onResponse(call: Call<Pedido>, response: Response<Pedido>) {
                 if (response.isSuccessful) {
                     continuation.resume(Result.success(true))
                 } else {
@@ -75,7 +76,7 @@ class PedidoRepository(private val api: ApiServicesKotlin) {
                 }
             }
 
-            override fun onFailure(call: Call<com.example.appinterface.core.model.Pedido>, t: Throwable) {
+            override fun onFailure(call: Call<Pedido>, t: Throwable) {
                 continuation.resume(Result.failure(t))
             }
         })

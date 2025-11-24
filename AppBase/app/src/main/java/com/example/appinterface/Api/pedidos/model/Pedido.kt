@@ -1,4 +1,4 @@
-package com.example.appinterface.core.model
+package com.example.appinterface.Api.pedidos.model
 
 import com.google.gson.annotations.SerializedName
 

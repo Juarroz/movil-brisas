@@ -12,7 +12,7 @@ import com.example.appinterface.R
 import com.example.appinterface.Api.contacto.ContactListActivity
 // Importamos la nueva actividad de Pedidos
 import com.example.appinterface.Api.pedidos.PedidosActivity
-import com.example.appinterface.core.data.SessionManager
+import com.example.appinterface.Api.pedidos.data.data.SessionManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 

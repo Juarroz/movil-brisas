@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appinterface.MainActivity
 import com.example.appinterface.R
-import com.example.appinterface.core.data.SessionManager
+import com.example.appinterface.Api.pedidos.data.data.SessionManager
 
 /**
  * ProfileActivity - Pantalla de perfil del usuario
