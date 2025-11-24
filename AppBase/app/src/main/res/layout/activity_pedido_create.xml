@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F5F5F5">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Crear Nuevo Pedido"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#173622"
+                android:layout_marginBottom="20dp"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Código (Ej: P-20240101-001)"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="16dp"/>
+        <EditText
+                android:id="@+id/etCrearCodigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Código único"
+                android:inputType="text"
+                android:maxLength="15"
+                android:layout_marginBottom="16dp"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID de Personalización (per_id)"
+                android:textSize="14sp"
+                android:textColor="#666666"/>
+        <EditText
+                android:id="@+id/etCrearPerId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ID de personalización del cliente"
+                android:inputType="number"
+                android:maxLength="5"
+                android:layout_marginBottom="16dp"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID de Empleado (Asignación)"
+                android:textSize="14sp"
+                android:textColor="#666666"/>
+        <EditText
+                android:id="@+id/etCrearEmpleadoId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ID del empleado asignado (opcional)"
+                android:inputType="number"
+                android:maxLength="5"
+                android:layout_marginBottom="16dp"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comentarios del Pedido"
+                android:textSize="14sp"
+                android:textColor="#666666"/>
+        <EditText
+                android:id="@+id/etCrearComentarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Notas internas o requisitos especiales"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top|start"
+                android:padding="10dp"
+                android:background="@android:color/white"
+                android:layout_marginBottom="30dp"/>
+
+        <Button
+                android:id="@+id/btnCrearPedido"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Crear Pedido"
+                android:backgroundTint="#173622"
+                android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+</ScrollView>
