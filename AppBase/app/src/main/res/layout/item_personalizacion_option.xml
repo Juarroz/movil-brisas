@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/card_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/gray_light"
+        app:cardBackgroundColor="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="12dp"
+            android:minWidth="90dp">
+
+        <!-- Icono de la opción (opcional) -->
+        <ImageView
+                android:id="@+id/iv_option_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:contentDescription="Icono de opción"
+                tools:src="@drawable/ic_diamond"
+                tools:visibility="visible" />
+
+        <!-- Nombre de la opción -->
+        <TextView
+                android:id="@+id/tv_option_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Diamante"
+                android:textColor="@color/gray_dark"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:gravity="center"
+                tools:text="Oro Rosa" />
+
+        <!-- Indicador de selección -->
+        <View
+                android:id="@+id/view_selected_indicator"
+                android:layout_width="24dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="6dp"
+                android:background="@color/green_brisas"
+                android:visibility="gone" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

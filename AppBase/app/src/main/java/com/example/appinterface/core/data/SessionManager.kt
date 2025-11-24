@@ -18,6 +18,7 @@ class SessionManager(context: Context) {
         private const val PREF_NAME = "brisas_prefs"
         private const val KEY_TOKEN = "auth_token"
         private const val KEY_TOKEN_TYPE = "token_type"
+        private const val KEY_USER_ID = "user_id"
         private const val KEY_USERNAME = "username"
         private const val KEY_ROLES = "roles"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
@@ -32,12 +33,14 @@ class SessionManager(context: Context) {
     fun saveSession(
         token: String,
         tokenType: String = "Bearer",
+        userId: Int,
         username: String,
         roles: List<String>
     ) {
         prefs.edit().apply {
             putString(KEY_TOKEN, token)
             putString(KEY_TOKEN_TYPE, tokenType)
+            putInt(KEY_USER_ID, userId)
             putString(KEY_USERNAME, username)
             putStringSet(KEY_ROLES, roles.toSet())
             putBoolean(KEY_IS_LOGGED_IN, true)
@@ -84,12 +87,22 @@ class SessionManager(context: Context) {
     }
 
     /**
+     * 3. NUEVA FUNCIÓN: Obtiene el ID del usuario logueado
+     * Devuelve null si no existe o es -1 (valor por defecto)
+     */
+    fun getUserId(): Int? {
+        val id = prefs.getInt(KEY_USER_ID, -1)
+        return if (id != -1) id else null
+    }
+
+    /**
      * Cierra la sesión del usuario (limpia todos los datos)
      */
     fun logout() {
         prefs.edit().apply {
             remove(KEY_TOKEN)
             remove(KEY_TOKEN_TYPE)
+            remove(KEY_USER_ID)
             remove(KEY_USERNAME)
             remove(KEY_ROLES)
             putBoolean(KEY_IS_LOGGED_IN, false)

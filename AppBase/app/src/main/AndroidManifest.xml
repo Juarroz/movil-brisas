@@ -47,6 +47,12 @@
                 android:exported="false" />
 
         <activity
+                android:name=".Api.personalizacion.PersonalizacionActivity"
+                android:label="@string/personalizacion_titulo"
+                android:theme="@style/Theme.AppInterface"
+                android:screenOrientation="portrait"
+                android:exported="false" />
+
                 android:name=".Api.pedidos.PedidoDetailActivity"
                 android:exported="false"
                 android:label="Detalle del Pedido"

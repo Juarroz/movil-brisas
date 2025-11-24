@@ -90,7 +90,7 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
             handleLogin()
         }
 
-        // Link de registro - 🆕 Cerrar este sheet y abrir el de registro
+        // Link de registro - Cerrar este sheet y abrir el de registro
         tvRegisterPrompt.setOnClickListener {
             dismiss()
 
