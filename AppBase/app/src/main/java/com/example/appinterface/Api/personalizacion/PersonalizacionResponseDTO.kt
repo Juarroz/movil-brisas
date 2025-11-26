@@ -5,27 +5,42 @@ import com.google.gson.annotations.SerializedName
 /**
  * Respuesta al crear una personalización
  * POST /api/personalizaciones
+ *
+ * ⚠️ IMPORTANTE: El backend NO envía wrapper success/data
+ * Responde directamente con el objeto
  */
 data class PersonalizacionCreateResponseDTO(
-    @SerializedName("success")
-    val success: Boolean = false,
-
-    @SerializedName("data")
-    val data: PersonalizacionCreada? = null,
-
-    @SerializedName("message")
-    val message: String? = null
-)
-
-data class PersonalizacionCreada(
     @SerializedName("id")
     val id: Int,
 
-    @SerializedName("per_fecha")
+    @SerializedName("fecha")
     val fecha: String,
 
-    @SerializedName("usu_id_cliente")
-    val usuarioClienteId: Int?
+    @SerializedName("usuarioClienteId")
+    val usuarioClienteId: Int?,
+
+    @SerializedName("usuarioNombre")
+    val usuarioNombre: String?,
+
+    @SerializedName("detalles")
+    val detalles: List<DetallePersonalizacionCreado> = emptyList()
+)
+
+data class DetallePersonalizacionCreado(
+    @SerializedName("detId")
+    val detalleId: Int,
+
+    @SerializedName("valId")
+    val valorId: Int,
+
+    @SerializedName("valNombre")
+    val valorNombre: String,
+
+    @SerializedName("opcionId")
+    val opcionId: Int,
+
+    @SerializedName("opcionNombre")
+    val opcionNombre: String
 )
 
 /**

@@ -1,6 +1,6 @@
 package com.example.appinterface.core.network
 
-import com.example.appinterface.Api.pedidos.data.data.SessionManager
+import com.example.appinterface.core.data.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
 

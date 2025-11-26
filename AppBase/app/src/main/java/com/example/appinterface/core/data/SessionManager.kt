@@ -1,7 +1,8 @@
-package com.example.appinterface.Api.pedidos.data.data
+package com.example.appinterface.core.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 /**
  * SessionManager - Gestiona la sesión del usuario y el token JWT
@@ -15,6 +16,7 @@ import android.content.SharedPreferences
 class SessionManager(context: Context) {
 
     companion object {
+        private const val TAG = "SessionManager"
         private const val PREF_NAME = "brisas_prefs"
         private const val KEY_TOKEN = "auth_token"
         private const val KEY_TOKEN_TYPE = "token_type"
@@ -37,6 +39,8 @@ class SessionManager(context: Context) {
         username: String,
         roles: List<String>
     ) {
+        Log.d(TAG, "💾 Guardando sesión - userId: $userId, username: $username")
+
         prefs.edit().apply {
             putString(KEY_TOKEN, token)
             putString(KEY_TOKEN_TYPE, tokenType)
@@ -46,6 +50,9 @@ class SessionManager(context: Context) {
             putBoolean(KEY_IS_LOGGED_IN, true)
             apply()
         }
+
+        // Verificar que se guardó correctamente
+        Log.d(TAG, "✅ Sesión guardada - Verificación: getUserId() = ${getUserId()}")
     }
 
     /**
@@ -75,8 +82,11 @@ class SessionManager(context: Context) {
      * Verifica si el usuario está logueado
      */
     fun isLoggedIn(): Boolean {
-        return prefs.getBoolean(KEY_IS_LOGGED_IN, false) &&
+        val loggedIn = prefs.getBoolean(KEY_IS_LOGGED_IN, false) &&
                 !prefs.getString(KEY_TOKEN, null).isNullOrBlank()
+
+        Log.d(TAG, "🔍 isLoggedIn: $loggedIn")
+        return loggedIn
     }
 
     /**
@@ -87,18 +97,35 @@ class SessionManager(context: Context) {
     }
 
     /**
-     * 3. NUEVA FUNCIÓN: Obtiene el ID del usuario logueado
-     * Devuelve null si no existe o es -1 (valor por defecto)
+     * CORREGIDO: Obtiene el ID del usuario logueado
+     * Devuelve null si:
+     * - No existe el valor
+     * - Es 0 (inválido)
+     * - Es -1 (valor por defecto)
      */
     fun getUserId(): Int? {
         val id = prefs.getInt(KEY_USER_ID, -1)
-        return if (id != -1) id else null
+
+        Log.d(TAG, "🔍 getUserId() llamado - Valor guardado: $id")
+
+        return when {
+            id <= 0 -> {
+                Log.w(TAG, "⚠️ getUserId() devuelve null - ID inválido: $id")
+                null
+            }
+            else -> {
+                Log.d(TAG, "✅ getUserId() devuelve: $id")
+                id
+            }
+        }
     }
 
     /**
      * Cierra la sesión del usuario (limpia todos los datos)
      */
     fun logout() {
+        Log.d(TAG, "🚪 Cerrando sesión...")
+
         prefs.edit().apply {
             remove(KEY_TOKEN)
             remove(KEY_TOKEN_TYPE)
@@ -108,6 +135,7 @@ class SessionManager(context: Context) {
             putBoolean(KEY_IS_LOGGED_IN, false)
             apply()
         }
-    }
 
+        Log.d(TAG, "✅ Sesión cerrada")
+    }
 }

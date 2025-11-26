@@ -1,7 +1,7 @@
 package com.example.appinterface.core
 
 import android.content.Context
-import com.example.appinterface.Api.pedidos.data.data.SessionManager
+import com.example.appinterface.core.data.SessionManager
 import com.example.appinterface.core.network.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,17 +47,6 @@ object RetrofitInstance {
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
-    }
-
-    /**
-     * API original (sin autenticación necesaria)
-     */
-    val api: ApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
     }
 
     /**
