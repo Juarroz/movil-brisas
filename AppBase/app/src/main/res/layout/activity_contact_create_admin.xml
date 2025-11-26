@@ -2,12 +2,11 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-    <!-- Barra superior: SOLO top_app_bar -->
+    <!-- Barra superior: top_app_bar + top_admin_bar -->
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -18,9 +17,12 @@
         <!-- Toolbar (siempre visible) -->
         <include layout="@layout/top_app_bar" />
 
+        <!-- TabLayout para admin -->
+        <include layout="@layout/top_admin_bar" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Contenido principal -->
+    <!-- Contenido principal del formulario -->
     <include
             layout="@layout/content_contact_form"
             android:layout_width="match_parent"

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contenido del formulario de contacto (tu diseño original) -->
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+    <LinearLayout
+            android:id="@+id/contact_form_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal"
+            android:clipToPadding="false">
+
+        <!-- Logo -->
+        <ImageView
+                android:id="@+id/iv_app_logo_contact"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/logo_120"
+                android:layout_marginBottom="24dp"
+                android:scaleType="fitCenter"/>
+
+        <!-- Título -->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_title"
+                android:textColor="@color/green_brisas"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_subtitle"
+                android:textColor="@color/gray_medium"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp"
+                android:textAlignment="center"/>
+
+        <!-- Campo de Nombre -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_contact_nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_nombre"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:textSize="16sp"
+                    android:padding="16dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo de Correo -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_contact_correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_email"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/ic_dialog_email"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium"
+                app:helperText="Opcional"
+                app:helperTextTextColor="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtCorreo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textSize="16sp"
+                    android:padding="16dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo de Teléfono -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_contact_telefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_telefono"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/stat_sys_phone_call"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium"
+                app:helperText="Opcional"
+                app:helperTextTextColor="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtTelefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:textSize="16sp"
+                    android:padding="16dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo de Mensaje -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_contact_mensaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_mensaje"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/ic_menu_edit"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium"
+                app:counterEnabled="true"
+                app:counterMaxLength="500">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtMensaje"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:textSize="16sp"
+                    android:padding="16dp"
+                    android:minHeight="120dp"
+                    android:gravity="top|start"
+                    android:maxLength="500" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón de Enviar -->
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFormulario"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/action_send"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                app:backgroundTint="@color/green_brisas"
+                app:cornerRadius="16dp"
+                app:elevation="4dp"
+                android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+</ScrollView>

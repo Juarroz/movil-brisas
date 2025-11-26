@@ -5,6 +5,7 @@ data class ContactoFormularioRequestDTO(
     val correo: String?,
     val telefono: String?,
     val mensaje: String,
+    val usuarioId: Int? = null,
     val terminos: Boolean = true,
     val via: String = "formulario"
 )
