@@ -82,20 +82,22 @@ class PersonalizacionRepository {
     /**
      * Crea una nueva personalización en el servidor
      * POST /api/personalizaciones
+     *
+     * ⚠️ ACTUALIZADO: El backend responde directamente con el objeto,
+     * no con wrapper success/data
      */
     suspend fun crearPersonalizacion(
         estado: PersonalizacionState,
         usuarioId: Int?
     ): Result<PersonalizacionGuardada> = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "Guardando personalizacion...")
+            Log.d(TAG, "🔄 Guardando personalización...")
 
             val valoresIds = estado.obtenerIdsSeleccionados()
 
             Log.d(TAG, "Usuario: $usuarioId")
             Log.d(TAG, "Valores: ${valoresIds.joinToString(", ")}")
 
-            // Usar el método factory
             val request = PersonalizacionRequestDTO.crearConFechaActual(
                 usuarioId = usuarioId,
                 valores = valoresIds
@@ -106,17 +108,20 @@ class PersonalizacionRepository {
             if (response.isSuccessful) {
                 val body = response.body()
 
-                if (body?.success == true && body.data != null) {
-                    Log.d(TAG, "✅ Personalización guardada. ID: ${body.data.id}")
+                if (body != null) {
+                    Log.d(TAG, "✅ Personalización guardada. ID: ${body.id}")
+                    Log.d(TAG, "   Fecha: ${body.fecha}")
+                    Log.d(TAG, "   Detalles: ${body.detalles.size} items")
 
                     val personalizacion = PersonalizacionGuardada(
-                        id = body.data.id,
-                        estado = estado
+                        id = body.id,
+                        estado = estado,
+                        detalles = body.detalles
                     )
 
                     Result.success(personalizacion)
                 } else {
-                    val error = body?.message ?: "Respuesta sin datos"
+                    val error = "Respuesta vacía del servidor"
                     Log.e(TAG, "❌ $error")
                     Result.failure(Exception(error))
                 }
@@ -138,5 +143,37 @@ class PersonalizacionRepository {
  */
 data class PersonalizacionGuardada(
     val id: Int,
-    val estado: PersonalizacionState
-)
+    val estado: PersonalizacionState,
+    val detalles: List<DetallePersonalizacionCreado> = emptyList()
+) {
+    /**
+     * Genera un resumen legible de la personalización
+     */
+    fun generarResumen(): String {
+        val builder = StringBuilder()
+        builder.appendLine("📋 RESUMEN DE PERSONALIZACIÓN")
+        builder.appendLine("ID: $id")
+        builder.appendLine()
+
+        detalles.forEach { detalle ->
+            builder.appendLine("• ${detalle.opcionNombre}: ${detalle.valorNombre}")
+        }
+
+        return builder.toString()
+    }
+
+    /**
+     * Genera un resumen para incluir en el mensaje del formulario
+     */
+    fun generarResumenParaFormulario(): String {
+        val builder = StringBuilder()
+        builder.appendLine("Personalización de anillo (ID: $id)")
+        builder.appendLine()
+
+        detalles.forEach { detalle ->
+            builder.appendLine("${detalle.opcionNombre}: ${detalle.valorNombre}")
+        }
+
+        return builder.toString()
+    }
+}

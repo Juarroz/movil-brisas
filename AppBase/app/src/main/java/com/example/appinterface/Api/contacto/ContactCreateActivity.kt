@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.appinterface.Api.personalizacion.PersonalizacionActivity
 import com.example.appinterface.R
 import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
@@ -25,6 +26,9 @@ class ContactCreateActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
 
     private val repository = ContactoRepository()
+
+    // NUEVO: Para guardar el ID de personalización si viene
+    private var personalizacionId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +62,6 @@ class ContactCreateActivity : AppCompatActivity() {
             title = "Contáctanos"
         }
 
-        // Configurar el botón de navegación para volver atrás
         toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
@@ -70,7 +73,48 @@ class ContactCreateActivity : AppCompatActivity() {
         txtMensaje = findViewById(R.id.txtMensaje)
         btnEnviar = findViewById(R.id.btnFormulario)
 
+        // NUEVO: Cargar resumen si viene de PersonalizacionActivity
+        cargarResumenSiExiste()
+
         btnEnviar.setOnClickListener { safeEnviarContacto() }
+    }
+
+    /**
+     * NUEVO: Carga el resumen de personalización si existe en el Intent
+     */
+    private fun cargarResumenSiExiste() {
+        val resumenPersonalizacion = intent.getStringExtra(
+            PersonalizacionActivity.EXTRA_RESUMEN_PERSONALIZACION
+        )
+
+        personalizacionId = intent.getIntExtra(
+            PersonalizacionActivity.EXTRA_ID_PERSONALIZACION,
+            -1
+        ).takeIf { it != -1 }
+
+        if (resumenPersonalizacion != null) {
+            Log.d(TAG, "📋 Resumen recibido - ID: $personalizacionId")
+
+            // Pre-cargar el mensaje con el resumen
+            val mensajeCompleto = buildString {
+                appendLine("Hola, me interesa esta personalización:")
+                appendLine()
+                appendLine(resumenPersonalizacion)
+                appendLine()
+                appendLine("Por favor, ¿podrían contactarme para más información?")
+            }
+
+            txtMensaje.setText(mensajeCompleto)
+
+            // Opcional: Mover cursor al final
+            txtMensaje.setSelection(txtMensaje.text?.length ?: 0)
+
+            Toast.makeText(
+                this,
+                "Resumen de personalización cargado en el mensaje",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -102,11 +146,18 @@ class ContactCreateActivity : AppCompatActivity() {
             return
         }
 
+        // MODIFICADO: Agregar ID de personalización al mensaje si existe
+        val mensajeFinal = if (personalizacionId != null) {
+            "$mensaje\n\n[Ref. Personalización ID: $personalizacionId]"
+        } else {
+            mensaje
+        }
+
         val request = ContactoFormularioRequestDTO(
             nombre = nombre,
             correo = if (correo.isEmpty()) null else correo,
             telefono = if (telefono.isEmpty()) null else telefono,
-            mensaje = mensaje,
+            mensaje = mensajeFinal,
             terminos = true,
             via = "formulario"
         )
@@ -116,22 +167,38 @@ class ContactCreateActivity : AppCompatActivity() {
 
         try {
             repository.enviarContacto(request).enqueue(object : Callback<ContactoFormularioResponseDTO> {
-                override fun onResponse(call: Call<ContactoFormularioResponseDTO>, response: Response<ContactoFormularioResponseDTO>) {
+                override fun onResponse(
+                    call: Call<ContactoFormularioResponseDTO>,
+                    response: Response<ContactoFormularioResponseDTO>
+                ) {
                     try {
                         btnEnviar.isEnabled = true
                         btnEnviar.alpha = 1.0f
                         if (response.isSuccessful) {
-                            Toast.makeText(this@ContactCreateActivity, "Contacto enviado correctamente", Toast.LENGTH_SHORT).show()
-                            limpiarCampos()
-                            // Opcional: Volver a la actividad anterior después de enviar
-                            // finish()
+                            Toast.makeText(
+                                this@ContactCreateActivity,
+                                "¡Contacto enviado! Nos comunicaremos pronto",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            // MODIFICADO: Volver y cerrar la personalización también
+                            finish()
+
                         } else {
                             Log.e(TAG, "Server error code=${response.code()} errorBody=${response.errorBody()}")
-                            Toast.makeText(this@ContactCreateActivity, "Error servidor: ${response.code()}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@ContactCreateActivity,
+                                "Error servidor: ${response.code()}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } catch (ex: Exception) {
                         Log.e(TAG, "Exception en onResponse", ex)
-                        Toast.makeText(this@ContactCreateActivity, "Error en respuesta", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ContactCreateActivity,
+                            "Error en respuesta",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
@@ -139,7 +206,11 @@ class ContactCreateActivity : AppCompatActivity() {
                     Log.e(TAG, "onFailure enviarContacto", t)
                     btnEnviar.isEnabled = true
                     btnEnviar.alpha = 1.0f
-                    Toast.makeText(this@ContactCreateActivity, "Fallo red: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ContactCreateActivity,
+                        "Fallo red: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         } catch (e: Exception) {
