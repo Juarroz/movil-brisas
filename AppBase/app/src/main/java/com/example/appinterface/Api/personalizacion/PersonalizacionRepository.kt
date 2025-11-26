@@ -95,22 +95,40 @@ class PersonalizacionRepository {
 
             val valoresIds = estado.obtenerIdsSeleccionados()
 
-            Log.d(TAG, "Usuario: $usuarioId")
-            Log.d(TAG, "Valores: ${valoresIds.joinToString(", ")}")
+            // LOGS MEJORADOS
+            Log.d(TAG, "═══════════════════════════════")
+            Log.d(TAG, "📋 DATOS A ENVIAR:")
+            Log.d(TAG, "   Usuario ID: $usuarioId")
+            Log.d(TAG, "   Valores IDs: ${valoresIds.joinToString(", ")}")
+            Log.d(TAG, "═══════════════════════════════")
 
             val request = PersonalizacionRequestDTO.crearConFechaActual(
                 usuarioId = usuarioId,
                 valores = valoresIds
             )
 
+            // LOG DEL REQUEST COMPLETO
+            Log.d(TAG, "📤 Request DTO:")
+            Log.d(TAG, "   usuarioClienteId: ${request.usuarioClienteId}")
+            Log.d(TAG, "   fecha: ${request.fecha}")
+            Log.d(TAG, "   valoresSeleccionados: ${request.valoresSeleccionados}")
+
             val response = api.crearPersonalizacion(request)
+
+            // LOG DE RESPUESTA
+            Log.d(TAG, "📥 Response:")
+            Log.d(TAG, "   isSuccessful: ${response.isSuccessful}")
+            Log.d(TAG, "   code: ${response.code()}")
+            Log.d(TAG, "   message: ${response.message()}")
 
             if (response.isSuccessful) {
                 val body = response.body()
 
                 if (body != null) {
-                    Log.d(TAG, "✅ Personalización guardada. ID: ${body.id}")
+                    Log.d(TAG, "✅ Personalización guardada exitosamente")
+                    Log.d(TAG, "   ID: ${body.id}")
                     Log.d(TAG, "   Fecha: ${body.fecha}")
+                    Log.d(TAG, "   Usuario: ${body.usuarioClienteId}")
                     Log.d(TAG, "   Detalles: ${body.detalles.size} items")
 
                     val personalizacion = PersonalizacionGuardada(
@@ -126,13 +144,23 @@ class PersonalizacionRepository {
                     Result.failure(Exception(error))
                 }
             } else {
+                // LOG DETALLADO DEL ERROR
+                val errorBody = response.errorBody()?.string()
                 val error = "Error ${response.code()}: ${response.message()}"
-                Log.e(TAG, "❌ $error")
-                Result.failure(Exception(error))
+
+                Log.e(TAG, "❌ Error del servidor:")
+                Log.e(TAG, "   Código: ${response.code()}")
+                Log.e(TAG, "   Mensaje: ${response.message()}")
+                Log.e(TAG, "   ErrorBody: $errorBody")
+
+                Result.failure(Exception("$error - $errorBody"))
             }
 
         } catch (e: Exception) {
             Log.e(TAG, "❌ Excepción al guardar", e)
+            Log.e(TAG, "   Tipo: ${e.javaClass.simpleName}")
+            Log.e(TAG, "   Mensaje: ${e.message}")
+            Log.e(TAG, "   StackTrace: ${e.stackTraceToString()}")
             Result.failure(e)
         }
     }

@@ -421,6 +421,7 @@ class PersonalizacionActivity : BaseActivity() {
     private fun continuarConFormulario() {
         lifecycleScope.launch {
             try {
+
                 // Validar que esté completa
                 if (!estado.esValido()) {
                     mostrarError(estado.obtenerMensajeError() ?: "Personalización incompleta")
@@ -449,7 +450,7 @@ class PersonalizacionActivity : BaseActivity() {
                     val personalizacion = result.getOrNull()!!
                     personalizacionGuardada = personalizacion
 
-                    Log.d(TAG, "✅ Personalización guardada - ID: ${personalizacion.id}")
+                    Log.d(TAG, "Personalización guardada - ID: ${personalizacion.id}")
 
                     // Abrir formulario con el resumen
                     abrirFormularioConResumen(personalizacion)
@@ -459,7 +460,7 @@ class PersonalizacionActivity : BaseActivity() {
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Error al continuar", e)
+                Log.e(TAG, "Error al continuar", e)
                 mostrarError("Error inesperado: ${e.message}")
             } finally {
                 fabSave.isEnabled = true
