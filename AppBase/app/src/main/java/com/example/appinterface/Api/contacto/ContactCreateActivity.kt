@@ -166,14 +166,6 @@ class ContactCreateActivity : BaseActivity() {
             null
         }
 
-        // Log para debug
-        Log.d(TAG, "═══════════════════════════════")
-        Log.d(TAG, "📤 ENVIANDO CONTACTO")
-        Log.d(TAG, "   Usuario ID: $usuarioId")
-        Log.d(TAG, "   Usuario logueado: ${sessionManager.isLoggedIn()}")
-        Log.d(TAG, "   Personalización ID: $personalizacionId")
-        Log.d(TAG, "═══════════════════════════════")
-
         // Agregar referencia de personalización al mensaje si existe
         val mensajeFinal = if (personalizacionId != null) {
             "$mensaje\n\n[Ref. Personalización ID: $personalizacionId]"
@@ -213,7 +205,7 @@ class ContactCreateActivity : BaseActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
 
-                            finish()
+                            navigateHome()
 
                         } else {
                             Log.e(TAG, "Server error code=${response.code()} errorBody=${response.errorBody()?.string()}")
