@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Contenido del formulario de contacto (tu diseño original) -->
-<ScrollView
+<androidx.core.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -182,7 +182,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 app:backgroundTint="@color/green_brisas"
                 app:cornerRadius="16dp"
                 app:elevation="4dp"
@@ -190,4 +190,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
