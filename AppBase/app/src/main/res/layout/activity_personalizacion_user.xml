@@ -8,7 +8,7 @@
         android:background="@color/white"
         tools:context=".Api.personalizacion.PersonalizacionActivity">
 
-    <!-- Barra superior: SOLO top_app_bar -->
+    <!-- Barra superior: top_app_bar + top_user_bar -->
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -17,7 +17,10 @@
             android:elevation="8dp">
 
         <!-- Toolbar (siempre visible) -->
-        <include layout="@layout/top_app_bar" />
+        <include layout="@layout/top_app_bar"/>
+
+        <!-- Barra para usuarios normales -->
+        <include layout="@layout/top_user_bar"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

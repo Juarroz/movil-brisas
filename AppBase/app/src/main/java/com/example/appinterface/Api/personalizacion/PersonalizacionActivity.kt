@@ -10,7 +10,6 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appinterface.Api.contacto.ContactCreateActivity
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -29,9 +27,10 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 /**
- * Actividad para personalizar joyas
- * Permite seleccionar forma, gema, material, tamaño y talla
- * Muestra vista previa en tiempo real de la combinación seleccionada
+ * PersonalizacionActivity - Pantalla de personalización de joyas
+ *
+ * Hereda de BaseActivity para usar las barras superiores por rol
+ * NO aparece en las tabs de navegación
  */
 class PersonalizacionActivity : BaseActivity() {
 
@@ -46,11 +45,8 @@ class PersonalizacionActivity : BaseActivity() {
     // Estado de la personalización
     private val estado = PersonalizacionState()
 
-    // NUEVO: Para guardar la personalización una sola vez
+    // Para guardar la personalización una sola vez
     private var personalizacionGuardada: PersonalizacionGuardada? = null
-
-    // Vistas - Toolbar
-    private lateinit var toolbar: MaterialToolbar
 
     // Vistas - Preview
     private lateinit var ivMainPreview: ImageView
@@ -89,19 +85,44 @@ class PersonalizacionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_personalizacion)
+
+        // Cargar layout según el rol
+        loadLayoutBasedOnRole()
 
         repository = PersonalizacionRepository()
-        initViews()
-        setupToolbar()
+
+        // Inicializar UI común (barra superior)
+        initCommonUI()
+
+        // Inicializar vistas específicas de personalización
+        initPersonalizacionViews()
         setupGestureDetector()
         setupAdapters()
         setupListeners()
         cargarDatosIniciales()
     }
 
-    private fun initViews() {
-        toolbar = findViewById(R.id.toolbar)
+    /**
+     * Carga el layout correcto según el rol del usuario
+     */
+    private fun loadLayoutBasedOnRole() {
+        when {
+            !isLoggedIn() -> {
+                setContentView(R.layout.activity_personalizacion)
+            }
+            isAdmin() -> {
+                setContentView(R.layout.activity_personalizacion_admin)
+            }
+            else -> {
+                setContentView(R.layout.activity_personalizacion_user)
+            }
+        }
+    }
+
+    /**
+     * Inicializa las vistas específicas de personalización
+     */
+    private fun initPersonalizacionViews() {
         ivMainPreview = findViewById(R.id.iv_main_preview)
         btnPrevView = findViewById(R.id.btn_prev_view)
         btnNextView = findViewById(R.id.btn_next_view)
@@ -118,14 +139,12 @@ class PersonalizacionActivity : BaseActivity() {
         fabSave = findViewById(R.id.fab_save)
     }
 
-    private fun setupToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
+    /**
+     * Override para personalizar el comportamiento del botón home
+     */
+    override fun navigateHome() {
+        // En lugar de ir al home, volver atrás
+        onBackPressed()
     }
 
     private fun setupGestureDetector() {
@@ -197,7 +216,6 @@ class PersonalizacionActivity : BaseActivity() {
             }
         }
 
-        // MODIFICADO: Nuevo flujo del botón
         fabSave.setOnClickListener {
             continuarConFormulario()
         }
@@ -411,30 +429,22 @@ class PersonalizacionActivity : BaseActivity() {
         tvSummary.text = estado.obtenerResumen()
     }
 
-    // ==========================================
-    // NUEVO FLUJO: GUARDAR Y ABRIR FORMULARIO
-    // ==========================================
-
     /**
-     * NUEVO: Flujo completo - Guarda personalización y abre formulario
+     * Flujo completo - Guarda personalización y abre formulario
      */
     private fun continuarConFormulario() {
         lifecycleScope.launch {
             try {
-
-                // Validar que esté completa
                 if (!estado.esValido()) {
                     mostrarError(estado.obtenerMensajeError() ?: "Personalización incompleta")
                     return@launch
                 }
 
-                // Si ya está guardada, solo abrir formulario
                 if (personalizacionGuardada != null) {
                     abrirFormularioConResumen(personalizacionGuardada!!)
                     return@launch
                 }
 
-                // Guardar personalización
                 fabSave.isEnabled = false
                 fabSave.text = "Guardando..."
 
@@ -450,9 +460,8 @@ class PersonalizacionActivity : BaseActivity() {
                     val personalizacion = result.getOrNull()!!
                     personalizacionGuardada = personalizacion
 
-                    Log.d(TAG, "Personalización guardada - ID: ${personalizacion.id}")
+                    Log.d(TAG, "✅ Personalización guardada - ID: ${personalizacion.id}")
 
-                    // Abrir formulario con el resumen
                     abrirFormularioConResumen(personalizacion)
 
                 } else {
@@ -460,7 +469,7 @@ class PersonalizacionActivity : BaseActivity() {
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error al continuar", e)
+                Log.e(TAG, "❌ Error al continuar", e)
                 mostrarError("Error inesperado: ${e.message}")
             } finally {
                 fabSave.isEnabled = true
@@ -470,7 +479,7 @@ class PersonalizacionActivity : BaseActivity() {
     }
 
     /**
-     * NUEVO: Abre el formulario de contacto con el resumen pre-cargado
+     * Abre el formulario de contacto con el resumen pre-cargado
      */
     private fun abrirFormularioConResumen(personalizacion: PersonalizacionGuardada) {
         val intent = Intent(this, ContactCreateActivity::class.java).apply {
@@ -479,10 +488,6 @@ class PersonalizacionActivity : BaseActivity() {
         }
         startActivity(intent)
     }
-
-    // ==========================================
-    // UTILIDADES UI
-    // ==========================================
 
     private fun mostrarCargando(mostrar: Boolean) {
         fabSave.isEnabled = !mostrar
