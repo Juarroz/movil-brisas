@@ -1,69 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:padding="18dp">
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <EditText
-            android:id="@+id/etNombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre"
-            android:inputType="textPersonName" />
-
-    <EditText
-            android:id="@+id/etCorreo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Correo"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="8dp"/>
-
-    <EditText
-            android:id="@+id/etTelefono"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Teléfono (opcional)"
-            android:inputType="phone"
-            android:layout_marginTop="8dp"/>
-
-    <EditText
-            android:id="@+id/etDocnum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Docnum (opcional)"
-            android:inputType="text"
-            android:layout_marginTop="8dp"/>
-
-    <!-- Si prefieres seleccionar rol, cambia a Spinner; aquí usamos rolId fijo por simplicidad -->
-    <TextView
-            android:id="@+id/tvInfoRol"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Rol: usuario (rolId = 1)"
-            android:textSize="12sp"
-            android:layout_marginTop="10dp"/>
-
-    <!-- Botones -->
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="12dp">
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal"
+            android:clipToPadding="false">
 
-        <Button
-                android:id="@+id/btnCancelCreate"
+        <!-- TÍTULO -->
+        <TextView
+                android:id="@+id/tv_title_user_form"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelar" />
+                android:text="Crear Usuario"
+                android:textColor="@color/green_brisas"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
-        <Button
-                android:id="@+id/btnCreateUser"
+        <TextView
+                android:id="@+id/tv_sub_user_form"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Crear"
-                android:layout_marginStart="8dp"/>
+                android:text="Ingresa los datos del nuevo usuario"
+                android:textColor="@color/gray_medium"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp"
+                android:textAlignment="center"/>
+
+        <!-- CAMPO NOMBRE -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_user_nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:textSize="16sp"
+                    android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- CAMPO CORREO -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_user_correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Correo"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/ic_dialog_email"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCorreo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textSize="16sp"
+                    android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- CAMPO TELÉFONO -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_user_telefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Teléfono (opcional)"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/stat_sys_phone_call"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTelefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:textSize="16sp"
+                    android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- CAMPO DOCNUM -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_user_docnum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Docnum (opcional)"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/text_input_stroke_color"
+                app:boxStrokeWidth="2dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:startIconDrawable="@android:drawable/ic_menu_edit"
+                app:startIconTint="@color/green_brisas"
+                app:hintTextColor="@color/green_brisas"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/gray_medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDocnum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- BOTONES -->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_marginTop="24dp">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancelCreate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Cancelar"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/gray_medium"
+                    app:cornerRadius="14dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreateUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Crear"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/green_brisas"
+                    app:cornerRadius="14dp"/>
+        </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

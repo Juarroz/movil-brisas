@@ -1,10 +1,12 @@
 package com.example.appinterface
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import android.widget.VideoView
 import com.example.appinterface.Api.contacto.ContactCreateActivity
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.Api.personalizacion.PersonalizacionActivity
@@ -22,6 +24,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var btnFormulario: Button
     private lateinit var btnPersonalizar: Button
+    private var videoView: VideoView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,25 @@ class MainActivity : BaseActivity() {
 
         // Inicializar vistas específicas de MainActivity
         initMainViews()
+
+        // Inicializar el video si existe en el layout cargado
+        initVideoBackground()
+    }
+
+    /**
+     * Inicializa el VideoView del header
+     */
+    private fun initVideoBackground() {
+        val view = findViewById<VideoView?>(R.id.videoBackground)
+        videoView = view ?: return
+
+        val path = "android.resource://" + packageName + "/" + R.raw.hero_video
+        videoView?.setVideoURI(Uri.parse(path))
+
+        videoView?.setOnPreparedListener { mp ->
+            mp.isLooping = true
+            videoView?.start()
+        }
     }
 
     /**
@@ -119,9 +141,20 @@ class MainActivity : BaseActivity() {
      */
     override fun onResume() {
         super.onResume()
-        // Recargar el layout por si cambió el estado de sesión
         loadLayoutBasedOnRole()
         initCommonUI()
         initMainViews()
+        initVideoBackground()
+        videoView?.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoView?.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        videoView?.stopPlayback()
     }
 }

@@ -34,7 +34,7 @@ class PedidosActivity : BaseActivity() {
         setContentView(R.layout.activity_pedidos)
 
         // 👇 SOLUCIÓN: CONECTAR EL TOOLBAR Y ACTIVAR EL MENÚ
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_pedidos)
+        val toolbar = findViewById<Toolbar>(R.id.topAdminTabLayout)
         setSupportActionBar(toolbar)
 
         inicializarVistas()

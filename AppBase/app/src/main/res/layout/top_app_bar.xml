@@ -21,13 +21,12 @@
                 android:id="@+id/toolbar_logo"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@mipmap/logo_40_white"
+                android:src="@mipmap/img_8"
                 android:contentDescription="@string/app_name"
                 android:scaleType="centerCrop"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="6dp"
                 android:clickable="true"
-                android:focusable="true" />
-
+                android:focusable="true"/>
         <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -35,17 +34,19 @@
 
         <ImageButton
                 android:id="@+id/btn_notifications"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_notifications"
+                android:adjustViewBounds="true"
+                android:padding="70dp"
                 android:contentDescription="@string/notifications" />
 
         <ImageButton
                 android:id="@+id/img_profile_top"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_profile_placeholder"
                 android:contentDescription="@string/profile" />

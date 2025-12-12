@@ -1,110 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:fillViewport="true">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F5F5F5">
 
-    <LinearLayout
+    <!-- Barra superior -->
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:background="#173622"
+            android:elevation="8dp">
 
-        <EditText
-                android:id="@+id/dialog_txtNombre"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Nombre"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:inputType="textPersonName" />
+        <include layout="@layout/top_app_bar" />
+        <include layout="@layout/top_user_bar" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <EditText
-                android:id="@+id/dialog_txtCorreo"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Correo"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:inputType="textEmailAddress"
-                android:layout_marginTop="8dp" />
-
-        <EditText
-                android:id="@+id/dialog_txtTelefono"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Teléfono"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:inputType="phone"
-                android:layout_marginTop="8dp" />
-
-        <EditText
-                android:id="@+id/dialog_txtMensaje"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:hint="Mensaje"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:inputType="textMultiLine"
-                android:gravity="top"
-                android:layout_marginTop="8dp" />
-
-        <EditText
-                android:id="@+id/dialog_txtEstado"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Estado"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:layout_marginTop="8dp" />
-
-        <EditText
-                android:id="@+id/dialog_txtNotas"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:hint="Notas"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:inputType="textMultiLine"
-                android:layout_marginTop="8dp" />
-
-        <EditText
-                android:id="@+id/dialog_txtVia"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Vía"
-                android:background="@drawable/bg_input_field"
-                android:padding="12dp"
-                android:layout_marginTop="8dp" />
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="end"
-                android:layout_marginTop="12dp">
+                android:orientation="vertical"
+                android:padding="24dp">
 
-            <com.google.android.material.button.MaterialButton
-                    android:id="@+id/dialog_btnActualizar"
+            <!-- TÍTULO -->
+            <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:text="Actualizar"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/bg_button_green"
-                    app:backgroundTint="@null"
-                    app:cornerRadius="18dp" />
+                    android:layout_height="wrap_content"
+                    android:text="Editar Contacto"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#173622"
+                    android:layout_marginBottom="24dp" />
 
-            <com.google.android.material.button.MaterialButton
-                    android:id="@+id/dialog_btnEliminar"
+            <!-- Nombre -->
+            <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_marginStart="8dp"
-                    android:text="Eliminar"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/bg_button_green"
-                    app:backgroundTint="@null"
-                    app:cornerRadius="18dp" />
+                    android:layout_height="wrap_content"
+                    android:text="Nombre"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_txtNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:padding="16dp"
+                        android:enabled="false" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Correo -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Correo"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_txtCorreo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:inputType="textEmailAddress"
+                        android:textSize="16sp"
+                        android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Teléfono -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Teléfono"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_txtTelefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:inputType="phone"
+                        android:textSize="16sp"
+                        android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Mensaje -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mensaje"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_txtMensaje"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minLines="3"
+                        android:gravity="top"
+                        android:enabled="false"
+                        android:inputType="textMultiLine"
+                        android:textSize="16sp"
+                        android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Vía -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vía"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_txtVia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Estado -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estado"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    android:backgroundTint="#FFFFFF"
+                    app:cardElevation="2dp">
+
+                <Spinner
+                        android:id="@+id/spinnerEstadoContacto"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:paddingHorizontal="12dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Notas -->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notas"
+                    android:textSize="12sp"
+                    android:textColor="#666666" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:boxBackgroundMode="filled"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_txtNotas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minLines="2"
+                        android:gravity="top"
+                        android:textSize="16sp"
+                        android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Botones -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/dialog_btnActualizar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Actualizar"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@color/green_brisas"
+                        app:cornerRadius="28dp"
+                        android:paddingHorizontal="24dp" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/dialog_btnEliminar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="12dp"
+                        android:text="Eliminar"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@color/gray_dark"
+                        app:cornerRadius="28dp"
+                        android:paddingHorizontal="24dp" />
+            </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

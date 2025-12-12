@@ -1,85 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="24dp"
-              android:gravity="center_horizontal"
-              android:background="@android:color/white">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F5F5F5">
 
-    <!-- Logo -->
-    <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/logo_120"
-            android:scaleType="fitCenter"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="24dp" />
-
-    <!-- Título -->
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mi Perfil"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/green_brisas"
-            android:layout_marginBottom="32dp" />
-
-    <!-- Email/Username -->
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Correo"
-            android:textSize="12sp"
-            android:textColor="@color/gray_medium"
-            android:textStyle="bold" />
-
-    <TextView
-            android:id="@+id/tv_profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="usuario@email.com"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp" />
-
-    <!-- Roles -->
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Roles"
-            android:textSize="12sp"
-            android:textColor="@color/gray_medium"
-            android:textStyle="bold" />
-
-    <TextView
-            android:id="@+id/tv_profile_roles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="USER"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="32dp" />
-
-    <!-- Botón de cerrar sesión -->
-    <Button
-            android:id="@+id/btn_logout"
+    <!-- BARRA SUPERIOR -->
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Cerrar Sesión"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/green_brisas"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="wrap_content"
+            android:background="#173622"
+            android:elevation="6dp">
 
-    <!-- Botón de volver -->
-    <Button
-            android:id="@+id/btn_back_to_main"
+        <include layout="@layout/top_app_bar"/>
+        <include layout="@layout/top_user_bar"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- CONTENIDO -->
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Volver"
-            android:textColor="@color/green_brisas"
-            android:backgroundTint="@android:color/transparent" />
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-</LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp"
+                android:orientation="vertical">
+
+            <!-- LOGO -->
+            <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@mipmap/logo_120"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_gravity="center"/>
+
+            <!-- TARJETA PRINCIPAL -->
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="4dp"
+                    android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:gravity="center_horizontal">
+
+                    <!-- TÍTULO -->
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mi Perfil"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/green_brisas"
+                            android:layout_marginBottom="24dp"/>
+
+                    <!-- EMAIL -->
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Correo"
+                            android:textStyle="bold"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="12sp"/>
+
+                    <TextView
+                            android:id="@+id/tv_profile_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="usuario@email.com"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            android:layout_marginBottom="20dp"/>
+
+                    <!-- ROLES -->
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Roles"
+                            android:textStyle="bold"
+                            android:textColor="@color/gray_medium"
+                            android:textSize="12sp"/>
+
+                    <TextView
+                            android:id="@+id/tv_profile_roles"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="USUARIO"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="16dp"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- BOTÓN CERRAR SESIÓN -->
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Cerrar Sesión"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/green_brisas"
+                    app:cornerRadius="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:stateListAnimator="@null"/>
+
+            <!-- BOTÓN VOLVER -->
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_back_to_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Volver"
+                    android:textColor="@color/green_brisas"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:backgroundTint="@android:color/white"
+                    app:strokeColor="@color/green_brisas"
+                    app:strokeWidth="2dp"
+                    app:cornerRadius="16dp"
+                    android:stateListAnimator="@null"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
