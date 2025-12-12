@@ -3,11 +3,7 @@ package com.example.appinterface.Api.contacto
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.R
 import retrofit2.Call
@@ -25,7 +21,6 @@ class ContactListActivity : BaseActivity() {
 
         listContainer = findViewById(R.id.listContainer)
         cargarContactos()
-
         initCommonUI()
     }
 
@@ -33,25 +28,33 @@ class ContactListActivity : BaseActivity() {
 
     private fun cargarContactos() {
         listContainer.removeAllViews()
+
         repository.listarContactos().enqueue(object : Callback<List<ContactoFormularioResponseDTO>> {
-            override fun onResponse(call: Call<List<ContactoFormularioResponseDTO>>, response: Response<List<ContactoFormularioResponseDTO>>) {
+            override fun onResponse(
+                call: Call<List<ContactoFormularioResponseDTO>>,
+                response: Response<List<ContactoFormularioResponseDTO>>
+            ) {
                 if (response.isSuccessful) {
                     val lista = response.body() ?: emptyList()
+
                     if (lista.isEmpty()) {
                         val emptyView = LayoutInflater.from(this@ContactListActivity)
                             .inflate(R.layout.item_contact_card, listContainer, false)
+
                         emptyView.findViewById<TextView>(R.id.txtNombre).text = "No hay contactos"
-                        emptyView.findViewById<TextView>(R.id.txtCorreo).visibility = View.GONE
-                        emptyView.findViewById<TextView>(R.id.txtTelefono).visibility = View.GONE
-                        emptyView.findViewById<TextView>(R.id.txtMensaje).visibility = View.GONE
-                        emptyView.findViewById<TextView>(R.id.txtEstado).visibility = View.GONE
-                        emptyView.findViewById<TextView>(R.id.txtNotas).visibility = View.GONE
-                        emptyView.findViewById<TextView>(R.id.txtVia).visibility = View.GONE
-                        emptyView.findViewById<View>(R.id.btnEdit)?.visibility = View.GONE
-                        emptyView.findViewById<View>(R.id.btnDelete)?.visibility = View.GONE
+                        emptyView.findViewById<TextView>(R.id.txtCorreo).visibility = android.view.View.GONE
+                        emptyView.findViewById<TextView>(R.id.txtTelefono).visibility = android.view.View.GONE
+                        emptyView.findViewById<TextView>(R.id.txtMensaje).visibility = android.view.View.GONE
+                        emptyView.findViewById<TextView>(R.id.txtEstado).visibility = android.view.View.GONE
+                        emptyView.findViewById<TextView>(R.id.txtNotas).visibility = android.view.View.GONE
+                        emptyView.findViewById<TextView>(R.id.txtVia).visibility = android.view.View.GONE
+                        emptyView.findViewById<android.view.View>(R.id.btnEdit).visibility = android.view.View.GONE
+                        emptyView.findViewById<android.view.View>(R.id.btnDelete).visibility = android.view.View.GONE
+
                         listContainer.addView(emptyView)
                         return
                     }
+
                     lista.forEach { contacto ->
                         val itemView = LayoutInflater.from(this@ContactListActivity)
                             .inflate(R.layout.item_contact_card, listContainer, false)
@@ -64,8 +67,8 @@ class ContactListActivity : BaseActivity() {
                         itemView.findViewById<TextView>(R.id.txtNotas).text = contacto.notas ?: ""
                         itemView.findViewById<TextView>(R.id.txtVia).text = contacto.via ?: ""
 
-                        val btnEdit = itemView.findViewById<View>(R.id.btnEdit)
-                        val btnDelete = itemView.findViewById<View>(R.id.btnDelete)
+                        val btnEdit = itemView.findViewById<android.view.View>(R.id.btnEdit)
+                        val btnDelete = itemView.findViewById<android.view.View>(R.id.btnDelete)
 
                         btnEdit.setOnClickListener { showEditDialog(contacto) }
 
@@ -107,46 +110,68 @@ class ContactListActivity : BaseActivity() {
     }
 
     private fun showEditDialog(contacto: ContactoFormularioResponseDTO) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_contact, null)
-        val dialog = AlertDialog.Builder(this).setView(dialogView).create()
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_edit_contact, null)
+        val dialog = AlertDialog.Builder(this).setView(view).create()
 
-        val etNombre = dialogView.findViewById<EditText>(R.id.dialog_txtNombre)
-        val etCorreo = dialogView.findViewById<EditText>(R.id.dialog_txtCorreo)
-        val etTelefono = dialogView.findViewById<EditText>(R.id.dialog_txtTelefono)
-        val etMensaje = dialogView.findViewById<EditText>(R.id.dialog_txtMensaje)
-        val etEstado = dialogView.findViewById<EditText>(R.id.dialog_txtEstado)
-        val etNotas = dialogView.findViewById<EditText>(R.id.dialog_txtNotas)
-        val etVia = dialogView.findViewById<EditText>(R.id.dialog_txtVia)
-        val btnActualizar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.dialog_btnActualizar)
-        val btnEliminar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.dialog_btnEliminar)
+        val etNombre = view.findViewById<EditText>(R.id.dialog_txtNombre)
+        val etCorreo = view.findViewById<EditText>(R.id.dialog_txtCorreo)
+        val etTelefono = view.findViewById<EditText>(R.id.dialog_txtTelefono)
+        val etMensaje = view.findViewById<EditText>(R.id.dialog_txtMensaje)
+        val etVia = view.findViewById<EditText>(R.id.dialog_txtVia)
+
+        val spinnerEstado = view.findViewById<Spinner>(R.id.spinnerEstadoContacto)
+        val etNotas = view.findViewById<EditText>(R.id.dialog_txtNotas)
+
+        val btnActualizar = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.dialog_btnActualizar)
+        val btnEliminar = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.dialog_btnEliminar)
 
         etNombre.setText(contacto.nombre ?: "")
         etCorreo.setText(contacto.correo ?: "")
         etTelefono.setText(contacto.telefono ?: "")
         etMensaje.setText(contacto.mensaje ?: "")
-        etEstado.setText(contacto.estado ?: "")
-        etNotas.setText(contacto.notas ?: "")
         etVia.setText(contacto.via ?: "")
 
+        etNombre.isEnabled = false
+        etCorreo.isEnabled = false
+        etTelefono.isEnabled = false
+        etMensaje.isEnabled = false
+        etVia.isEnabled = false
+
+        val estados = listOf("pendiente", "atendido") // quitamos "finalizado"
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, estados)
+        spinnerEstado.adapter = adapter
+
+        val index = estados.indexOf(contacto.estado ?: "pendiente")
+        spinnerEstado.setSelection(if (index >= 0) index else 0)
+
+        etNotas.setText(contacto.notas ?: "")
+
         btnActualizar.setOnClickListener {
+            val estadoSeleccionado = spinnerEstado.selectedItem.toString()
             val update = ContactoFormularioUpdateDTO(
                 usuarioId = null,
                 usuarioIdAdmin = null,
-                via = etVia.text.toString().takeIf { it.isNotBlank() },
-                estado = etEstado.text.toString().takeIf { it.isNotBlank() },
-                notas = etNotas.text.toString().takeIf { it.isNotBlank() }
+                via = null,
+                estado = estadoSeleccionado,
+                notas = etNotas.text.toString()
             )
+
             repository.actualizarContacto(contacto.id?.toInt() ?: 0, update)
                 .enqueue(object : Callback<ContactoFormularioResponseDTO> {
-                    override fun onResponse(call: Call<ContactoFormularioResponseDTO>, response: Response<ContactoFormularioResponseDTO>) {
+                    override fun onResponse(
+                        call: Call<ContactoFormularioResponseDTO>,
+                        response: Response<ContactoFormularioResponseDTO>
+                    ) {
                         if (response.isSuccessful) {
                             Toast.makeText(this@ContactListActivity, "Actualizado", Toast.LENGTH_SHORT).show()
                             dialog.dismiss()
                             cargarContactos()
                         } else {
-                            Toast.makeText(this@ContactListActivity, "Error al actualizar: ${response.code()}", Toast.LENGTH_SHORT).show()
+                            val errorBody = response.errorBody()?.string()
+                            Toast.makeText(this@ContactListActivity, "Error ${response.code()}: $errorBody", Toast.LENGTH_LONG).show()
                         }
                     }
+
                     override fun onFailure(call: Call<ContactoFormularioResponseDTO>, t: Throwable) {
                         Toast.makeText(this@ContactListActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
@@ -165,6 +190,7 @@ class ContactListActivity : BaseActivity() {
                             Toast.makeText(this@ContactListActivity, "Error al eliminar: ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
                     }
+
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         Toast.makeText(this@ContactListActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
                     }

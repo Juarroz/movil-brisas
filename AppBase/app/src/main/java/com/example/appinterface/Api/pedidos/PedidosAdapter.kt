@@ -31,7 +31,7 @@ class PedidosAdapter(
             when (pedido.estadoId) {
                 1 -> { // diseño
                     tvEstadoBadge.text = "DISEÑO"
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#42A5F5")) // Azul
+                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#009688")) // Azul
                 }
                 2, 3, 4 -> { // tallado, engaste, pulido (En Proceso)
                     val estadoNombre = when (pedido.estadoId) {
@@ -41,7 +41,7 @@ class PedidosAdapter(
                         else -> "PROCESO"
                     }
                     tvEstadoBadge.text = estadoNombre
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#FFB300")) // Naranja
+                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#B9009955")) // Naranja
                 }
                 5 -> { // finalizado
                     tvEstadoBadge.text = "FINALIZADO"
@@ -49,7 +49,7 @@ class PedidosAdapter(
                 }
                 6 -> { // cancelado
                     tvEstadoBadge.text = "CANCELADO"
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#D32F2F")) // Rojo
+                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#576457")) // Rojo
                 }
                 else -> { // Desconocido
                     tvEstadoBadge.text = "N/D"

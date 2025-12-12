@@ -1,49 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/img_2"
-        tools:context=".MainActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-    <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFormulario"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:text=" ¡CONTACTANOS!"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:contentDescription="Enviar formulario"
-            android:background="@drawable/bg_button_green"
-            app:backgroundTint="@null"
-            android:stateListAnimator="@null"
-            app:cornerRadius="24dp" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.735" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.881"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <!-- Botón de Personalización -->
-    <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPersonalizar"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:text="✨ PERSONALIZA"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:contentDescription="Personalizar joya"
-            android:background="@drawable/bg_button_green"
-            app:backgroundTint="@null"
-            android:stateListAnimator="@null"
-            app:cornerRadius="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0.65"
-            app:layout_constraintHorizontal_bias="0.881" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- SECCION 1: VIDEO FULL WIDTH -->
+        <FrameLayout
+                android:id="@+id/videoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="260dp">
+
+            <VideoView
+                    android:id="@+id/videoBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <!-- CONTENIDO CON PADDING -->
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+            <!-- SECCION 2 : TEXTO CENTRADO -->
+            <TextView
+                    android:id="@+id/txtFrase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Descubre el brillo que refleja tu historia"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    android:textColor="#173622"
+                    android:gravity="center"
+                    android:layout_marginTop="28dp"/>
+
+            <!-- SECCION 3: IMAGEN 1 + TEXTO + BOTON -->
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp">
+
+                <ImageView
+                        android:id="@+id/img1"
+                        android:layout_width="0dp"
+                        android:layout_height="180dp"
+                        android:layout_weight="1"
+                        android:src="@mipmap/img_4"
+                        android:scaleType="centerCrop"
+                        android:layout_marginEnd="16dp"
+                        android:clipToOutline="true"/>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                    <TextView
+                            android:id="@+id/txt1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Diseños exclusivos inspirados en la elegancia natural de la esmeralda."
+                            android:textSize="14sp"
+                            android:textColor="#173622"
+                            android:gravity="center"/>
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPersonalizar"
+                            android:layout_width="150dp"
+                            android:layout_height="40dp"
+                            android:text=" Personalizar"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="32dp"
+                            app:backgroundTint="@color/green_brisas"
+                            app:cornerRadius="16dp"
+                            app:elevation="4dp"
+                            android:stateListAnimator="@null"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SECCION 4: IMAGEN 2 + TEXTO + BOTON -->
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                    <TextView
+                            android:id="@+id/txt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Cada pieza está diseñada para perdurar y transmitir autenticidad."
+                            android:textSize="14sp"
+                            android:textColor="#173622"
+                            android:gravity="center"/>
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnFormulario"
+                            android:layout_width="150dp"
+                            android:layout_height="40dp"
+                            android:text=" Contactanos"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="32dp"
+                            app:backgroundTint="@color/green_brisas"
+                            app:cornerRadius="16dp"
+                            app:elevation="4dp"
+                            android:stateListAnimator="@null"/>
+                </LinearLayout>
+
+                <ImageView
+                        android:id="@+id/img2"
+                        android:layout_width="0dp"
+                        android:layout_height="180dp"
+                        android:layout_weight="1"
+                        android:src="@mipmap/img_6"
+                        android:scaleType="centerCrop"
+                        android:layout_marginStart="16dp"
+                        android:clipToOutline="true"/>
+            </LinearLayout>
+
+            <!-- SECCION 5: PARRAFO -->
+            <TextView
+                    android:id="@+id/txtParrafo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:text="Las esmeraldas representan tradición, lujo y carácter. Cada pieza cuenta una historia que trasciende el tiempo, convirtiéndola en un símbolo único e irrepetible."
+                    android:textColor="#173622"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+            <!-- SECCION 6: TARJETAS ALINEADAS -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="50dp"
+                    android:weightSum="3">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp">
+
+                    <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@mipmap/img_5"
+                            android:scaleType="centerCrop"/>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Misión"
+                            android:textColor="#173622"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"/>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Crear piezas únicas que inspiren, conecten y acompañen momentos importantes de la vida."
+                            android:textSize="13sp"
+                            android:gravity="center"
+                            android:layout_marginTop="6dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="12dp">
+
+                    <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@mipmap/img_3"
+                            android:scaleType="centerCrop"/>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Visión"
+                            android:textColor="#173622"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"/>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ser referentes en joyería artesanal de esmeraldas, reconocidos por diseño, excelencia y autenticidad."
+                            android:textSize="13sp"
+                            android:gravity="center"
+                            android:layout_marginTop="6dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp">
+
+                    <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:src="@mipmap/img_7"
+                            android:scaleType="centerCrop"/>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Calidad"
+                            android:textColor="#173622"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"/>
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Trabajamos con precisión y materiales certificados para garantizar excelencia en cada detalle."
+                            android:textSize="13sp"
+                            android:gravity="center"
+                            android:layout_marginTop="6dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- FOOTER -->
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="© 2025 Emerald House — Arte en cada detalle."
+                    android:textColor="#173622"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginBottom="20dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

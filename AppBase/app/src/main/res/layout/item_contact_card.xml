@@ -87,7 +87,7 @@
                 android:text="Editar"
                 android:textSize="14sp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bg_button_green"
+                android:backgroundTint="@color/green_brisas"
                 app:backgroundTint="@null"
                 app:cornerRadius="18dp"
                 android:paddingHorizontal="14dp" />
@@ -100,7 +100,7 @@
                 android:text="Eliminar"
                 android:textSize="14sp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bg_button_green"
+                android:backgroundTint="@color/green_brisas"
                 app:backgroundTint="@null"
                 app:cornerRadius="18dp"
                 android:paddingHorizontal="14dp" />

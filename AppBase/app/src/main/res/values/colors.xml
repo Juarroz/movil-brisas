@@ -3,7 +3,7 @@
 	<color name="black">#FF000000</color>
 	<color name="white">#FFFFFFFF</color>
     <color name="green_dark">#006644</color>
-    <color name="green_medium">#009955</color>
+    <color name="green_medium">#B9009955</color>
     <color name="green_light">#33cc88</color>
     <color name="green_gradient_start">#009955</color>
     <color name="green_gradient_end">#33cc88</color>
@@ -11,7 +11,7 @@
     <color name="gray_dark">#576457</color>
     <color name="gray_medium">#576457</color>
     <color name="gray_light">#7D877D</color>
-    <color name="green_brisas">#173622</color>
+    <color name="green_brisas">#009688</color>
 
     <!-- Nuevos colores para personalización -->
     <color name="background_light">#F5F5F5</color>

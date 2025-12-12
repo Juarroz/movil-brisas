@@ -51,22 +51,22 @@
             app:layout_constraintTop_toBottomOf="@id/txtTelefono"
             app:layout_constraintStart_toStartOf="parent"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Editar"
-            style="@style/GreenButton"
+            android:backgroundTint="@color/green_brisas"
             app:layout_constraintTop_toBottomOf="@id/txtTelefono"
             app:layout_constraintEnd_toStartOf="@id/btnDelete"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-    <Button
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.88" app:layout_constraintVertical_bias="1.0"/>
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eliminar"
-            style="@style/GreenButton"
+            android:backgroundTint="@color/green_brisas"
             app:layout_constraintTop_toBottomOf="@id/txtTelefono"
             app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

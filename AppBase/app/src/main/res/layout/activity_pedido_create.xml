@@ -1,95 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#F5F5F5">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Barra superior -->
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:background="@color/green_brisas"
+            android:elevation="8dp">
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Crear Nuevo Pedido"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#173622"
-                android:layout_marginBottom="20dp"/>
+        <!-- Toolbar (siempre visible) -->
+        <include layout="@layout/top_app_bar"/>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Código (Ej: P-20240101-001)"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:layout_marginTop="16dp"/>
-        <EditText
-                android:id="@+id/etCrearCodigo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Código único"
-                android:inputType="text"
-                android:maxLength="15"
-                android:layout_marginBottom="16dp"/>
+        <!-- Barra de usuario -->
+        <include layout="@layout/top_user_bar"/>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ID de Personalización (per_id)"
-                android:textSize="14sp"
-                android:textColor="#666666"/>
-        <EditText
-                android:id="@+id/etCrearPerId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ID de personalización del cliente"
-                android:inputType="number"
-                android:maxLength="5"
-                android:layout_marginBottom="16dp"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ID de Empleado (Asignación)"
-                android:textSize="14sp"
-                android:textColor="#666666"/>
-        <EditText
-                android:id="@+id/etCrearEmpleadoId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ID del empleado asignado (opcional)"
-                android:inputType="number"
-                android:maxLength="5"
-                android:layout_marginBottom="16dp"/>
+    <!-- Contenido principal -->
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fillViewport="true">
 
-        <TextView
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Comentarios del Pedido"
-                android:textSize="14sp"
-                android:textColor="#666666"/>
-        <EditText
-                android:id="@+id/etCrearComentarios"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Notas internas o requisitos especiales"
-                android:inputType="textMultiLine"
-                android:minLines="3"
-                android:gravity="top|start"
-                android:padding="10dp"
-                android:background="@android:color/white"
-                android:layout_marginBottom="30dp"/>
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center_horizontal">
 
-        <Button
-                android:id="@+id/btnCrearPedido"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="Crear Pedido"
-                android:backgroundTint="#173622"
-                android:textColor="#FFFFFF"/>
+            <!-- Título -->
+            <TextView
+                    android:id="@+id/txtTituloCrear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crear Nuevo Pedido"
+                    android:textColor="@color/green_brisas"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="24dp"/>
 
-    </LinearLayout>
-</ScrollView>
+            <!-- Campo Código -->
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_crear_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Código del Pedido"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/text_input_stroke_color"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_menu_info_details"
+                    app:startIconTint="@color/green_brisas"
+                    app:hintTextColor="@color/green_brisas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCrearCodigo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:textSize="16sp"
+                        android:padding="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Campo per_id -->
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_crear_perid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ID Personalización (per_id)"
+                    android:layout_marginTop="16dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/text_input_stroke_color"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_menu_manage"
+                    app:startIconTint="@color/green_brisas"
+                    app:hintTextColor="@color/green_brisas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCrearPerId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:textSize="16sp"
+                        android:padding="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Campo empleado_id -->
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_crear_empleadoid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ID de Empleado (Asignado)"
+                    android:layout_marginTop="16dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/text_input_stroke_color"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+                    app:startIconTint="@color/green_brisas"
+                    app:hintTextColor="@color/green_brisas">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCrearEmpleadoId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:textSize="16sp"
+                        android:padding="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Campo comentarios -->
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_crear_comentarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Comentarios del Pedido"
+                    android:layout_marginTop="16dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/text_input_stroke_color"
+                    app:boxStrokeWidth="2dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_menu_edit"
+                    app:startIconTint="@color/green_brisas"
+                    app:hintTextColor="@color/green_brisas"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="300">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCrearComentarios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:minHeight="120dp"
+                        android:gravity="top|start"
+                        android:textSize="16sp"
+                        android:padding="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Botón Crear -->
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCrearPedido"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Crear Pedido"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="32dp"
+                    app:backgroundTint="@color/green_brisas"
+                    app:cornerRadius="16dp"
+                    app:elevation="4dp"
+                    android:stateListAnimator="@null"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
