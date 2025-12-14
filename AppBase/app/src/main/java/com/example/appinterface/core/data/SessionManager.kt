@@ -60,7 +60,7 @@ class SessionManager(context: Context) {
      */
     fun getAuthToken(): String? {
         val token = prefs.getString(KEY_TOKEN, null) ?: return null
-        val tokenType = prefs.getString(KEY_TOKEN_TYPE, "Bearer")
+        val tokenType = prefs.getString(KEY_TOKEN_TYPE, null)
         return "$tokenType $token"
     }
 

@@ -29,7 +29,10 @@ class PedidoCreateActivity : BaseActivity() {
         setContentView(R.layout.activity_pedido_create)
 
         // 1. Inicializar Repositorio
-        repository = PedidoRepository(RetrofitInstance.api2kotlin)
+        // 🔥 CORRECCIÓN: Inyectar SessionManager
+        val api = RetrofitInstance.api2kotlin
+        val sessionManager = RetrofitInstance.getSessionManager()
+        repository = PedidoRepository(api, sessionManager) // <-- CORREGIDO
 
         // 2. Vincular Vistas
         etCodigo = findViewById(R.id.etCrearCodigo)
@@ -78,7 +81,7 @@ class PedidoCreateActivity : BaseActivity() {
                     Toast.makeText(this@PedidoCreateActivity, "¡Pedido Creado con Éxito!", Toast.LENGTH_LONG).show()
                     finish() // Cierra la pantalla
                 } else {
-                    Toast.makeText(this@PedidoCreateActivity, "Error al crear: verifica datos y IDs.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PedidoCreateActivity, "Error al crear: verifica datos y IDs. ${resultado.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.example.appinterface.Api.pedidos
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -8,7 +9,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.appinterface.R
-import com.example.appinterface.core.BaseActivity // Heredar de BaseActivity para mantener sesión
+import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
 import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
 import com.example.appinterface.Api.pedidos.model.PedidoRequest
@@ -17,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PedidoDetailActivity : BaseActivity() { // Heredamos de BaseActivity
+class PedidoDetailActivity : BaseActivity() {
 
     private lateinit var etCodigo: EditText
     private lateinit var etComentarios: EditText
@@ -25,7 +26,6 @@ class PedidoDetailActivity : BaseActivity() { // Heredamos de BaseActivity
     private lateinit var btnGuardar: Button
     private lateinit var btnEliminar: Button
 
-    // Variables para datos
     private var pedidoId: Int = 0
     private lateinit var repository: PedidoRepository
 
@@ -35,7 +35,8 @@ class PedidoDetailActivity : BaseActivity() { // Heredamos de BaseActivity
 
         // 1. Inicializar Repositorio
         val api = RetrofitInstance.api2kotlin
-        repository = PedidoRepository(api)
+        val sessionManager = RetrofitInstance.getSessionManager()
+        repository = PedidoRepository(api, sessionManager) // <-- CORREGIDO
 
         // 2. Vincular Vistas
         etCodigo = findViewById(R.id.etCodigoDetalle)
@@ -47,16 +48,20 @@ class PedidoDetailActivity : BaseActivity() { // Heredamos de BaseActivity
         // 3. Configurar Spinner (Lista de estados)
         configurarSpinner()
 
-        // 4. Cargar datos recibidos de la lista anterior
+        // 4. Cargar datos
         cargarDatosDelIntent()
 
-        // 5. Configurar Botones
+        // 5. 🔥 CRÍTICO: Configurar restricciones de UI basadas en el rol
+        setupRoleRestrictions()
+
+        // 6. Configurar Acciones
         btnGuardar.setOnClickListener { guardarCambios() }
         btnEliminar.setOnClickListener { confirmarEliminar() }
     }
 
     private fun configurarSpinner() {
-        val estados = arrayOf("diseño", "tallado", "engaste", "pulido", "finalizado", "cancelado")
+        // La lista de estados debe ser inmutable y en el orden de IDs de la BD (1-6)
+        val estados = arrayOf("Diseño", "Tallado", "Engaste", "Pulido", "Finalizado", "Cancelado")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerEstado.adapter = adapter
@@ -71,48 +76,86 @@ class PedidoDetailActivity : BaseActivity() { // Heredamos de BaseActivity
         etCodigo.setText(codigo)
         etComentarios.setText(comentarios)
 
-        // Seleccionar el estado correcto en el spinner
-        // Si estadoId es 1, seleccionamos posición 0
+        // Seleccionar el estado correcto en el spinner (ID - 1)
         if (estadoId > 0 && estadoId <= spinnerEstado.adapter.count) {
             spinnerEstado.setSelection(estadoId - 1)
         }
     }
 
+    // 🔥 NUEVA FUNCIÓN PARA RESTRINGIR ACCIONES SEGÚN EL ROL
+    private fun setupRoleRestrictions() {
+        val roles = sessionManager.getRoles()
+        val isClient = roles.contains("ROLE_USUARIO")
+        val isAdminOrDesigner = roles.contains("ROLE_ADMINISTRADOR") || roles.contains("ROLE_DISEÑADOR")
+
+        // El cliente (USUARIO) NO puede modificar el estado, eliminar, o editar.
+        if (isClient) {
+            btnGuardar.visibility = View.GONE
+            btnEliminar.visibility = View.GONE
+            spinnerEstado.isEnabled = false // Deshabilitar cambio de estado
+            etComentarios.isEnabled = false // Deshabilitar edición de comentarios
+
+            // Opcional: Mostrar un mensaje si es solo vista.
+            Toast.makeText(this, "Modificaciones no permitidas para clientes.", Toast.LENGTH_SHORT).show()
+        } else if (isAdminOrDesigner) {
+            // El diseñador/administrador PUEDE actualizar el estado y los comentarios.
+            btnGuardar.visibility = View.VISIBLE
+            spinnerEstado.isEnabled = true
+            etComentarios.isEnabled = true
+
+            // Solo el administrador puede eliminar
+            btnEliminar.visibility = if (roles.contains("ROLE_ADMINISTRADOR")) View.VISIBLE else View.GONE
+        } else {
+            // Rol desconocido (seguridad)
+            btnGuardar.visibility = View.GONE
+            btnEliminar.visibility = View.GONE
+        }
+    }
+
     private fun guardarCambios() {
-        val nuevoEstadoId = spinnerEstado.selectedItemPosition + 1 // +1 porque el index empieza en 0
+        val nuevoEstadoId = spinnerEstado.selectedItemPosition + 1
         val nuevosComentarios = etComentarios.text.toString()
         val codigoActual = etCodigo.text.toString()
 
-        // Crear el objeto para enviar
+        // Validar si el usuario tiene permiso (aunque la UI lo oculte, es buena práctica)
+        if (!sessionManager.getRoles().any { it == "ROLE_ADMINISTRADOR" || it == "ROLE_DISEÑADOR" }) {
+            Toast.makeText(this, "Acción no autorizada.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val request = PedidoRequest(
             codigo = codigoActual,
             comentarios = nuevosComentarios,
             estadoId = nuevoEstadoId,
-            personaId = null, // No cambiamos esto
-            usuarioId = null  // No cambiamos esto
+            personaId = null,
+            usuarioId = null
         )
 
-        // Llamada al servidor (Usamos Corutinas)
         CoroutineScope(Dispatchers.IO).launch {
             val resultado = repository.actualizarPedido(pedidoId, request)
 
             withContext(Dispatchers.Main) {
                 if (resultado.isSuccess) {
                     Toast.makeText(this@PedidoDetailActivity, "¡Pedido Actualizado!", Toast.LENGTH_SHORT).show()
-                    finish() // Cierra la pantalla y vuelve a la lista
+                    finish()
                 } else {
-                    Toast.makeText(this@PedidoDetailActivity, "Error al guardar", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PedidoDetailActivity, "Error al guardar. ${resultado.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
     private fun confirmarEliminar() {
+        // Validar si el usuario tiene permiso (solo admin puede eliminar)
+        if (!sessionManager.isAdmin()) {
+            Toast.makeText(this, "Solo los administradores pueden eliminar pedidos.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         AlertDialog.Builder(this)
             .setTitle("¿Eliminar Pedido?")
             .setMessage("Esta acción no se puede deshacer.")
             .setPositiveButton("Eliminar") { _, _ ->
-                // Llamada para eliminar
                 CoroutineScope(Dispatchers.IO).launch {
                     val resultado = repository.eliminarPedido(pedidoId)
                     withContext(Dispatchers.Main) {
@@ -120,7 +163,7 @@ class PedidoDetailActivity : BaseActivity() { // Heredamos de BaseActivity
                             Toast.makeText(this@PedidoDetailActivity, "Pedido eliminado", Toast.LENGTH_SHORT).show()
                             finish()
                         } else {
-                            Toast.makeText(this@PedidoDetailActivity, "Error al eliminar", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@PedidoDetailActivity, "Error al eliminar. ${resultado.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.appinterface.core
 
+
 import com.example.appinterface.Api.contacto.ContactoFormularioRequestDTO
 import com.example.appinterface.Api.usuarios.RolResponseDTO
 import com.example.appinterface.Api.auth.LoginRequestDTO
@@ -49,8 +50,6 @@ interface ApiServicesKotlin {
     ): Call<Void>
 
 
-    @GET("pedidos")
-    fun getPedidos(): Call<List<Pedido>>
 
     // --- USUARIOS CRUD ---
 
@@ -179,6 +178,19 @@ interface ApiServicesKotlin {
 
 
 
+    // ==========================================
+    // ENDPOINTS DE PEDIDO
+    // ==========================================
+
+
+    @GET("pedidos")
+    fun getPedidos(): Call<List<Pedido>>
+
+    @POST("pedidos")
+    fun crearPedido(
+        @Body request: PedidoRequest
+    ): Call<Pedido>
+
     // Actualizar un pedido (PUT)
     @PUT("pedidos/{id}")
     fun actualizarPedido(
@@ -192,10 +204,13 @@ interface ApiServicesKotlin {
         @Path("id") id: Int
     ): Call<Void>
 
-    // Crear un nuevo pedido (POST)
-    @POST("pedidos")
-    fun crearPedido(
-        @Body request: PedidoRequest
-    ): Call<Pedido>
+    @GET("pedidos/cliente/{usuId}")
+    fun getPedidosByClienteId(
+        @Path("usuId") usuId: Int
+    ): Call<List<Pedido>>
 
+    @GET("pedidos/empleado/{usuId}")
+    fun getPedidosByEmpleadoId(
+        @Path("usuId") usuId: Int
+    ): Call<List<Pedido>>
 }

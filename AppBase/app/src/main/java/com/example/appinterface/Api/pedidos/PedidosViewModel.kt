@@ -1,3 +1,5 @@
+// /java/com/example/appinterface/Api/pedidos/PedidosViewModel.kt
+
 package com.example.appinterface.Api.pedidos
 
 import androidx.lifecycle.LiveData
@@ -7,35 +9,51 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
 import com.example.appinterface.Api.pedidos.model.Pedido
-// IMPORTANTE: Agregamos este import que faltaba
 import com.example.appinterface.Api.pedidos.model.PedidoRequest
 import kotlinx.coroutines.launch
 
 class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
 
     // --- ESTADOS ---
-    private val _pedidos = MutableLiveData<Result<List<Pedido>>>()
-    val pedidos: LiveData<Result<List<Pedido>>> = _pedidos
+    // 🔥 CAMBIO: LiveData ahora solo maneja la lista, los errores se manejan por separado
+    private val _pedidos = MutableLiveData<List<Pedido>>()
+    val pedidos: LiveData<List<Pedido>> = _pedidos
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // Nuevo estado para mensajes de éxito/error en editar/eliminar
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
     private val _operacionExitosa = MutableLiveData<String?>()
     val operacionExitosa: LiveData<String?> = _operacionExitosa
+
+    init {
+        // La carga inicial se mantiene
+        cargarPedidos()
+    }
 
     // --- FUNCIONES ---
 
     fun cargarPedidos() {
         _isLoading.value = true
-        viewModelScope.launch {
-            val resultado = repository.obtenerPedidos()
-            _pedidos.postValue(resultado)
-            _isLoading.postValue(false)
-        }
+        _errorMessage.value = null // Limpiar errores anteriores
+
+        // 🔥 CRÍTICO: Usar el método centralizado y segmentado
+        repository.getPedidosByRole(
+            onSuccess = { listaPedidos ->
+                _pedidos.value = listaPedidos
+                _isLoading.value = false
+            },
+            onError = { error ->
+                _errorMessage.value = error
+                _pedidos.value = emptyList() // Limpiar lista en caso de error
+                _isLoading.value = false
+            }
+        )
     }
 
-    // 👇 AQUÍ ES DONDE DEBEN IR LAS NUEVAS FUNCIONES (Dentro del ViewModel) 👇
+    // Funciones CRUD mantenidas (usan Coroutines y suspends)
 
     fun actualizarPedido(id: Int, request: PedidoRequest) {
         _isLoading.value = true
@@ -44,7 +62,7 @@ class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
             _isLoading.postValue(false)
             if (resultado.isSuccess) {
                 _operacionExitosa.postValue("Pedido actualizado correctamente")
-                cargarPedidos() // Recargamos la lista para ver el cambio
+                cargarPedidos() // Recargamos la lista con la nueva información
             } else {
                 _operacionExitosa.postValue("Error: ${resultado.exceptionOrNull()?.message}")
             }
@@ -69,16 +87,4 @@ class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
         _operacionExitosa.value = null
     }
 
-} // <--- AQUÍ SE TERMINA LA CLASE ViewModel
-
-// 👇 LA FÁBRICA VA AFUERA, SEPARADA 👇
-
-class PedidosViewModelFactory(private val repository: PedidoRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PedidosViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return PedidosViewModel(repository) as T
-        }
-        throw IllegalArgumentException("ViewModel desconocido")
-    }
 }

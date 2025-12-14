@@ -86,37 +86,23 @@ class PersonalizacionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Cargar layout según el rol
-        loadLayoutBasedOnRole()
+        // 🔥 CRÍTICO: Usar el layout UNIFICADO (R.layout.activity_personalizacion)
+        setContentView(R.layout.activity_personalizacion)
+
+        // YA NO NECESITAS loadLayoutBasedOnRole()
+        // loadLayoutBasedOnRole() // <-- ELIMINAR ESTA FUNCIÓN
 
         repository = PersonalizacionRepository()
 
-        // Inicializar UI común (barra superior)
+        // Inicializar UI común (esto llama a setupRoleBars que oculta/muestra las barras)
         initCommonUI()
 
-        // Inicializar vistas específicas de personalización
+        // ... (resto de la inicialización de la actividad)
         initPersonalizacionViews()
         setupGestureDetector()
         setupAdapters()
         setupListeners()
         cargarDatosIniciales()
-    }
-
-    /**
-     * Carga el layout correcto según el rol del usuario
-     */
-    private fun loadLayoutBasedOnRole() {
-        when {
-            !isLoggedIn() -> {
-                setContentView(R.layout.activity_personalizacion)
-            }
-            isAdmin() -> {
-                setContentView(R.layout.activity_personalizacion_admin)
-            }
-            else -> {
-                setContentView(R.layout.activity_personalizacion_user)
-            }
-        }
     }
 
     /**
