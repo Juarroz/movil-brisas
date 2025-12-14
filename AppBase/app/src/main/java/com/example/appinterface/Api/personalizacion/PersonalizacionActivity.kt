@@ -17,7 +17,7 @@ import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appinterface.Api.contacto.ContactCreateActivity
+import com.example.appinterface.Api.contacto.ContactCreateBottomSheetFragment
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.google.android.material.chip.Chip
@@ -468,11 +468,22 @@ class PersonalizacionActivity : BaseActivity() {
      * Abre el formulario de contacto con el resumen pre-cargado
      */
     private fun abrirFormularioConResumen(personalizacion: PersonalizacionGuardada) {
+        // 🔥 CAMBIO: Usar Bottom Sheet Fragment
+        val sheet = ContactCreateBottomSheetFragment.newInstance(
+            resumen = personalizacion.generarResumenParaFormulario(),
+            personalizacionId = personalizacion.id
+        )
+        // Usar supportFragmentManager de la Activity
+        sheet.show(supportFragmentManager, ContactCreateBottomSheetFragment.TAG_SHEET)
+
+        // Elimina el código de Intent anterior
+        /*
         val intent = Intent(this, ContactCreateActivity::class.java).apply {
             putExtra(EXTRA_RESUMEN_PERSONALIZACION, personalizacion.generarResumenParaFormulario())
             putExtra(EXTRA_ID_PERSONALIZACION, personalizacion.id)
         }
         startActivity(intent)
+        */
     }
 
     private fun mostrarCargando(mostrar: Boolean) {

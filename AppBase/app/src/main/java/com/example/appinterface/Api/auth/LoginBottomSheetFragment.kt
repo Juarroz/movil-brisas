@@ -45,7 +45,7 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.login_bottom_sheet, container, false)
+        return inflater.inflate(R.layout.bottom_sheet_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

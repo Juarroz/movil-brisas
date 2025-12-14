@@ -1,16 +1,13 @@
 package com.example.appinterface.Api.auth
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.example.appinterface.Api.usuarios.UsuarioActivity
 import com.example.appinterface.Api.usuarios.UsuarioRequestDTO
 import com.example.appinterface.Api.usuarios.UsuarioResponseDTO
-import com.example.appinterface.MainActivity
 import com.example.appinterface.R
 import com.example.appinterface.core.RetrofitInstance
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -55,7 +52,7 @@ class RegisterBottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.register_bottom_sheet, container, false)
+        return inflater.inflate(R.layout.bottom_sheet_register, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

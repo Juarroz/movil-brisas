@@ -97,6 +97,13 @@ class SessionManager(context: Context) {
     }
 
     /**
+     * Verifica si el usuario tiene rol de DISEÑADOR
+     */
+    fun isDesigner(): Boolean {
+        return getRoles().contains("ROLE_DISEÑADOR")
+    }
+
+    /**
      * CORREGIDO: Obtiene el ID del usuario logueado
      * Devuelve null si:
      * - No existe el valor
