@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import android.widget.VideoView
+import androidx.appcompat.widget.Toolbar
 import com.example.appinterface.Api.contacto.ContactCreateBottomSheetFragment
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.Api.personalizacion.PersonalizacionActivity
@@ -24,12 +25,12 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 🔥 CRÍTICO: Usar el layout UNIFICADO para todos los roles
         setContentView(R.layout.activity_main)
 
-        // ELIMINAR: loadLayoutBasedOnRole()
-        // loadLayoutBasedOnRole()
+        // 🔥 CRÍTICO: Configurar la Toolbar para que la Activity la reconozca
+        val toolbar = findViewById<Toolbar>(R.id.topAppBar)
+        setSupportActionBar(toolbar)
+
 
         // Inicializar UI común (esto llama a setupRoleBars que oculta/muestra las barras)
         initCommonUI()

@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.appcompat.widget.Toolbar
 
 class PedidoDetailActivity : BaseActivity() {
 
@@ -33,10 +34,18 @@ class PedidoDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pedido_detail)
 
+        // 🔥 1A. Configurar la Toolbar base (que está en top_app_bar)
+        // La Toolbar es necesaria para el título y para que initCommonUI funcione bien.
+        val toolbar = findViewById<Toolbar>(R.id.topAppBar)
+        setSupportActionBar(toolbar)
+
+        // 🔥 1B. Llamar a initCommonUI para manejar la visibilidad de top_admin_bar/top_user_bar
+        initCommonUI()
+
         // 1. Inicializar Repositorio
         val api = RetrofitInstance.api2kotlin
         val sessionManager = RetrofitInstance.getSessionManager()
-        repository = PedidoRepository(api, sessionManager) // <-- CORREGIDO
+        repository = PedidoRepository(api, sessionManager)
 
         // 2. Vincular Vistas
         etCodigo = findViewById(R.id.etCodigoDetalle)
@@ -51,7 +60,7 @@ class PedidoDetailActivity : BaseActivity() {
         // 4. Cargar datos
         cargarDatosDelIntent()
 
-        // 5. 🔥 CRÍTICO: Configurar restricciones de UI basadas en el rol
+        // 5. CRÍTICO: Configurar restricciones de UI basadas en el rol
         setupRoleRestrictions()
 
         // 6. Configurar Acciones

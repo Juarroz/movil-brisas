@@ -35,19 +35,18 @@ class PedidosActivity : BaseActivity() {
         setContentView(R.layout.activity_pedidos)
 
         // 1. Configurar Toolbar
-        // Asumiendo que R.id.topAdminTabLayout es el ID de la Toolbar en activity_pedidos.xml
-        val toolbar = findViewById<Toolbar>(R.id.topAdminTabLayout)
-        setSupportActionBar(toolbar)
+        // 🔥 CAMBIAR R.id.topAdminTabLayout por R.id.topAppBar
+        val toolbar = findViewById<Toolbar>(R.id.topAppBar)
+        setSupportActionBar(toolbar) // Esto configura el Toolbar base como la ActionBar de la Activity
 
+        // Ahora la BaseActivity puede inicializar el resto de la UI
+        initCommonUI() // <-- Asegúrate de que esta línea esté aquí si quieres que las barras de rol funcionen
+
+        // El resto de tu lógica se mantiene igual
         inicializarVistas()
         configurarViewModel()
-
-        // 🔥 Llamada para adaptar el título ANTES de observar datos
         setupRoleUI()
-
         observarDatos()
-
-        // Cargar datos iniciales
         viewModel.cargarPedidos()
     }
 

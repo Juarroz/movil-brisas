@@ -209,31 +209,45 @@ open class BaseActivity : AppCompatActivity() {
         tabLayout.visibility = View.VISIBLE
         tabLayout.removeAllTabs()
 
-        // --- AGREGAMOS LAS PESTAÑAS AQUÍ ---
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))     // Index 0
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))  // Index 1
-        tabLayout.addTab(tabLayout.newTab().setText("Pedidos"))                         // Index 2
-        tabLayout.addTab(tabLayout.newTab().setText("Personalización"))                 // 🔥 Index 3 (Nuevo)
+        // --- AGREGAMOS LAS CUATRO PESTAÑAS ---
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))      // Index 0
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))   // Index 1
+        tabLayout.addTab(tabLayout.newTab().setText("Pedidos"))                          // Index 2
+        tabLayout.addTab(tabLayout.newTab().setText("Personalización"))                  // Index 3
 
         // 2. Seleccionar la pestaña actual
-        val currentTab = getCurrentTabIndex()
+        val currentTab = getCurrentTabIndex() // Será null en MainActivity, 0 en UsuarioActivity, etc.
         if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
             tabLayout.getTabAt(currentTab)?.select()
         }
 
-        // 3. Navegación por selección de pestaña (Listener de Admin)
+        // 🔥 3. Navegación (Listener debe estar siempre para todas las pantallas Admin)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> startActivity(Intent(this@BaseActivity, UsuarioActivity::class.java))
-                    1 -> startActivity(Intent(this@BaseActivity, ContactListActivity::class.java))
-                    2 -> startActivity(Intent(this@BaseActivity, PedidosActivity::class.java))
-                    3 -> startActivity(Intent(this@BaseActivity, com.example.appinterface.Api.personalizacion.PersonalizacionActivity::class.java)) // 🔥 Nuevo
+
+                val targetActivityClass = when (tab.position) {
+                    0 -> com.example.appinterface.Api.usuarios.UsuarioActivity::class.java
+                    1 -> com.example.appinterface.Api.contacto.ContactListActivity::class.java
+                    2 -> com.example.appinterface.Api.pedidos.PedidosActivity::class.java
+                    3 -> com.example.appinterface.Api.personalizacion.PersonalizacionActivity::class.java
+                    else -> null
+                }
+
+                // CRÍTICO: El chequeo a prueba de bucles es el que se mantiene.
+                if (targetActivityClass != null && targetActivityClass != this@BaseActivity::class.java) {
+                    val intent = Intent(this@BaseActivity, targetActivityClass)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+
+                    // Finalizar la Activity actual para que la nueva tome su lugar
+                    finish()
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+
 
         // 4. Efecto de desplazamiento (se mantiene)
         if (mainAppBar != null) {

@@ -13,10 +13,10 @@
             android:background="@color/green_brisas"
             android:elevation="8dp">
 
-        <!-- Toolbar (siempre visible) -->
         <include layout="@layout/top_app_bar"/>
 
-        <!-- Barra de usuario -->
+        <include layout="@layout/top_admin_bar"/>
+
         <include layout="@layout/top_user_bar"/>
 
     </com.google.android.material.appbar.AppBarLayout>

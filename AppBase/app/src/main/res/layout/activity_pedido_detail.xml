@@ -14,6 +14,9 @@
             android:elevation="8dp">
 
         <include layout="@layout/top_app_bar" />
+
+        <include layout="@layout/top_admin_bar"/>
+
         <include layout="@layout/top_user_bar" />
 
     </com.google.android.material.appbar.AppBarLayout>
