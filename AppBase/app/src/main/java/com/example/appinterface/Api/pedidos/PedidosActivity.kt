@@ -17,6 +17,7 @@ import com.example.appinterface.core.RetrofitInstance
 import com.example.appinterface.Api.pedidos.data.PedidoRepository
 import androidx.appcompat.widget.Toolbar
 import com.example.appinterface.Api.pedidos.data.PedidoDTO
+import com.example.appinterface.core.data.SessionManager
 
 
 class PedidosActivity : BaseActivity() {
@@ -48,10 +49,6 @@ class PedidosActivity : BaseActivity() {
         configurarViewModel()
         observarDatos()
         viewModel.cargarPedidos()
-    }
-
-    override fun getCurrentTabIndex(): Int? {
-        return 2 // Índice de la pestaña de Pedidos en Admin Tabs
     }
 
     override fun onResume() {
@@ -270,4 +267,17 @@ class PedidosActivity : BaseActivity() {
 
         Toast.makeText(this, "Asignando Pedido $pedidoId al Diseñador $usuIdEmpleado...", Toast.LENGTH_LONG).show()
     }
+
+    override fun getCurrentTabIndex(): Int? {
+        val sessionManager = SessionManager(this)
+        return when {
+            // Si es Admin, "Pedidos" es el tercer tab (Index 2)
+            sessionManager.isAdmin() -> 2
+            // Si es Diseñador, "Pedidos" es el primer tab (Index 0)
+            sessionManager.isDesigner() || sessionManager.isLoggedIn() -> 0
+            else -> null
+        }
+    }
+
+
 }

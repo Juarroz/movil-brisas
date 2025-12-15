@@ -178,20 +178,17 @@ open class BaseActivity : AppCompatActivity() {
                 topUserTabLayout?.let { it.visibility = View.GONE }
             }
         } else if (designer) {
-            // ROL: DISEÑADOR -> Por ahora usa la barra de usuario, pero podría usar una propia (designer_bar)
-            // La clave es que usa el topUserTabLayout, pero la lógica de la Actividad de Pedidos
-            // sabrá darle permisos de admin en esa pantalla específica.
-            topUserTabLayout?.let {
-                it.visibility = View.VISIBLE
-                // Podrías llamar a setupUserTabs(it) aquí si tu barra de usuario tiene pestañas
+            // ROL: DISEÑADOR -> Usa el topUserTabLayout para mostrar sus pestañas específicas
+            if (topUserTabLayout != null) {
+                setupDesignerTabs(topUserTabLayout!!) // 🔥 LLAMAR AL NUEVO MÉTODO
+                topAdminTabLayout?.let { it.visibility = View.GONE }
+            }
+        } else if (loggedIn) {
+            // ROL: USUARIO/CLIENTE -> Muestra la barra de usuario con pestañas
+            if (topUserTabLayout != null) {
+                setupUserTabs(topUserTabLayout!!) // 🔥 LLAMAR AL MÉTODO
             }
             topAdminTabLayout?.let { it.visibility = View.GONE }
-
-        } else if (loggedIn) {
-            // ROL: USUARIO/CLIENTE -> Muestra la barra de usuario
-            topUserTabLayout?.let {
-                it.visibility = View.VISIBLE
-            }
             topAdminTabLayout?.let { it.visibility = View.GONE }
         } else {
             // ANÓNIMO (Si solo tienes top_app_bar, el topUserTabLayout y topAdminTabLayout estarán ocultos por defecto)
@@ -248,6 +245,99 @@ open class BaseActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+
+        // 4. Efecto de desplazamiento (se mantiene)
+        if (mainAppBar != null) {
+            mainAppBar!!.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                tabLayout.translationY = verticalOffset * 0.5f
+            })
+        }
+    }
+
+    /**
+     * Configura el TabLayout de navegación SOLAMENTE para diseñadores.
+     */
+    private fun setupDesignerTabs(tabLayout: TabLayout) {
+        // 1. Mostrar y configurar pestañas
+        tabLayout.visibility = View.VISIBLE
+        tabLayout.removeAllTabs()
+
+        // --- PESTAÑAS DEL DISEÑADOR: Pedidos y Personalización ---
+        tabLayout.addTab(tabLayout.newTab().setText("Pedidos"))                          // Index 0 (Pedidos)
+        tabLayout.addTab(tabLayout.newTab().setText("Personalización"))                  // Index 1 (Personalización)
+
+        // 2. Seleccionar la pestaña actual
+        val currentTab = getCurrentTabIndex()
+        if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
+            tabLayout.getTabAt(currentTab)?.select()
+        }
+
+        // 3. Navegación
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+
+                val targetActivityClass = when (tab.position) {
+                    0 -> com.example.appinterface.Api.pedidos.PedidosActivity::class.java
+                    1 -> com.example.appinterface.Api.personalizacion.PersonalizacionActivity::class.java
+                    else -> null
+                }
+
+                if (targetActivityClass != null && targetActivityClass != this@BaseActivity::class.java) {
+                    val intent = Intent(this@BaseActivity, targetActivityClass)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    finish()
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        // 4. Efecto de desplazamiento (se mantiene)
+        if (mainAppBar != null) {
+            mainAppBar!!.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                tabLayout.translationY = verticalOffset * 0.5f
+            })
+        }
+    }
+
+    /**
+     * Configura el TabLayout de navegación SOLAMENTE para usuarios/clientes logueados.
+     */
+    private fun setupUserTabs(tabLayout: TabLayout) {
+        tabLayout.visibility = View.VISIBLE
+        tabLayout.removeAllTabs()
+
+        // --- PESTAÑAS DEL CLIENTE: Pedidos y una posible Home o Perfil ---
+        // Asumo que el cliente solo necesita ver sus pedidos.
+        tabLayout.addTab(tabLayout.newTab().setText("Mis Pedidos"))                          // Index 0
+        // tabLayout.addTab(tabLayout.newTab().setText("Perfil"))                            // Index 1 (Opcional)
+
+        val currentTab = getCurrentTabIndex()
+        if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
+            tabLayout.getTabAt(currentTab)?.select()
+        }
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+
+                val targetActivityClass = when (tab.position) {
+                    0 -> com.example.appinterface.Api.pedidos.PedidosActivity::class.java
+                    // 1 -> com.example.appinterface.Api.auth.ProfileActivity::class.java // Si añades Perfil
+                    else -> null
+                }
+
+                if (targetActivityClass != null && targetActivityClass != this@BaseActivity::class.java) {
+                    val intent = Intent(this@BaseActivity, targetActivityClass)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    finish()
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
 
         // 4. Efecto de desplazamiento (se mantiene)
         if (mainAppBar != null) {
