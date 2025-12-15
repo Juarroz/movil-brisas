@@ -43,10 +43,10 @@ class AuthRepository(
                     if (loginResponse != null) {
 
                         sessionManager.saveSession(
-                            username = loginResponse.userName,  // Nombre completo para mostrar
                             token = loginResponse.token,
-                            userId = 0,
-                            roles = loginResponse.roles  // ← SIN MODIFICAR: ["ROLE_ADMINISTRADOR"]
+                            userId = loginResponse.userId,      // 1. Pasar el ID del usuario
+                            username = loginResponse.userName,  // 2. Pasar el Nombre
+                            roles = loginResponse.roles         // 3. Pasar la lista de roles
                         )
                         onSuccess(loginResponse)
                     } else {

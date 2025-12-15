@@ -27,10 +27,6 @@
         </activity>
 
         <activity
-                android:name=".Api.contacto.ContactCreateActivity"
-                android:exported="true" />
-
-        <activity
                 android:name=".Api.contacto.ContactListActivity"
                 android:exported="true" />
 

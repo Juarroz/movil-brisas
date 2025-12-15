@@ -14,14 +14,11 @@
             android:background="#173622"
             android:elevation="6dp">
 
-        <!-- toolbar base -->
         <include layout="@layout/top_app_bar"/>
 
-        <!-- barra para usuarios -->
-        <include layout="@layout/top_user_bar"/>
+        <include layout="@layout/top_admin_bar"/>
 
-        <!-- Si usas barra para admins, usa esta en lugar de la de arriba -->
-        <!-- <include layout="@layout/top_admin_bar"/> -->
+        <include layout="@layout/top_user_bar"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

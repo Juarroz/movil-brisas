@@ -4,61 +4,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.example.appinterface.R
-import com.example.appinterface.Api.pedidos.model.Pedido
+import com.example.appinterface.core.RetrofitInstance
 import android.graphics.Color
+import com.example.appinterface.Api.pedidos.data.PedidoDTO
+import com.example.appinterface.core.data.SessionManager
 
 class PedidosAdapter(
-    private var listaPedidos: List<Pedido> = emptyList(),
-    private val onPedidoClick: (Pedido) -> Unit
+    private var pedidos: List<PedidoDTO>,
+    private val onClick: (PedidoDTO) -> Unit, // Para ir al detalle
+    private val onCambiarEstado: (PedidoDTO) -> Unit, // Abre DialogCambiarEstadoFragment
+    private val onAsignarDisenador: (PedidoDTO) -> Unit // Abre DialogAsignarDisenadorFragment
 ) : RecyclerView.Adapter<PedidosAdapter.PedidoViewHolder>() {
 
+    private val sessionManager: SessionManager? by lazy {
+        try {
+            // Intentar obtener la instancia. Si RetrofitInstance no está lista, puede lanzar excepción.
+            RetrofitInstance.getSessionManager()
+        } catch (e: Exception) {
+            // Manejar la excepción si la instancia de Retrofit falla
+            null
+        }
+    }
+
+    // Ahora accedemos a los roles de forma segura (tolerando null)
+    private val isAdmin: Boolean
+        get() = sessionManager?.isAdmin() ?: false
+
+    private val isDesigner: Boolean
+        get() = sessionManager?.isDesigner() ?: false
+
+    private val currentUserId: Int?
+        get() = sessionManager?.getUserId()
+
     class PedidoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        // Renombré tvEstadoBadge a tvEstado para coincidir con el XML item_pedido.xml
         val tvCodigo: TextView = view.findViewById(R.id.tvCodigo)
         val tvFecha: TextView = view.findViewById(R.id.tvFecha)
-        val tvComentarios: TextView = view.findViewById(R.id.tvComentarios)
-        val tvEstadoBadge: TextView = view.findViewById(R.id.tvEstadoBadge)
-
-        fun bind(pedido: Pedido, onClick: (Pedido) -> Unit) {
-
-            val fechaLimpia = pedido.fechaCreacion?.take(10) ?: "Sin fecha"
-            tvFecha.text = fechaLimpia
-            tvCodigo.text = "Pedido: ${pedido.codigo ?: "S/N"}"
-            tvComentarios.text = pedido.comentarios ?: "Sin comentarios"
-
-            // 3. LÓGICA DE ESTADO BASADA EN IDs DE BD
-            when (pedido.estadoId) {
-                1 -> { // diseño
-                    tvEstadoBadge.text = "DISEÑO"
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#009688")) // Azul
-                }
-                2, 3, 4 -> { // tallado, engaste, pulido (En Proceso)
-                    val estadoNombre = when (pedido.estadoId) {
-                        2 -> "TALLADO"
-                        3 -> "ENGASTE"
-                        4 -> "PULIDO"
-                        else -> "PROCESO"
-                    }
-                    tvEstadoBadge.text = estadoNombre
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#B9009955")) // Naranja
-                }
-                5 -> { // finalizado
-                    tvEstadoBadge.text = "FINALIZADO"
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#4CAF50")) // Verde
-                }
-                6 -> { // cancelado
-                    tvEstadoBadge.text = "CANCELADO"
-                    tvEstadoBadge.setBackgroundColor(Color.parseColor("#576457")) // Rojo
-                }
-                else -> { // Desconocido
-                    tvEstadoBadge.text = "N/D"
-                    tvEstadoBadge.setBackgroundColor(Color.GRAY)
-                }
-            }
-
-            itemView.setOnClickListener { onClick(pedido) }
-        }
+        val tvCliente: TextView = view.findViewById(R.id.tvCliente) // Nuevo
+        val tvDisenador: TextView = view.findViewById(R.id.tvDisenador) // Nuevo
+        val tvEstado: TextView = view.findViewById(R.id.tvEstado) // Nuevo ID
+        // Botones de acción
+        val btnAsignar: MaterialButton = view.findViewById(R.id.btnAsignarDisenadorCard)
+        val btnCambiarEstado: MaterialButton = view.findViewById(R.id.btnCambiarEstadoCard)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
@@ -67,13 +58,83 @@ class PedidosAdapter(
     }
 
     override fun onBindViewHolder(holder: PedidoViewHolder, position: Int) {
-        holder.bind(listaPedidos[position], onPedidoClick)
+        val pedido = pedidos[position]
+        val context = holder.itemView.context
+
+        // 1. Datos e Identificación
+        holder.tvCodigo.text = "#${pedido.pedCodigo ?: "S/N"}"
+        holder.tvFecha.text = pedido.pedFechaCreacion?.take(10) ?: "Sin fecha"
+
+        // Asumo que tu DTO Pedido tiene nombreCliente y nombreEmpleado
+        holder.tvCliente.text = pedido.nombreCliente ?: "Cliente Desconocido"
+        holder.tvDisenador.text = pedido.nombreEmpleado ?: "PENDIENTE ASIGNAR"
+
+        // 2. LÓGICA DE ESTADO (Usando tus IDs y colores)
+        val estadoNombre = pedido.estadoNombre?.replace('_', ' ')?.uppercase() ?: "N/D"
+        holder.tvEstado.text = estadoNombre
+
+        val estadoColor: Int
+        val textColor: Int
+
+        // Mapeo de Colores basado en tu lógica anterior y tu paleta
+        when (pedido.estId) {
+            1 -> { // Cotización Pendiente (Usando un color que destaque el 'pendiente')
+                estadoColor = ContextCompat.getColor(context, R.color.green_medium)
+                textColor = ContextCompat.getColor(context, R.color.white)
+            }
+            3, 4, 5, 6, 7, 8 -> { // En Proceso (Diseño, Tallado, etc. - Usamos el color principal)
+                estadoColor = ContextCompat.getColor(context, R.color.green_brisas)
+                textColor = ContextCompat.getColor(context, R.color.white)
+            }
+            9 -> { // Finalizado/Entregado
+                estadoColor = ContextCompat.getColor(context, R.color.green_dark)
+                textColor = ContextCompat.getColor(context, R.color.white)
+            }
+            10 -> { // Cancelado
+                estadoColor = ContextCompat.getColor(context, R.color.gray_dark)
+                textColor = ContextCompat.getColor(context, R.color.white)
+            }
+            else -> { // Desconocido/Otros
+                estadoColor = Color.GRAY
+                textColor = Color.WHITE
+            }
+        }
+
+        // Aplicar el color de fondo (asumo que bg_status_rounded es un drawable de forma simple)
+        holder.tvEstado.background.setTint(estadoColor)
+        holder.tvEstado.setTextColor(textColor)
+
+
+        // 3. Lógica de Roles y Acciones
+
+        // A. Acción principal (clic en la tarjeta)
+        holder.itemView.setOnClickListener { onClick(pedido) }
+
+        // B. Botones de Gestión (Visibilidad y Acciones)
+
+        // Asignar: Solo Administrador
+        if (isAdmin) {
+            holder.btnAsignar.visibility = View.VISIBLE
+            holder.btnAsignar.setOnClickListener { onAsignarDisenador(pedido) }
+        } else {
+            holder.btnAsignar.visibility = View.GONE
+        }
+
+        // Cambiar Estado: Admin O Diseñador asignado
+        val puedeCambiarEstado = isAdmin || (isDesigner && pedido.usuIdEmpleado == currentUserId && currentUserId != null)
+
+        if (puedeCambiarEstado) {
+            holder.btnCambiarEstado.visibility = View.VISIBLE
+            holder.btnCambiarEstado.setOnClickListener { onCambiarEstado(pedido) }
+        } else {
+            holder.btnCambiarEstado.visibility = View.GONE
+        }
     }
 
-    override fun getItemCount(): Int = listaPedidos.size
+    override fun getItemCount(): Int = pedidos.size
 
-    fun updateList(nuevaLista: List<Pedido>) {
-        listaPedidos = nuevaLista
+    fun updateList(newList: List<PedidoDTO>) {
+        pedidos = newList
         notifyDataSetChanged()
     }
 }

@@ -17,7 +17,7 @@ import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appinterface.Api.contacto.ContactCreateActivity
+import com.example.appinterface.Api.contacto.ContactCreateBottomSheetFragment
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.google.android.material.chip.Chip
@@ -86,37 +86,23 @@ class PersonalizacionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Cargar layout según el rol
-        loadLayoutBasedOnRole()
+        // 🔥 CRÍTICO: Usar el layout UNIFICADO (R.layout.activity_personalizacion)
+        setContentView(R.layout.activity_personalizacion)
+
+        // YA NO NECESITAS loadLayoutBasedOnRole()
+        // loadLayoutBasedOnRole() // <-- ELIMINAR ESTA FUNCIÓN
 
         repository = PersonalizacionRepository()
 
-        // Inicializar UI común (barra superior)
+        // Inicializar UI común (esto llama a setupRoleBars que oculta/muestra las barras)
         initCommonUI()
 
-        // Inicializar vistas específicas de personalización
+        // ... (resto de la inicialización de la actividad)
         initPersonalizacionViews()
         setupGestureDetector()
         setupAdapters()
         setupListeners()
         cargarDatosIniciales()
-    }
-
-    /**
-     * Carga el layout correcto según el rol del usuario
-     */
-    private fun loadLayoutBasedOnRole() {
-        when {
-            !isLoggedIn() -> {
-                setContentView(R.layout.activity_personalizacion)
-            }
-            isAdmin() -> {
-                setContentView(R.layout.activity_personalizacion_admin)
-            }
-            else -> {
-                setContentView(R.layout.activity_personalizacion_user)
-            }
-        }
     }
 
     /**
@@ -482,11 +468,22 @@ class PersonalizacionActivity : BaseActivity() {
      * Abre el formulario de contacto con el resumen pre-cargado
      */
     private fun abrirFormularioConResumen(personalizacion: PersonalizacionGuardada) {
+        // 🔥 CAMBIO: Usar Bottom Sheet Fragment
+        val sheet = ContactCreateBottomSheetFragment.newInstance(
+            resumen = personalizacion.generarResumenParaFormulario(),
+            personalizacionId = personalizacion.id
+        )
+        // Usar supportFragmentManager de la Activity
+        sheet.show(supportFragmentManager, ContactCreateBottomSheetFragment.TAG_SHEET)
+
+        // Elimina el código de Intent anterior
+        /*
         val intent = Intent(this, ContactCreateActivity::class.java).apply {
             putExtra(EXTRA_RESUMEN_PERSONALIZACION, personalizacion.generarResumenParaFormulario())
             putExtra(EXTRA_ID_PERSONALIZACION, personalizacion.id)
         }
         startActivity(intent)
+        */
     }
 
     private fun mostrarCargando(mostrar: Boolean) {

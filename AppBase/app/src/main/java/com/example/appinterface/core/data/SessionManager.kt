@@ -60,7 +60,7 @@ class SessionManager(context: Context) {
      */
     fun getAuthToken(): String? {
         val token = prefs.getString(KEY_TOKEN, null) ?: return null
-        val tokenType = prefs.getString(KEY_TOKEN_TYPE, "Bearer")
+        val tokenType = prefs.getString(KEY_TOKEN_TYPE, null)
         return "$tokenType $token"
     }
 
@@ -94,6 +94,13 @@ class SessionManager(context: Context) {
      */
     fun isAdmin(): Boolean {
         return getRoles().contains("ROLE_ADMINISTRADOR")
+    }
+
+    /**
+     * Verifica si el usuario tiene rol de DISEÑADOR
+     */
+    fun isDesigner(): Boolean {
+        return getRoles().contains("ROLE_DISEÑADOR")
     }
 
     /**

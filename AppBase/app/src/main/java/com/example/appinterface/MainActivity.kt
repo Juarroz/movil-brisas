@@ -7,7 +7,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import android.widget.VideoView
-import com.example.appinterface.Api.contacto.ContactCreateActivity
+import androidx.appcompat.widget.Toolbar
+import com.example.appinterface.Api.contacto.ContactCreateBottomSheetFragment
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.Api.personalizacion.PersonalizacionActivity
 import com.example.appinterface.R
@@ -15,10 +16,6 @@ import com.example.appinterface.R
 /**
  * MainActivity - Pantalla principal de la aplicación
  *
- * Carga diferentes layouts según el estado de sesión:
- * - Sin sesión → activity_main.xml (solo top_app_bar)
- * - Admin → activity_main_admin.xml (top_app_bar + top_admin_bar)
- * - User → activity_main_user.xml (top_app_bar + top_user_bar)
  */
 class MainActivity : BaseActivity() {
 
@@ -28,11 +25,14 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        // Cargar el layout según el rol del usuario
-        loadLayoutBasedOnRole()
+        // 🔥 CRÍTICO: Configurar la Toolbar para que la Activity la reconozca
+        val toolbar = findViewById<Toolbar>(R.id.topAppBar)
+        setSupportActionBar(toolbar)
 
-        // Inicializar UI común (barra superior, tabs si es admin)
+
+        // Inicializar UI común (esto llama a setupRoleBars que oculta/muestra las barras)
         initCommonUI()
 
         // Inicializar vistas específicas de MainActivity
@@ -59,26 +59,6 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * Carga el layout correcto según el rol del usuario
-     */
-    private fun loadLayoutBasedOnRole() {
-        when {
-            !isLoggedIn() -> {
-                // Sin sesión → Layout básico
-                setContentView(R.layout.activity_main)
-            }
-            isAdmin() -> {
-                // Admin → Layout con admin bar
-                setContentView(R.layout.activity_main_admin)
-            }
-            else -> {
-                // User normal → Layout con user bar
-                setContentView(R.layout.activity_main_user)
-            }
-        }
-    }
-
-    /**
      * Inicializa las vistas específicas de MainActivity
      */
     private fun initMainViews() {
@@ -93,11 +73,18 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    /**
-     * Abre el formulario de contacto
-     */
     private fun abrirFormularioContacto() {
-        startActivity(Intent(this, ContactCreateActivity::class.java))
+        // 1. Crear una instancia del Fragment (usando el constructor limpio para el Home)
+        val contactSheet = ContactCreateBottomSheetFragment.newInstance(
+            resumen = null, // No hay resumen desde el Home
+            personalizacionId = null // No hay ID desde el Home
+        )
+
+        // 2. Mostrarlo usando el FragmentManager
+        // Nota: MainActivity debe heredar de AppCompatActivity o FragmentActivity
+        contactSheet.show(supportFragmentManager, ContactCreateBottomSheetFragment.TAG_SHEET)
+
+        // 🔥 ELIMINAR: startActivity(Intent(this, ContactCreateBottomSheetFragment::class.java))
     }
 
     /**
@@ -141,7 +128,6 @@ class MainActivity : BaseActivity() {
      */
     override fun onResume() {
         super.onResume()
-        loadLayoutBasedOnRole()
         initCommonUI()
         initMainViews()
         initVideoBackground()

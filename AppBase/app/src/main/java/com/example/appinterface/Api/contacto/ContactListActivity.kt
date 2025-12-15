@@ -3,6 +3,7 @@ package com.example.appinterface.Api.contacto
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.R
@@ -70,30 +71,48 @@ class ContactListActivity : BaseActivity() {
                         val btnEdit = itemView.findViewById<android.view.View>(R.id.btnEdit)
                         val btnDelete = itemView.findViewById<android.view.View>(R.id.btnDelete)
 
-                        btnEdit.setOnClickListener { showEditDialog(contacto) }
 
-                        btnDelete.setOnClickListener {
-                            AlertDialog.Builder(this@ContactListActivity)
-                                .setTitle("Eliminar")
-                                .setMessage("¿Eliminar a ${contacto.nombre}?")
-                                .setPositiveButton("Sí") { _, _ ->
-                                    repository.eliminarContacto(contacto.id?.toInt() ?: 0)
-                                        .enqueue(object : Callback<Void> {
-                                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                                if (response.isSuccessful) {
-                                                    Toast.makeText(this@ContactListActivity, "Eliminado", Toast.LENGTH_SHORT).show()
-                                                    cargarContactos()
-                                                } else {
-                                                    Toast.makeText(this@ContactListActivity, "Error al eliminar: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        if (sessionManager.isAdmin()) {
+                            btnEdit.setOnClickListener { showEditDialog(contacto) }
+                            btnDelete.setOnClickListener {
+                                AlertDialog.Builder(this@ContactListActivity)
+                                    .setTitle("Eliminar")
+                                    .setMessage("¿Eliminar a ${contacto.nombre}?")
+                                    .setPositiveButton("Sí") { _, _ ->
+                                        repository.eliminarContacto(contacto.id?.toInt() ?: 0)
+                                            .enqueue(object : Callback<Void> {
+                                                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                                    if (response.isSuccessful) {
+                                                        Toast.makeText(
+                                                            this@ContactListActivity,
+                                                            "Eliminado",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        cargarContactos()
+                                                    } else {
+                                                        Toast.makeText(
+                                                            this@ContactListActivity,
+                                                            "Error al eliminar: ${response.code()}",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
                                                 }
-                                            }
-                                            override fun onFailure(call: Call<Void>, t: Throwable) {
-                                                Toast.makeText(this@ContactListActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
-                                            }
-                                        })
-                                }
-                                .setNegativeButton("Cancelar", null)
-                                .show()
+
+                                                override fun onFailure(call: Call<Void>, t: Throwable) {
+                                                    Toast.makeText(
+                                                        this@ContactListActivity,
+                                                        "Fallo: ${t.message}",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            })
+                                    }
+                                    .setNegativeButton("Cancelar", null)
+                                    .show()
+                            }
+                        } else {
+                            btnEdit.visibility = View.GONE
+                            btnDelete.visibility = View.GONE
                         }
 
                         listContainer.addView(itemView)
@@ -199,6 +218,4 @@ class ContactListActivity : BaseActivity() {
 
         dialog.show()
     }
-
-    override fun isAdmin(): Boolean = true
 }

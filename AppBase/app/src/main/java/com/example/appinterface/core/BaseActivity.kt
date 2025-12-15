@@ -52,6 +52,13 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     /**
+     * Verifica si el usuario actual es diseñador
+     */
+    protected fun isDesigner(): Boolean {
+        return sessionManager.isDesigner()
+    }
+
+    /**
      * Verifica si hay sesión activa
      */
     protected fun isLoggedIn(): Boolean {
@@ -158,18 +165,37 @@ open class BaseActivity : AppCompatActivity() {
      */
     protected fun setupRoleBars() {
         val admin = isAdmin()
+        val designer = isDesigner()
+        val loggedIn = isLoggedIn()
 
-        // DEBUG: Verificar estado y vistas disponibles
         android.util.Log.d("BaseActivity", "=== setupRoleBars INICIO ===")
-        android.util.Log.d("BaseActivity", "isAdmin: $admin")
+        android.util.Log.d("BaseActivity", "isAdmin: $admin, isDesigner: $designer, isLoggedIn: $loggedIn")
 
         if (admin) {
+            // ROL: ADMINISTRADOR -> Muestra la barra completa de gestión
             if (topAdminTabLayout != null) {
                 setupAdminTabs(topAdminTabLayout!!)
                 topUserTabLayout?.let { it.visibility = View.GONE }
             }
+        } else if (designer) {
+            // ROL: DISEÑADOR -> Por ahora usa la barra de usuario, pero podría usar una propia (designer_bar)
+            // La clave es que usa el topUserTabLayout, pero la lógica de la Actividad de Pedidos
+            // sabrá darle permisos de admin en esa pantalla específica.
+            topUserTabLayout?.let {
+                it.visibility = View.VISIBLE
+                // Podrías llamar a setupUserTabs(it) aquí si tu barra de usuario tiene pestañas
+            }
+            topAdminTabLayout?.let { it.visibility = View.GONE }
+
+        } else if (loggedIn) {
+            // ROL: USUARIO/CLIENTE -> Muestra la barra de usuario
+            topUserTabLayout?.let {
+                it.visibility = View.VISIBLE
+            }
+            topAdminTabLayout?.let { it.visibility = View.GONE }
         } else {
-            topUserTabLayout?.let { it.visibility = View.VISIBLE }
+            // ANÓNIMO (Si solo tienes top_app_bar, el topUserTabLayout y topAdminTabLayout estarán ocultos por defecto)
+            topUserTabLayout?.let { it.visibility = View.GONE }
             topAdminTabLayout?.let { it.visibility = View.GONE }
         }
         android.util.Log.d("BaseActivity", "=== setupRoleBars FIN ===")
@@ -177,39 +203,53 @@ open class BaseActivity : AppCompatActivity() {
 
     /**
      * Configura el TabLayout de navegación SOLAMENTE para administradores.
-     * (Contiene la lógica que antes estaba en setupTabs)
      */
     private fun setupAdminTabs(tabLayout: TabLayout) {
         // 1. Mostrar y configurar pestañas
         tabLayout.visibility = View.VISIBLE
         tabLayout.removeAllTabs()
 
-        // --- AGREGAMOS LAS PESTAÑAS AQUÍ ---
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))     // Index 0
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))  // Index 1
-        tabLayout.addTab(tabLayout.newTab().setText("Pedidos"))                           // Index 2 (Nueva)
+        // --- AGREGAMOS LAS CUATRO PESTAÑAS ---
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_users)))      // Index 0
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_contacts)))   // Index 1
+        tabLayout.addTab(tabLayout.newTab().setText("Pedidos"))                          // Index 2
+        tabLayout.addTab(tabLayout.newTab().setText("Personalización"))                  // Index 3
 
         // 2. Seleccionar la pestaña actual
-        val currentTab = getCurrentTabIndex()
+        val currentTab = getCurrentTabIndex() // Será null en MainActivity, 0 en UsuarioActivity, etc.
         if (currentTab != null && currentTab >= 0 && currentTab < tabLayout.tabCount) {
             tabLayout.getTabAt(currentTab)?.select()
         }
 
-        // 3. Navegación por selección de pestaña (Listener de Admin)
+        // 🔥 3. Navegación (Listener debe estar siempre para todas las pantallas Admin)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> startActivity(Intent(this@BaseActivity, UsuarioActivity::class.java))
-                    1 -> startActivity(Intent(this@BaseActivity, ContactListActivity::class.java))
-                    // Agregamos la navegación a Pedidos
-                    2 -> startActivity(Intent(this@BaseActivity, PedidosActivity::class.java))
+
+                val targetActivityClass = when (tab.position) {
+                    0 -> com.example.appinterface.Api.usuarios.UsuarioActivity::class.java
+                    1 -> com.example.appinterface.Api.contacto.ContactListActivity::class.java
+                    2 -> com.example.appinterface.Api.pedidos.PedidosActivity::class.java
+                    3 -> com.example.appinterface.Api.personalizacion.PersonalizacionActivity::class.java
+                    else -> null
+                }
+
+                // CRÍTICO: El chequeo a prueba de bucles es el que se mantiene.
+                if (targetActivityClass != null && targetActivityClass != this@BaseActivity::class.java) {
+                    val intent = Intent(this@BaseActivity, targetActivityClass)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+
+                    // Finalizar la Activity actual para que la nueva tome su lugar
+                    finish()
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        // 4. Efecto de desplazamiento
+
+        // 4. Efecto de desplazamiento (se mantiene)
         if (mainAppBar != null) {
             mainAppBar!!.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 tabLayout.translationY = verticalOffset * 0.5f
