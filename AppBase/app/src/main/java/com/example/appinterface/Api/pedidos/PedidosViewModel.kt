@@ -106,8 +106,11 @@ class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
             StatusDTO(1, "1. Cotización Pendiente"),
             StatusDTO(2, "2. Pago Diseño Pendiente"),
             StatusDTO(3, "3. Diseño en Proceso"),
-            // ... (añadir el resto de 1 a 10)
-            StatusDTO(9, "9. Finalizado"),
+            StatusDTO(4, "4. Producción (Tallado)"),
+            StatusDTO(5, "5. Control de Calidad"),
+            StatusDTO(6, "6. Empaque"),
+            StatusDTO(7, "7. En Tránsito"),
+            StatusDTO(8, "8. Revisión Final"),
             StatusDTO(10, "10. Cancelado")
         )
     }
