@@ -11,8 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
-import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
-import com.example.appinterface.Api.pedidos.model.PedidoRequest
+import com.example.appinterface.Api.pedidos.data.PedidoRepository
+import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -132,7 +132,7 @@ class PedidoDetailActivity : BaseActivity() {
             return
         }
 
-        val request = PedidoRequest(
+        val request = PedidoRequestDTO(
             codigo = codigoActual,
             comentarios = nuevosComentarios,
             estadoId = nuevoEstadoId,

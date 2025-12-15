@@ -14,8 +14,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
-import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
+import com.example.appinterface.Api.pedidos.data.PedidoRepository
 import androidx.appcompat.widget.Toolbar
+import com.example.appinterface.Api.pedidos.data.PedidoDTO
 
 
 class PedidosActivity : BaseActivity() {
@@ -35,7 +36,7 @@ class PedidosActivity : BaseActivity() {
         setContentView(R.layout.activity_pedidos)
 
         // 1. Configurar Toolbar
-        // 🔥 CAMBIAR R.id.topAdminTabLayout por R.id.topAppBar
+        // CAMBIAR R.id.topAdminTabLayout por R.id.topAppBar
         val toolbar = findViewById<Toolbar>(R.id.topAppBar)
         setSupportActionBar(toolbar) // Esto configura el Toolbar base como la ActionBar de la Activity
 
@@ -45,7 +46,6 @@ class PedidosActivity : BaseActivity() {
         // El resto de tu lógica se mantiene igual
         inicializarVistas()
         configurarViewModel()
-        setupRoleUI()
         observarDatos()
         viewModel.cargarPedidos()
     }
@@ -73,20 +73,26 @@ class PedidosActivity : BaseActivity() {
             swipeRefresh.isRefreshing = false
         }
 
-        // 2. Configurar el RecyclerView y el Clic
-        adapter = PedidosAdapter { pedidoSeleccionado ->
-            val intent = Intent(this, PedidoDetailActivity::class.java)
-            // Empaquetamos los datos para enviarlos
-            intent.putExtra("EXTRA_ID", pedidoSeleccionado.id)
-            intent.putExtra("EXTRA_CODIGO", pedidoSeleccionado.codigo)
-            intent.putExtra("EXTRA_COMENTARIOS", pedidoSeleccionado.comentarios)
-            intent.putExtra("EXTRA_ESTADO_ID", pedidoSeleccionado.estadoId)
-            // Opcional: Pasar ID del cliente/empleado para referencia en Detail
-            // intent.putExtra("EXTRA_CLIENTE_ID", pedidoSeleccionado.personaId)
-            // intent.putExtra("EXTRA_EMPLEADO_ID", pedidoSeleccionado.usuarioId)
-
-            startActivity(intent)
-        }
+        // 2. Configurar el RecyclerView y el Clic (Usando las nuevas lambdas de acción)
+        // El Adapter ahora maneja tres tipos de clics
+        adapter = PedidosAdapter(
+            pedidos = emptyList(), // Iniciar con lista vacía
+            onClick = { pedidoSeleccionado ->
+                // Acción principal: Navegación al detalle
+                val intent = Intent(this, PedidoDetailActivity::class.java)
+                // Asumo que tu DTO Pedido tiene pedId
+                intent.putExtra("EXTRA_ID", pedidoSeleccionado.pedId)
+                startActivity(intent)
+            },
+            onCambiarEstado = { pedidoSeleccionado ->
+                // Acción de botón: Abrir diálogo de cambio de estado
+                showCambiarEstadoDialog(pedidoSeleccionado)
+            },
+            onAsignarDisenador = { pedidoSeleccionado ->
+                // Acción de botón: Abrir diálogo de asignación de diseñador
+                showAsignarDisenadorDialog(pedidoSeleccionado)
+            }
+        )
 
         rvPedidos.layoutManager = LinearLayoutManager(this)
         rvPedidos.adapter = adapter
@@ -104,7 +110,7 @@ class PedidosActivity : BaseActivity() {
         // 3. Crear el ViewModel
         val factory = PedidosViewModelFactory(repository)
 
-        viewModel = ViewModelProvider(this, factory)[PedidosViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory).get(PedidosViewModel::class.java)
     }
 
     // 🔥 MÉTODO PARA OBTENER EL ROL PRINCIPAL (usado para mensajes)
@@ -205,5 +211,63 @@ class PedidosActivity : BaseActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    // Llamarás a esta función desde el click del botón en la Card
+    fun showCambiarEstadoDialog(pedido: PedidoDTO) {
+        // 💡 NOTA: Asumo que tienes una lista de estados disponibles (StatusDTO)
+        // que debes cargar desde tu API una sola vez.
+
+        // Crear el Bundle con la información necesaria
+        val bundle = Bundle().apply {
+            putInt("PEDIDO_ID", pedido.pedId)
+            // Puedes pasar la lista de estados si la tienes
+            // putParcelableArrayList("ESTADOS", ArrayList(viewModel.listaEstados.value))
+        }
+
+        // Crea el fragmento del diálogo y muéstralo
+        val dialog = DialogCambiarEstadoFragment()
+        dialog.arguments = bundle
+        dialog.show(supportFragmentManager, "CambiarEstadoDialog")
+    }
+
+    // CRÍTICO: El diálogo llamará a esta función para ejecutar la acción
+    fun ejecutarCambioDeEstado(pedidoId: Int, nuevoEstadoId: Int, comentarios: String) {
+        // 💡 Aquí es donde llamarías al ViewModel para ejecutar la acción
+        // viewModel.actualizarEstado(pedidoId, nuevoEstadoId, comentarios)
+        //     .observe(this, { pedidoActualizado ->
+        //         // 1. Mostrar mensaje de éxito
+        //         // 2. Recargar la lista de pedidos (o actualizar el ítem en el Adapter)
+        //     })
+
+        Toast.makeText(this, "Cambiando Pedido $pedidoId a Estado $nuevoEstadoId...", Toast.LENGTH_LONG).show()
+    }
+    fun showAsignarDisenadorDialog(pedido: PedidoDTO) {
+        // 💡 NOTA: Debes tener una lista de Empleados/Diseñadores para el Spinner.
+        if (!sessionManager.isAdmin()) {
+            Toast.makeText(this, "Permiso denegado.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putInt("PEDIDO_ID", pedido.pedId)
+            // putParcelableArrayList("EMPLEADOS", ArrayList(viewModel.listaEmpleados.value))
+        }
+
+        val dialog = DialogAsignarDisenadorFragment()
+        dialog.arguments = bundle
+        dialog.show(supportFragmentManager, "AsignarDisenadorDialog")
+    }
+
+    // 🔥 CRÍTICO: El diálogo llamará a esta función para ejecutar la acción
+    fun ejecutarAsignacion(pedidoId: Int, usuIdEmpleado: Int) {
+        // 💡 Aquí es donde llamarías al ViewModel
+        // viewModel.asignarDisenador(pedidoId, usuIdEmpleado)
+        //     .observe(this, { pedidoActualizado ->
+        //         // 1. Mostrar mensaje de éxito
+        //         // 2. Recargar la lista
+        //     })
+
+        Toast.makeText(this, "Asignando Pedido $pedidoId al Diseñador $usuIdEmpleado...", Toast.LENGTH_LONG).show()
     }
 }

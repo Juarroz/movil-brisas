@@ -7,8 +7,8 @@ import android.widget.Toast
 import com.example.appinterface.R
 import com.example.appinterface.core.BaseActivity
 import com.example.appinterface.core.RetrofitInstance
-import com.example.appinterface.Api.pedidos.data.data.PedidoRepository
-import com.example.appinterface.Api.pedidos.model.PedidoRequest
+import com.example.appinterface.Api.pedidos.data.PedidoRepository
+import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,7 +64,7 @@ class PedidoCreateActivity : BaseActivity() {
         // El pedido siempre se crea en estado 1 ('diseño' según tu BD)
         val estadoInicial = 1
 
-        val request = PedidoRequest(
+        val request = PedidoRequestDTO(
             codigo = codigo,
             comentarios = comentarios,
             estadoId = estadoInicial,

@@ -2,7 +2,7 @@ package com.example.appinterface.Api.pedidos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.appinterface.Api.pedidos.data.data.PedidoRepository // Necesita esta importación
+import com.example.appinterface.Api.pedidos.data.PedidoRepository // Necesita esta importación
 
 class PedidosViewModelFactory(private val repository: PedidoRepository) : ViewModelProvider.Factory {
 

@@ -12,8 +12,8 @@ import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
 import com.example.appinterface.Api.usuarios.PageWrapperDTO
 import com.example.appinterface.Api.usuarios.RolUpdateBody
 import com.example.appinterface.Api.personalizacion.*
-import com.example.appinterface.Api.pedidos.model.Pedido
-import com.example.appinterface.Api.pedidos.model.PedidoRequest
+import com.example.appinterface.Api.pedidos.data.PedidoDTO
+import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -183,20 +183,46 @@ interface ApiServicesKotlin {
     // ==========================================
 
 
+    // 1. Admin (Lista completa)
     @GET("pedidos")
-    fun getPedidos(): Call<List<Pedido>>
+    fun getPedidos(): Call<List<PedidoDTO>>
+
+    // 2. Diseñador (Lista asignada)
+    @GET("pedidos/empleado/{usuIdEmpleado}")
+    fun obtenerPedidosPorEmpleado(@Path("usuIdEmpleado") userId: Int): Call<List<PedidoDTO>>
+
+    // 3. Cliente (Lista propia)
+    @GET("pedidos/cliente/{usuIdCliente}")
+    fun obtenerPedidosPorCliente(@Path("usuIdCliente") userId: Int): Call<List<PedidoDTO>>
+
+    /*// 4. Obtener Historial
+    @GET("pedidos/{id}/historial")
+    fun obtenerHistorial(@Path("id") pedidoId: Int): Call<List<HistorialResponseDTO>>*/
+
+    @PATCH("pedidos/{id}/estado")
+    fun actualizarEstado(
+        @Path("id") pedidoId: Int,
+        @Body payload: Map<String, @JvmSuppressWildcards Any> // Usamos Map<String, Any> para el JSON
+    ): Call<PedidoDTO>
+
+    // 🔥 Asignar Diseñador (PATCH /api/pedidos/{id}/asignar)
+    @PATCH("pedidos/{id}/asignar")
+    fun asignarDisenador(
+        @Path("id") pedidoId: Int,
+        @Body payload: Map<String, Int> // Recibe {usuIdEmpleado: X}
+    ): Call<PedidoDTO>
 
     @POST("pedidos")
     fun crearPedido(
-        @Body request: PedidoRequest
-    ): Call<Pedido>
+        @Body request: PedidoRequestDTO
+    ): Call<PedidoDTO>
 
     // Actualizar un pedido (PUT)
     @PUT("pedidos/{id}")
     fun actualizarPedido(
         @Path("id") id: Int,
-        @Body request: PedidoRequest
-    ): Call<Pedido>
+        @Body request: PedidoRequestDTO
+    ): Call<PedidoDTO>
 
     // Eliminar un pedido (DELETE)
     @DELETE("pedidos/{id}")
@@ -207,10 +233,10 @@ interface ApiServicesKotlin {
     @GET("pedidos/cliente/{usuId}")
     fun getPedidosByClienteId(
         @Path("usuId") usuId: Int
-    ): Call<List<Pedido>>
+    ): Call<List<PedidoDTO>>
 
     @GET("pedidos/empleado/{usuId}")
     fun getPedidosByEmpleadoId(
         @Path("usuId") usuId: Int
-    ): Call<List<Pedido>>
+    ): Call<List<PedidoDTO>>
 }

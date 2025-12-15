@@ -1,8 +1,8 @@
-package com.example.appinterface.Api.pedidos.model
+package com.example.appinterface.Api.pedidos.data
 
 import com.google.gson.annotations.SerializedName
 
-data class PedidoRequest(
+data class PedidoRequestDTO(
     @SerializedName("pedCodigo")
     val codigo: String,
 
