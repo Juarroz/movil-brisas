@@ -2,6 +2,7 @@ package com.example.appinterface.Api.pedidos
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -211,20 +212,29 @@ class PedidosActivity : BaseActivity() {
         }
     }
 
-    // Llamarás a esta función desde el click del botón en la Card
     fun showCambiarEstadoDialog(pedido: PedidoDTO) {
-        // 🔥 USAR EL MÉTODO ESTÁTICO newInstance
+        if (pedido.pedId <= 0) {
+            Toast.makeText(this, "Error: ID de pedido inválido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val dialog = DialogCambiarEstadoFragment.newInstance(pedido.pedId)
         dialog.show(supportFragmentManager, "CambiarEstadoDialog")
     }
 
     fun showAsignarDisenadorDialog(pedido: PedidoDTO) {
         if (!sessionManager.isAdmin()) {
-            Toast.makeText(this, "Permiso denegado.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Permiso denegado", Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (pedido.pedId <= 0) {
+            Toast.makeText(this, "Error: ID de pedido inválido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val dialog = DialogAsignarDisenadorFragment.newInstance(pedido.pedId)
-        dialog.show(supportFragmentManager, "AsignarDisenadorDialog")
+        dialog.show(supportFragmentManager, "DialogAsignarDisenador")
     }
 
     override fun getCurrentTabIndex(): Int? {

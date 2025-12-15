@@ -43,7 +43,7 @@ class DialogAsignarDisenadorFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.CustomAlertDialogStyle)
 
-        // LECTURA SIMPLE DE ARGUMENTOS (Asumiendo que newInstance garantiza el Bundle)
+        // LECTURA SIMPLE Y NO REDUNDANTE. ELIMINAMOS EL CHEQUEO DE ID AQUÍ.
         pedidoId = arguments?.getInt(ARG_PEDIDO_ID) ?: 0
     }
 
@@ -53,6 +53,12 @@ class DialogAsignarDisenadorFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (pedidoId == 0) {
+            Toast.makeText(context, "Error fatal: ID de pedido no cargado.", Toast.LENGTH_LONG).show()
+            dismiss()
+            return // CRÍTICO: Sale del método y no inicializa Vistas/ViewModel
+        }
 
         // Asignar el ViewModel de la Activity
         viewModel = ViewModelProvider(requireActivity()).get(PedidosViewModel::class.java)

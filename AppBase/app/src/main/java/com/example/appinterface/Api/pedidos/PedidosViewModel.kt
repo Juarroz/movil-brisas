@@ -2,6 +2,7 @@
 
 package com.example.appinterface.Api.pedidos
 
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -127,42 +128,49 @@ class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
 
     // Método de acción (llamado desde el Dialog)
     fun actualizarEstado(pedidoId: Int, nuevoEstadoId: Int, comentarios: String) {
-        // ... Lógica para establecer _isLoading.value = true
+        _isLoading.value = true
 
         repository.actualizarEstado(pedidoId, nuevoEstadoId, comentarios)
             .enqueue(object : Callback<PedidoDTO> {
                 override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                    _isLoading.value = false
+
                     if (response.isSuccessful) {
-                        // Notificar éxito
-                        // 🔥 NOTA: Aquí deberías actualizar la lista de pedidos y/o la UI
-                        _operacionExitosa.value = "Estado de Pedido ${response.body()?.pedCodigo} actualizado."
-                        cargarPedidos() // Recargar la lista completa
+                        _operacionExitosa.value = "Estado actualizado correctamente"
+                        cargarPedidos()
                     } else {
-                        _errorMessage.value = "Error al actualizar estado: ${response.code()}"
+                        val errorBody = response.errorBody()?.string()
+                        _errorMessage.value = "Error al actualizar: ${errorBody ?: "Sin detalles"}"
                     }
                 }
+
                 override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
-                    _errorMessage.value = "Fallo de red al cambiar estado: ${t.message}"
+                    _isLoading.value = false
+                    _errorMessage.value = "Error de conexión: ${t.message}"
                 }
             })
     }
 
     fun asignarDisenador(pedidoId: Int, usuIdEmpleado: Int) {
-        // ... Lógica para establecer _isLoading.value = true
+        _isLoading.value = true
 
         repository.asignarDisenador(pedidoId, usuIdEmpleado)
             .enqueue(object : Callback<PedidoDTO> {
                 override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                    _isLoading.value = false
+
                     if (response.isSuccessful) {
-                        // Notificar éxito
-                        _operacionExitosa.value = "Diseñador asignado al Pedido ${response.body()?.pedCodigo}."
-                        cargarPedidos() // Recargar la lista completa para reflejar el cambio
+                        _operacionExitosa.value = "Diseñador asignado correctamente"
+                        cargarPedidos()
                     } else {
-                        _errorMessage.value = "Error al asignar diseñador: ${response.code()}"
+                        val errorBody = response.errorBody()?.string()
+                        _errorMessage.value = "Error al asignar: ${errorBody ?: "Sin detalles"}"
                     }
                 }
+
                 override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
-                    _errorMessage.value = "Fallo de red al asignar diseñador: ${t.message}"
+                    _isLoading.value = false
+                    _errorMessage.value = "Error de conexión: ${t.message}"
                 }
             })
     }

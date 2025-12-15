@@ -3,38 +3,34 @@ package com.example.appinterface.Api.pedidos.data
 import com.google.gson.annotations.SerializedName
 
 data class PedidoDTO(
-    @SerializedName("ped_id")
-    val pedId: Int, // Renombrado a pedId para el Adapter
+    // 🔥 CORRECCIÓN CRÍTICA: Cambiar "ped_id" por "pedId"
+    @SerializedName("pedId")
+    val pedId: Int,
 
     @SerializedName("pedCodigo")
-    val pedCodigo: String?, // Renombrado a pedCodigo para el Adapter
+    val pedCodigo: String?,
 
     @SerializedName("pedFechaCreacion")
-    val pedFechaCreacion: String?, // Renombrado a pedFechaCreacion
+    val pedFechaCreacion: String?,
 
     @SerializedName("pedComentarios")
     val pedComentarios: String?,
 
     @SerializedName("estId")
-    val estId: Int, // Renombrado a estId para el Adapter (asumo que no es nullable si viene en la BD)
-
-    // --- CAMPOS ENRIQUECIDOS AÑADIDOS ---
+    val estId: Int?,
 
     @SerializedName("estadoNombre")
-    val estadoNombre: String?, // Nombre del estado (ej: "COTIZACION_PENDIENTE")
+    val estadoNombre: String?,
 
     @SerializedName("usuIdCliente")
-    val usuIdCliente: Int?, // ID del Cliente (Tu campo anterior 'usuarioId' era ambiguo)
+    val usuIdCliente: Int?,
 
     @SerializedName("usuIdEmpleado")
-    val usuIdEmpleado: Int?, // ID del Diseñador/Empleado asignado (CRUCIAL)
+    val usuIdEmpleado: Int?,
 
     @SerializedName("nombreCliente")
-    val nombreCliente: String?, // Nombre completo del cliente (para la tarjeta)
+    val nombreCliente: String?,
 
     @SerializedName("nombreEmpleado")
-    val nombreEmpleado: String? // Nombre completo del diseñador (para la tarjeta)
-
-    // @SerializedName("perId") // El campo 'perId' ya no es necesario si tenemos 'usuIdCliente'
-    // val personaId: Int?
+    val nombreEmpleado: String?
 )
