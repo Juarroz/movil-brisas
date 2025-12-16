@@ -51,8 +51,6 @@ interface ApiServicesKotlin {
         @Path("id") id: Int
     ): Call<Void>
 
-
-
     // --- USUARIOS CRUD ---
 
     @GET("usuarios")
@@ -247,6 +245,4 @@ interface ApiServicesKotlin {
 
     @GET("usuarios/empleados")
     fun getDisenadores(): Call<List<EmpleadoDTO>>
-
-
 }

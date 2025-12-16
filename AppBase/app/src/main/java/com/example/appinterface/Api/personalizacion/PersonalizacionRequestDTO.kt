@@ -17,9 +17,11 @@ data class PersonalizacionRequestDTO(
     companion object {
         /**
          * Crea un DTO con la fecha actual del sistema
+         * 🔥 CORREGIDO: Ahora usa formato ISO 8601 con hora
          */
         fun crearConFechaActual(usuarioId: Int?, valores: List<Int>): PersonalizacionRequestDTO {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            // 🔥 CAMBIO CRÍTICO: De "yyyy-MM-dd" a "yyyy-MM-dd'T'HH:mm:ss"
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
             return PersonalizacionRequestDTO(
                 usuarioClienteId = usuarioId,
                 fecha = dateFormat.format(Date()),
@@ -28,10 +30,11 @@ data class PersonalizacionRequestDTO(
         }
 
         /**
-         * Obtiene la fecha actual en formato yyyy-MM-dd
+         * Obtiene la fecha actual en formato ISO 8601
+         * 🔥 CORREGIDO: Ahora incluye hora
          */
         fun obtenerFechaActual(): String {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
             return dateFormat.format(Date())
         }
     }

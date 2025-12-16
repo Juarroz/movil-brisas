@@ -10,6 +10,9 @@ import com.example.appinterface.Api.pedidos.data.PedidoDTO
 import com.example.appinterface.Api.pedidos.data.PedidoRepository
 import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Callback
 
 class PedidoDetailViewModel(private val repository: PedidoRepository) : ViewModel() {
 
@@ -69,22 +72,31 @@ class PedidoDetailViewModel(private val repository: PedidoRepository) : ViewMode
         }
     }
 
-    fun guardarCambios(request: PedidoRequestDTO) {
+    fun guardarCambios(nuevoEstadoId: Int, comentarios: String) {
         if (currentPedidoId == 0) return
 
         _isLoading.value = true
         _errorMessage.value = null
-        viewModelScope.launch {
-            val resultado = repository.actualizarPedido(currentPedidoId, request)
-            _isLoading.postValue(false)
 
-            if (resultado.isSuccess) {
-                _operacionExitosa.postValue("Pedido actualizado correctamente.")
-                cargarDetalles() // Recarga los detalles y el historial
-            } else {
-                _errorMessage.postValue("Error al guardar: ${resultado.exceptionOrNull()?.message}")
-            }
-        }
+        repository.actualizarEstado(currentPedidoId, nuevoEstadoId, comentarios)
+            .enqueue(object : Callback<PedidoDTO> {
+                override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                    _isLoading.postValue(false)
+
+                    if (response.isSuccessful) {
+                        _operacionExitosa.postValue("Estado actualizado correctamente.")
+                        cargarDetalles()
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        _errorMessage.postValue("Error al guardar: ${errorBody ?: "Sin detalles"}")
+                    }
+                }
+
+                override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
+                    _isLoading.postValue(false)
+                    _errorMessage.postValue("Error de conexión: ${t.message}")
+                }
+            })
     }
 
     fun eliminarPedido() {
