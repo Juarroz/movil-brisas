@@ -414,76 +414,66 @@ class PersonalizacionActivity : BaseActivity() {
     private fun actualizarResumen() {
         tvSummary.text = estado.obtenerResumen()
     }
+    /**
+    * Abre el formulario con el resumen de personalización
+    * SIN guardar en la API
+    */
+    private fun continuarConFormulario() {
+        try {
+            if (!estado.esValido()) {
+                mostrarError(estado.obtenerMensajeError() ?: "Personalización incompleta")
+                return
+            }
+
+            // 🔥 GENERAR RESUMEN DIRECTAMENTE (sin guardar en API)
+            val resumen = generarResumenPersonalizacion()
+
+            Log.d(TAG, "📋 Resumen generado:")
+            Log.d(TAG, resumen)
+
+            // Abrir el Bottom Sheet con el resumen
+            abrirFormularioConResumen(resumen)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Error al continuar", e)
+            mostrarError("Error inesperado: ${e.message}")
+        }
+    }
 
     /**
-     * Flujo completo - Guarda personalización y abre formulario
+     * Genera el resumen de la personalización en formato legible
      */
-    private fun continuarConFormulario() {
-        lifecycleScope.launch {
-            try {
-                if (!estado.esValido()) {
-                    mostrarError(estado.obtenerMensajeError() ?: "Personalización incompleta")
-                    return@launch
+    private fun generarResumenPersonalizacion(): String {
+        return buildString {
+            appendLine("=== PERSONALIZACIÓN DE ANILLO ===")
+            appendLine()
+
+            estado.selecciones.forEach { (categoria, valor) ->
+                val categoriaFormateada = when(categoria) {
+                    "forma" -> "Forma de la gema"
+                    "gema" -> "Gema central"
+                    "material" -> "Material"
+                    "tamano" -> "Tamaño de la gema"
+                    "talla" -> "Talla del anillo"
+                    else -> categoria.capitalize()
                 }
-
-                if (personalizacionGuardada != null) {
-                    abrirFormularioConResumen(personalizacionGuardada!!)
-                    return@launch
-                }
-
-                fabSave.isEnabled = false
-                fabSave.text = "Guardando..."
-
-                val usuarioId = if (isLoggedIn()) {
-                    sessionManager.getUserId()
-                } else {
-                    null
-                }
-
-                val result = repository.crearPersonalizacion(estado, usuarioId)
-
-                if (result.isSuccess) {
-                    val personalizacion = result.getOrNull()!!
-                    personalizacionGuardada = personalizacion
-
-                    Log.d(TAG, "✅ Personalización guardada - ID: ${personalizacion.id}")
-
-                    abrirFormularioConResumen(personalizacion)
-
-                } else {
-                    mostrarError("Error al guardar: ${result.exceptionOrNull()?.message}")
-                }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Error al continuar", e)
-                mostrarError("Error inesperado: ${e.message}")
-            } finally {
-                fabSave.isEnabled = true
-                fabSave.text = "Continuar"
+                appendLine("• $categoriaFormateada: ${valor.nombre}")
             }
+
+            appendLine()
+            appendLine("=================================")
         }
     }
 
     /**
      * Abre el formulario de contacto con el resumen pre-cargado
      */
-    private fun abrirFormularioConResumen(personalizacion: PersonalizacionGuardada) {
-        // 🔥 CAMBIO: Usar Bottom Sheet Fragment
+    private fun abrirFormularioConResumen(resumen: String) {
         val sheet = ContactCreateBottomSheetFragment.newInstance(
-            resumen = personalizacion.generarResumenParaFormulario(),
-            personalizacionId = personalizacion.id
+            resumen = resumen,
+            personalizacionId = null // Ya no hay ID porque no guardamos
         )
-        // Usar supportFragmentManager de la Activity
         sheet.show(supportFragmentManager, ContactCreateBottomSheetFragment.TAG_SHEET)
-
-        // Elimina el código de Intent anterior
-        /*
-        val intent = Intent(this, ContactCreateActivity::class.java).apply {
-            putExtra(EXTRA_RESUMEN_PERSONALIZACION, personalizacion.generarResumenParaFormulario())
-            putExtra(EXTRA_ID_PERSONALIZACION, personalizacion.id)
-        }
-        startActivity(intent)
-        */
     }
 
     private fun mostrarCargando(mostrar: Boolean) {

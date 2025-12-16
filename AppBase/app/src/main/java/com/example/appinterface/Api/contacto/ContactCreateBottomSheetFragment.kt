@@ -89,29 +89,26 @@ class ContactCreateBottomSheetFragment : BottomSheetDialogFragment() {
     private fun cargarResumenSiExiste() {
         val resumenPersonalizacion = arguments?.getString(PersonalizacionActivity.EXTRA_RESUMEN_PERSONALIZACION)
 
-        personalizacionId = arguments?.getInt(PersonalizacionActivity.EXTRA_ID_PERSONALIZACION, -1)
-            .takeIf { it != -1 }
-
         if (resumenPersonalizacion != null) {
-            // Lógica para pre-cargar el mensaje
+            // 🔥 SIMPLIFICADO: Solo agregar el resumen al mensaje
             val mensajeCompleto = buildString {
                 appendLine("Hola, me interesa esta personalización:")
                 appendLine()
-                appendLine(resumenPersonalizacion)
+                append(resumenPersonalizacion) // Ya viene formateado
                 appendLine()
                 appendLine("Por favor, ¿podrían contactarme para más información?")
             }
+
             txtMensaje.setText(mensajeCompleto)
             txtMensaje.setSelection(txtMensaje.text?.length ?: 0)
         }
 
-        // Si el usuario está logueado, precargar nombre/correo si están disponibles
+        // Si el usuario está logueado, precargar correo
         if (sessionManager.isLoggedIn()) {
-            // NOTA: Asumo que tienes un método para obtener el correo en SessionManager, si no lo tienes, usa username
             val username = sessionManager.getUsername()
             if (username != null && username.contains("@")) {
                 txtCorreo.setText(username)
-                txtCorreo.isEnabled = false // Evitar que el usuario logueado lo cambie
+                txtCorreo.isEnabled = false
             }
         }
     }
@@ -133,7 +130,16 @@ class ContactCreateBottomSheetFragment : BottomSheetDialogFragment() {
         val telefono = txtTelefono.text.toString().trim()
         val mensaje = txtMensaje.text.toString().trim()
 
-        // ... (Tu lógica de validación) ...
+        // Validaciones
+        if (nombre.isEmpty()) {
+            Toast.makeText(requireContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (mensaje.isEmpty()) {
+            Toast.makeText(requireContext(), "El mensaje es obligatorio", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val usuarioId = if (sessionManager.isLoggedIn()) {
             sessionManager.getUserId()
@@ -141,18 +147,13 @@ class ContactCreateBottomSheetFragment : BottomSheetDialogFragment() {
             null
         }
 
-        // ... (Tu lógica de mensaje final) ...
-        val mensajeFinal = if (personalizacionId != null) {
-            "$mensaje\n\n[Ref. Personalización ID: $personalizacionId]"
-        } else {
-            mensaje
-        }
-
+        // 🔥 YA NO AGREGAMOS REFERENCIA A PERSONALIZACIÓN
+        // El resumen ya está incluido en el mensaje
         val request = ContactoFormularioRequestDTO(
             nombre = nombre,
             correo = if (correo.isEmpty()) null else correo,
             telefono = if (telefono.isEmpty()) null else telefono,
-            mensaje = mensajeFinal,
+            mensaje = mensaje, // Ya incluye el resumen de personalización
             usuarioId = usuarioId,
             terminos = true,
             via = "formulario"
@@ -162,24 +163,37 @@ class ContactCreateBottomSheetFragment : BottomSheetDialogFragment() {
         btnEnviar.alpha = 0.6f
 
         repository.enviarContacto(request).enqueue(object : Callback<ContactoFormularioResponseDTO> {
-            override fun onResponse(call: Call<ContactoFormularioResponseDTO>, response: Response<ContactoFormularioResponseDTO>) {
+            override fun onResponse(
+                call: Call<ContactoFormularioResponseDTO>,
+                response: Response<ContactoFormularioResponseDTO>
+            ) {
                 btnEnviar.isEnabled = true
                 btnEnviar.alpha = 1.0f
+
                 if (response.isSuccessful) {
-                    // ... (Manejo de éxito)
-                    Toast.makeText(requireContext(), "¡Contacto enviado! Nos comunicaremos pronto", Toast.LENGTH_LONG).show()
-                    dismiss() // 🔥 CERRAR EL BOTTOM SHEET
+                    Toast.makeText(
+                        requireContext(),
+                        "¡Contacto enviado! Nos comunicaremos pronto",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    dismiss() // Cerrar el Bottom Sheet
                 } else {
-                    // ... (Manejo de error)
-                    Toast.makeText(requireContext(), "Error servidor: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error del servidor: ${response.code()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<ContactoFormularioResponseDTO>, t: Throwable) {
-                // ... (Manejo de fallo de red)
                 btnEnviar.isEnabled = true
                 btnEnviar.alpha = 1.0f
-                Toast.makeText(requireContext(), "Fallo red: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error de conexión: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
