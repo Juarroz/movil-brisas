@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5F5F5">
@@ -14,9 +15,7 @@
             android:elevation="8dp">
 
         <include layout="@layout/top_app_bar" />
-
         <include layout="@layout/top_admin_bar"/>
-
         <include layout="@layout/top_user_bar" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -33,13 +32,25 @@
                 android:padding="24dp">
 
             <TextView
+                    android:id="@+id/tvPedidoCodigo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Detalle del Pedido"
+                    android:text="Pedido #[Cargando...]"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="#173622"
-                    android:layout_marginBottom="24dp"/>
+                    android:layout_marginBottom="4dp"
+                    tools:text="Pedido #P-202512-001"/>
+
+            <TextView
+                    android:id="@+id/tvFechaCliente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cliente: N/D | Creado: N/D"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="24dp"
+                    tools:text="Cliente: Fabian | Creado: 15/12/2025"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -47,7 +58,6 @@
                     android:text="Código del pedido"
                     android:textSize="12sp"
                     android:textColor="#666666"/>
-
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,17 +69,15 @@
                     app:boxCornerRadiusBottomEnd="16dp"
                     app:boxBackgroundColor="#FFFFFF"
                     app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:boxStrokeColor="@android:color/transparent">
-
+                    app:boxStrokeWidthFocused="0dp">
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCodigoDetalle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textSize="16sp"
-                        android:padding="16dp"/>
-
+                        android:padding="16dp"
+                        tools:text="P-202512-001"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -78,7 +86,6 @@
                     android:text="Estado del pedido"
                     android:textSize="12sp"
                     android:textColor="#666666"/>
-
             <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,13 +93,11 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
                     android:backgroundTint="#FFFFFF">
-
                 <Spinner
                         android:id="@+id/spinnerEstado"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:paddingHorizontal="12dp"/>
-
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -101,7 +106,6 @@
                     android:text="Comentarios"
                     android:textSize="12sp"
                     android:textColor="#666666"/>
-
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -113,9 +117,7 @@
                     app:boxCornerRadiusBottomEnd="16dp"
                     app:boxBackgroundColor="#FFFFFF"
                     app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:boxStrokeColor="@android:color/transparent">
-
+                    app:boxStrokeWidthFocused="0dp">
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etComentariosDetalle"
                         android:layout_width="match_parent"
@@ -123,39 +125,57 @@
                         android:inputType="textMultiLine"
                         android:minLines="3"
                         android:textSize="16sp"
-                        android:padding="16dp"/>
-
+                        android:padding="16dp"
+                        tools:text="Este es un comentario largo sobre las especificaciones del diseño."/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Historial de Cambios"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#173622"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="16dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHistorial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_historial"/>
+
+            <TextView
+                    android:id="@+id/tvHistorialEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No hay historial de cambios para mostrar."
+                    android:gravity="center"
+                    android:textColor="@color/gray_dark"
+                    android:padding="16dp"
+                    android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnGuardarCambios"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="Guardar Cambios"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginTop="32dp"
                     app:backgroundTint="@color/green_brisas"
-                    app:cornerRadius="16dp"
-                    app:elevation="4dp"
-                    android:stateListAnimator="@null"/>
+                    app:cornerRadius="16dp" />
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnEliminarPedido"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="Eliminar Pedido"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="32dp"
-                    app:backgroundTint="@color/gray_dark"
+                    app:backgroundTint="@color/red_error"
                     app:cornerRadius="16dp"
-                    app:elevation="4dp"
-                    android:stateListAnimator="@null"/>
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="32dp"/>
 
         </LinearLayout>
 

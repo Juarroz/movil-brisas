@@ -2,6 +2,7 @@
 
 package com.example.appinterface.Api.pedidos
 
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -106,60 +107,79 @@ class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
             StatusDTO(1, "1. Cotización Pendiente"),
             StatusDTO(2, "2. Pago Diseño Pendiente"),
             StatusDTO(3, "3. Diseño en Proceso"),
-            // ... (añadir el resto de 1 a 10)
-            StatusDTO(9, "9. Finalizado"),
+            StatusDTO(4, "4. Diseño Aprobado"),
+            StatusDTO(5, "5. Tallado (Producción)"),
+            StatusDTO(6, "6. Engaste (Producción)"),
+            StatusDTO(7, "7. Pulido (Producción)"),
+            StatusDTO(8, "8. Inspección de Calidad"),
             StatusDTO(10, "10. Cancelado")
         )
     }
 
     private fun cargarDisenadores() {
-        // Implementar la llamada a la API que devuelva la lista de EmpleadoDTO (GET /usuarios/empleados)
-        // Por ahora, datos quemados:
-        _disenadores.value = listOf(
-            EmpleadoDTO(6, "Doña Doloritas", "doloritas@brisas.com"),
-            EmpleadoDTO(7, "Miguel Paramo", "miguel@brisas.com"),
-            EmpleadoDTO(8, "Eduviges Dyada", "eduviges@brisas.com")
+        repository.getDisenadores(
+            onSuccess = { listaCompleta ->
+
+                // FILTRADO CRÍTICO: Solo usuarios cuyo rol sea "diseñador"
+                val soloDisenadores = listaCompleta.filter {
+                    it.rolNombre?.equals("diseñador", ignoreCase = true) == true
+                }
+
+                _disenadores.value = soloDisenadores // Guardar lista filtrada
+
+            },
+            onError = { error ->
+                Log.e("PedidosViewModel", "Error al cargar diseñadores: $error")
+                _disenadores.value = emptyList()
+            }
         )
     }
 
     // Método de acción (llamado desde el Dialog)
     fun actualizarEstado(pedidoId: Int, nuevoEstadoId: Int, comentarios: String) {
-        // ... Lógica para establecer _isLoading.value = true
+        _isLoading.value = true
 
         repository.actualizarEstado(pedidoId, nuevoEstadoId, comentarios)
             .enqueue(object : Callback<PedidoDTO> {
                 override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                    _isLoading.value = false
+
                     if (response.isSuccessful) {
-                        // Notificar éxito
-                        // 🔥 NOTA: Aquí deberías actualizar la lista de pedidos y/o la UI
-                        _operacionExitosa.value = "Estado de Pedido ${response.body()?.pedCodigo} actualizado."
-                        cargarPedidos() // Recargar la lista completa
+                        _operacionExitosa.value = "Estado actualizado correctamente"
+                        cargarPedidos()
                     } else {
-                        _errorMessage.value = "Error al actualizar estado: ${response.code()}"
+                        val errorBody = response.errorBody()?.string()
+                        _errorMessage.value = "Error al actualizar: ${errorBody ?: "Sin detalles"}"
                     }
                 }
+
                 override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
-                    _errorMessage.value = "Fallo de red al cambiar estado: ${t.message}"
+                    _isLoading.value = false
+                    _errorMessage.value = "Error de conexión: ${t.message}"
                 }
             })
     }
 
     fun asignarDisenador(pedidoId: Int, usuIdEmpleado: Int) {
-        // ... Lógica para establecer _isLoading.value = true
+        _isLoading.value = true
 
         repository.asignarDisenador(pedidoId, usuIdEmpleado)
             .enqueue(object : Callback<PedidoDTO> {
                 override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                    _isLoading.value = false
+
                     if (response.isSuccessful) {
-                        // Notificar éxito
-                        _operacionExitosa.value = "Diseñador asignado al Pedido ${response.body()?.pedCodigo}."
-                        cargarPedidos() // Recargar la lista completa para reflejar el cambio
+                        _operacionExitosa.value = "Diseñador asignado correctamente"
+                        cargarPedidos()
                     } else {
-                        _errorMessage.value = "Error al asignar diseñador: ${response.code()}"
+                        val errorBody = response.errorBody()?.string()
+                        _errorMessage.value = "Error al asignar: ${errorBody ?: "Sin detalles"}"
                     }
                 }
+
                 override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
-                    _errorMessage.value = "Fallo de red al asignar diseñador: ${t.message}"
+                    _isLoading.value = false
+                    _errorMessage.value = "Error de conexión: ${t.message}"
                 }
             })
     }

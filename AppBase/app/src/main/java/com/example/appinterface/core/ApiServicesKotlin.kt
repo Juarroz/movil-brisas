@@ -9,11 +9,13 @@ import com.example.appinterface.Api.usuarios.UsuarioRequestDTO
 import com.example.appinterface.Api.usuarios.UsuarioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioResponseDTO
 import com.example.appinterface.Api.contacto.ContactoFormularioUpdateDTO
+import com.example.appinterface.Api.pedidos.data.HistorialDTO
 import com.example.appinterface.Api.usuarios.PageWrapperDTO
 import com.example.appinterface.Api.usuarios.RolUpdateBody
 import com.example.appinterface.Api.personalizacion.*
 import com.example.appinterface.Api.pedidos.data.PedidoDTO
 import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
+import com.example.appinterface.Api.usuarios.data.EmpleadoDTO
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -187,6 +189,9 @@ interface ApiServicesKotlin {
     @GET("pedidos")
     fun getPedidos(): Call<List<PedidoDTO>>
 
+    @GET("pedidos/{id}")
+    fun obtenerPedido(@Path("id") id: Int): Call<PedidoDTO>
+
     // 2. Diseñador (Lista asignada)
     @GET("pedidos/empleado/{usuIdEmpleado}")
     fun obtenerPedidosPorEmpleado(@Path("usuIdEmpleado") userId: Int): Call<List<PedidoDTO>>
@@ -195,9 +200,9 @@ interface ApiServicesKotlin {
     @GET("pedidos/cliente/{usuIdCliente}")
     fun obtenerPedidosPorCliente(@Path("usuIdCliente") userId: Int): Call<List<PedidoDTO>>
 
-    /*// 4. Obtener Historial
+
     @GET("pedidos/{id}/historial")
-    fun obtenerHistorial(@Path("id") pedidoId: Int): Call<List<HistorialResponseDTO>>*/
+    fun obtenerHistorial(@Path("id") pedidoId: Int): Call<List<HistorialDTO>>
 
     @PATCH("pedidos/{id}/estado")
     fun actualizarEstado(
@@ -239,4 +244,9 @@ interface ApiServicesKotlin {
     fun getPedidosByEmpleadoId(
         @Path("usuId") usuId: Int
     ): Call<List<PedidoDTO>>
+
+    @GET("usuarios/empleados")
+    fun getDisenadores(): Call<List<EmpleadoDTO>>
+
+
 }

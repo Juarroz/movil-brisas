@@ -1,5 +1,3 @@
-// /java/com/example/appinterface/Api/pedidos/DialogCambiarEstadoFragment.kt
-
 package com.example.appinterface.Api.pedidos
 
 import android.os.Bundle
@@ -16,11 +14,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.appinterface.Api.pedidos.data.StatusDTO
 import com.example.appinterface.R
 
-
 class DialogCambiarEstadoFragment : DialogFragment() {
 
     private lateinit var viewModel: PedidosViewModel
     private var pedidoId: Int = 0
+
+    private var listaEstados: List<StatusDTO> = emptyList()
 
     // Componentes del diálogo
     private lateinit var spinnerEstado: Spinner
@@ -28,26 +27,39 @@ class DialogCambiarEstadoFragment : DialogFragment() {
     private lateinit var btnGuardar: Button
     private lateinit var btnCancelar: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Usar estilo de diálogo más amplio
-        setStyle(STYLE_NORMAL, R.style.CustomAlertDialogStyle)
+    // 🔥 COMPANION OBJECT PARA CREAR EL FRAGMENTO DE FORMA SEGURA
+    companion object {
+        private const val ARG_PEDIDO_ID = "PEDIDO_ID"
 
-        // Obtener ID del pedido
-        pedidoId = arguments?.getInt("PEDIDO_ID") ?: 0
-        if (pedidoId == 0) {
-            Toast.makeText(context, "Error: ID de pedido no proporcionado.", Toast.LENGTH_SHORT).show()
-            dismiss()
+        fun newInstance(pedidoId: Int): DialogCambiarEstadoFragment {
+            val fragment = DialogCambiarEstadoFragment()
+            val args = Bundle()
+            args.putInt(ARG_PEDIDO_ID, pedidoId)
+            fragment.arguments = args
+            return fragment
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.CustomAlertDialogStyle)
+
+        // LECTURA SIMPLE Y NO REDUNDANTE. ELIMINAMOS EL CHEQUEO DE ID AQUÍ.
+        pedidoId = arguments?.getInt(ARG_PEDIDO_ID) ?: 0
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflar el layout que te daré luego (dialog_cambiar_estado.xml)
         return inflater.inflate(R.layout.dialog_cambiar_estado, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (pedidoId == 0) {
+            Toast.makeText(context, "Error fatal: ID de pedido no cargado.", Toast.LENGTH_LONG).show()
+            dismiss()
+            return // CRÍTICO: Sale del método y no inicializa Vistas/ViewModel
+        }
 
         // Asignar el ViewModel de la Activity (PedidosActivity)
         viewModel = ViewModelProvider(requireActivity()).get(PedidosViewModel::class.java)
@@ -60,19 +72,24 @@ class DialogCambiarEstadoFragment : DialogFragment() {
 
         // Cargar datos en el Spinner y observar
         viewModel.estadosDisponibles.observe(viewLifecycleOwner) {
+            listaEstados = it
             setupSpinner(it)
         }
 
         btnCancelar.setOnClickListener { dismiss() }
 
         btnGuardar.setOnClickListener {
-            val selectedStatus = spinnerEstado.selectedItem as StatusDTO
+            val selectedIndex = spinnerEstado.selectedItemPosition
             val comentarios = etComentarios.text.toString().trim()
 
-            if (selectedStatus.id == 0) {
+            // Validar la selección del índice
+            if (selectedIndex < 0 || selectedIndex >= listaEstados.size) {
                 Toast.makeText(context, "Selecciona un estado válido.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // Obtener el DTO real por índice
+            val selectedStatus = listaEstados[selectedIndex]
 
             // Llamada al ViewModel para ejecutar la acción
             viewModel.actualizarEstado(
@@ -88,10 +105,8 @@ class DialogCambiarEstadoFragment : DialogFragment() {
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            estados.map { it.nombre } // Mostrar solo el nombre
+            estados.map { it.nombre }
         )
         spinnerEstado.adapter = adapter
-
-        // Si quieres preseleccionar el estado actual, necesitas pasarlo en el Bundle
     }
 }

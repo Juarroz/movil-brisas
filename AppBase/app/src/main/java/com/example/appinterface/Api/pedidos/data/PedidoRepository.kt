@@ -1,7 +1,9 @@
 package com.example.appinterface.Api.pedidos.data
 
+import android.util.Log
 import com.example.appinterface.Api.pedidos.data.PedidoDTO
 import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
+import com.example.appinterface.Api.usuarios.data.EmpleadoDTO
 import com.example.appinterface.core.ApiServicesKotlin
 import com.example.appinterface.core.data.SessionManager
 import retrofit2.Call
@@ -60,7 +62,8 @@ class PedidoRepository(
                 if (response.isSuccessful) {
                     onSuccess(response.body() ?: emptyList())
                 } else {
-                    val msg = if (response.code() == 403) "Acceso denegado. Permisos insuficientes." else "Error HTTP ${response.code()}"
+                    val msg =
+                        if (response.code() == 403) "Acceso denegado. Permisos insuficientes." else "Error HTTP ${response.code()}"
                     onError(msg)
                 }
             }
@@ -74,21 +77,22 @@ class PedidoRepository(
     // --- MÉTODOS SUSPEND (Mantenidos) ---
 
     // Función para actualizar (mantenida de tu código)
-    suspend fun actualizarPedido(id: Int, request: PedidoRequestDTO): Result<Boolean> = suspendCoroutine { continuation ->
-        api.actualizarPedido(id, request).enqueue(object : Callback<PedidoDTO> {
-            override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
-                if (response.isSuccessful) {
-                    continuation.resume(Result.success(true))
-                } else {
-                    continuation.resume(Result.failure(Exception("Error al actualizar: ${response.code()}")))
+    suspend fun actualizarPedido(id: Int, request: PedidoRequestDTO): Result<Boolean> =
+        suspendCoroutine { continuation ->
+            api.actualizarPedido(id, request).enqueue(object : Callback<PedidoDTO> {
+                override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                    if (response.isSuccessful) {
+                        continuation.resume(Result.success(true))
+                    } else {
+                        continuation.resume(Result.failure(Exception("Error al actualizar: ${response.code()}")))
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
-                continuation.resume(Result.failure(t))
-            }
-        })
-    }
+                override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
+                    continuation.resume(Result.failure(t))
+                }
+            })
+        }
 
     // Función para eliminar (mantenida de tu código)
     suspend fun eliminarPedido(id: Int): Result<Boolean> = suspendCoroutine { continuation ->
@@ -124,21 +128,18 @@ class PedidoRepository(
         })
     }
 
+    /**
+     * Actualiza el estado de un pedido con historial
+     */
     fun actualizarEstado(
         pedidoId: Int,
         nuevoEstadoId: Int,
         comentarios: String?
     ): Call<PedidoDTO> {
-        // Tu API en Spring Boot requiere: {nuevoEstadoId, comentarios}
-        // y el responsableId (que es fijo en 2 en tu ejemplo, o debe venir del JWT)
-        val responsableId = sessionManager.getUserId() ?: 2 // Usar el ID del usuario logueado
-
-        val payload = mutableMapOf<String, Any>()
-        payload["nuevoEstadoId"] = nuevoEstadoId
-        payload["comentarios"] = comentarios ?: ""
-        // Si el responsableId es necesario en el body (tu Spring Boot lo ignora por ahora,
-        // pero es buena práctica si no usas JWT para eso):
-        // payload["responsableId"] = responsableId
+        val payload = buildMap<String, Any> {
+            put("nuevoEstadoId", nuevoEstadoId)
+            put("comentarios", comentarios?.trim() ?: "Actualización sin comentarios")
+        }
 
         return api.actualizarEstado(pedidoId, payload)
     }
@@ -149,5 +150,56 @@ class PedidoRepository(
     ): Call<PedidoDTO> {
         val payload = mapOf("usuIdEmpleado" to usuIdEmpleado)
         return api.asignarDisenador(pedidoId, payload)
+    }
+
+    fun getDisenadores(
+        onSuccess: (List<EmpleadoDTO>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        api.getDisenadores().enqueue(object : Callback<List<EmpleadoDTO>> {
+            override fun onResponse(call: Call<List<EmpleadoDTO>>, response: Response<List<EmpleadoDTO>>) {
+                if (response.isSuccessful) {
+                    onSuccess(response.body() ?: emptyList())
+                } else {
+                    onError("Error ${response.code()} al cargar diseñadores.")
+                }
+            }
+            override fun onFailure(call: Call<List<EmpleadoDTO>>, t: Throwable) {
+                onError("Fallo de red al cargar diseñadores: ${t.message}")
+            }
+        })
+    }
+
+    suspend fun getHistorial(pedidoId: Int): Result<List<HistorialDTO>> = suspendCoroutine { continuation ->
+        api.obtenerHistorial(pedidoId).enqueue(object : Callback<List<HistorialDTO>> {
+            override fun onResponse(call: Call<List<HistorialDTO>>, response: Response<List<HistorialDTO>>) {
+                if (response.isSuccessful) {
+                    continuation.resume(Result.success(response.body() ?: emptyList()))
+                } else {
+                    val msg = "Error al cargar historial: ${response.code()}"
+                    continuation.resume(Result.failure(Exception(msg)))
+                }
+            }
+
+            override fun onFailure(call: Call<List<HistorialDTO>>, t: Throwable) {
+                continuation.resume(Result.failure(t))
+            }
+        })
+    }
+
+    suspend fun getPedidoById(pedidoId: Int): Result<PedidoDTO> = suspendCoroutine { continuation ->
+        api.obtenerPedido(pedidoId).enqueue(object : Callback<PedidoDTO> {
+            override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                if (response.isSuccessful && response.body() != null) {
+                    continuation.resume(Result.success(response.body()!!))
+                } else {
+                    val msg = "Error HTTP ${response.code()} al cargar el pedido."
+                    continuation.resume(Result.failure(Exception(msg)))
+                }
+            }
+            override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
+                continuation.resume(Result.failure(t))
+            }
+        })
     }
 }

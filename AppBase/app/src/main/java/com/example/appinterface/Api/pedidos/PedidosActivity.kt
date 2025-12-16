@@ -2,6 +2,7 @@ package com.example.appinterface.Api.pedidos
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -17,6 +18,7 @@ import com.example.appinterface.core.RetrofitInstance
 import com.example.appinterface.Api.pedidos.data.PedidoRepository
 import androidx.appcompat.widget.Toolbar
 import com.example.appinterface.Api.pedidos.data.PedidoDTO
+import com.example.appinterface.core.data.SessionManager
 
 
 class PedidosActivity : BaseActivity() {
@@ -48,10 +50,6 @@ class PedidosActivity : BaseActivity() {
         configurarViewModel()
         observarDatos()
         viewModel.cargarPedidos()
-    }
-
-    override fun getCurrentTabIndex(): Int? {
-        return 2 // Índice de la pestaña de Pedidos en Admin Tabs
     }
 
     override fun onResume() {
@@ -209,65 +207,44 @@ class PedidosActivity : BaseActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    // Llamarás a esta función desde el click del botón en la Card
     fun showCambiarEstadoDialog(pedido: PedidoDTO) {
-        // 💡 NOTA: Asumo que tienes una lista de estados disponibles (StatusDTO)
-        // que debes cargar desde tu API una sola vez.
-
-        // Crear el Bundle con la información necesaria
-        val bundle = Bundle().apply {
-            putInt("PEDIDO_ID", pedido.pedId)
-            // Puedes pasar la lista de estados si la tienes
-            // putParcelableArrayList("ESTADOS", ArrayList(viewModel.listaEstados.value))
-        }
-
-        // Crea el fragmento del diálogo y muéstralo
-        val dialog = DialogCambiarEstadoFragment()
-        dialog.arguments = bundle
-        dialog.show(supportFragmentManager, "CambiarEstadoDialog")
-    }
-
-    // CRÍTICO: El diálogo llamará a esta función para ejecutar la acción
-    fun ejecutarCambioDeEstado(pedidoId: Int, nuevoEstadoId: Int, comentarios: String) {
-        // 💡 Aquí es donde llamarías al ViewModel para ejecutar la acción
-        // viewModel.actualizarEstado(pedidoId, nuevoEstadoId, comentarios)
-        //     .observe(this, { pedidoActualizado ->
-        //         // 1. Mostrar mensaje de éxito
-        //         // 2. Recargar la lista de pedidos (o actualizar el ítem en el Adapter)
-        //     })
-
-        Toast.makeText(this, "Cambiando Pedido $pedidoId a Estado $nuevoEstadoId...", Toast.LENGTH_LONG).show()
-    }
-    fun showAsignarDisenadorDialog(pedido: PedidoDTO) {
-        // 💡 NOTA: Debes tener una lista de Empleados/Diseñadores para el Spinner.
-        if (!sessionManager.isAdmin()) {
-            Toast.makeText(this, "Permiso denegado.", Toast.LENGTH_SHORT).show()
+        if (pedido.pedId <= 0) {
+            Toast.makeText(this, "Error: ID de pedido inválido", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val bundle = Bundle().apply {
-            putInt("PEDIDO_ID", pedido.pedId)
-            // putParcelableArrayList("EMPLEADOS", ArrayList(viewModel.listaEmpleados.value))
-        }
-
-        val dialog = DialogAsignarDisenadorFragment()
-        dialog.arguments = bundle
-        dialog.show(supportFragmentManager, "AsignarDisenadorDialog")
+        val dialog = DialogCambiarEstadoFragment.newInstance(pedido.pedId)
+        dialog.show(supportFragmentManager, "CambiarEstadoDialog")
     }
 
-    // 🔥 CRÍTICO: El diálogo llamará a esta función para ejecutar la acción
-    fun ejecutarAsignacion(pedidoId: Int, usuIdEmpleado: Int) {
-        // 💡 Aquí es donde llamarías al ViewModel
-        // viewModel.asignarDisenador(pedidoId, usuIdEmpleado)
-        //     .observe(this, { pedidoActualizado ->
-        //         // 1. Mostrar mensaje de éxito
-        //         // 2. Recargar la lista
-        //     })
+    fun showAsignarDisenadorDialog(pedido: PedidoDTO) {
+        if (!sessionManager.isAdmin()) {
+            Toast.makeText(this, "Permiso denegado", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        Toast.makeText(this, "Asignando Pedido $pedidoId al Diseñador $usuIdEmpleado...", Toast.LENGTH_LONG).show()
+        if (pedido.pedId <= 0) {
+            Toast.makeText(this, "Error: ID de pedido inválido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val dialog = DialogAsignarDisenadorFragment.newInstance(pedido.pedId)
+        dialog.show(supportFragmentManager, "DialogAsignarDisenador")
+    }
+
+    override fun getCurrentTabIndex(): Int? {
+        val sessionManager = SessionManager(this)
+        return when {
+            // Si es Admin, "Pedidos" es el tercer tab (Index 2)
+            sessionManager.isAdmin() -> 2
+            // Si es Diseñador, "Pedidos" es el primer tab (Index 0)
+            sessionManager.isDesigner() || sessionManager.isLoggedIn() -> 0
+            else -> null
+        }
     }
 }

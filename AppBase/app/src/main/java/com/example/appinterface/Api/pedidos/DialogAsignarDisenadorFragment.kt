@@ -23,28 +23,42 @@ class DialogAsignarDisenadorFragment : DialogFragment() {
     private lateinit var btnAsignar: Button
     private lateinit var btnCancelar: Button
 
-    // Lista para el Adapter, para obtener el ID real
+    // Lista para el Adapter
     private var listaDisenadores: List<EmpleadoDTO> = emptyList()
+
+    // 🔥 COMPANION OBJECT PARA CREAR EL FRAGMENTO DE FORMA SEGURA
+    companion object {
+        private const val ARG_PEDIDO_ID = "PEDIDO_ID"
+
+        fun newInstance(pedidoId: Int): DialogAsignarDisenadorFragment {
+            val fragment = DialogAsignarDisenadorFragment()
+            val args = Bundle()
+            args.putInt(ARG_PEDIDO_ID, pedidoId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.CustomAlertDialogStyle)
 
-        // Obtener ID del pedido
-        pedidoId = arguments?.getInt("PEDIDO_ID") ?: 0
-        if (pedidoId == 0) {
-            Toast.makeText(context, "Error: ID de pedido no proporcionado.", Toast.LENGTH_SHORT).show()
-            dismiss()
-        }
+        // LECTURA SIMPLE Y NO REDUNDANTE. ELIMINAMOS EL CHEQUEO DE ID AQUÍ.
+        pedidoId = arguments?.getInt(ARG_PEDIDO_ID) ?: 0
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflar el layout (dialog_asignar_disenador.xml)
         return inflater.inflate(R.layout.dialog_asignar_disenador, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (pedidoId == 0) {
+            Toast.makeText(context, "Error fatal: ID de pedido no cargado.", Toast.LENGTH_LONG).show()
+            dismiss()
+            return // CRÍTICO: Sale del método y no inicializa Vistas/ViewModel
+        }
 
         // Asignar el ViewModel de la Activity
         viewModel = ViewModelProvider(requireActivity()).get(PedidosViewModel::class.java)
@@ -65,17 +79,17 @@ class DialogAsignarDisenadorFragment : DialogFragment() {
         btnAsignar.setOnClickListener {
             val selectedIndex = spinnerDisenador.selectedItemPosition
 
-            // Asumiendo que el Index 0 es "Seleccionar un diseñador..." o similar
+            // Validar selección (índice 0 es el placeholder)
             if (selectedIndex <= 0 || selectedIndex > listaDisenadores.size) {
                 Toast.makeText(context, "Selecciona un diseñador.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 🔥 Obtenemos el ID del diseñador (el índice es +1 por el primer item 'Seleccionar')
+            // Obtener el ID del diseñador (ajustando por el placeholder)
             val diseñadorSeleccionado = listaDisenadores[selectedIndex - 1]
             val nuevoEmpleadoId = diseñadorSeleccionado.id
 
-            // Llamada al ViewModel para ejecutar la acción
+            // Llamada al ViewModel
             viewModel.asignarDisenador(
                 pedidoId = pedidoId,
                 usuIdEmpleado = nuevoEmpleadoId
@@ -85,7 +99,6 @@ class DialogAsignarDisenadorFragment : DialogFragment() {
     }
 
     private fun setupSpinner(disenadores: List<EmpleadoDTO>) {
-        // Creamos la lista para el ArrayAdapter, incluyendo la opción de placeholder
         val nombres = mutableListOf("Seleccionar un diseñador...")
         nombres.addAll(disenadores.map { "${it.nombre} (${it.correo})" })
 

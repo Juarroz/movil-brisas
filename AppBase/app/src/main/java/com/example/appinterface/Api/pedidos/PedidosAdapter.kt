@@ -50,6 +50,7 @@ class PedidosAdapter(
         // Botones de acción
         val btnAsignar: MaterialButton = view.findViewById(R.id.btnAsignarDisenadorCard)
         val btnCambiarEstado: MaterialButton = view.findViewById(R.id.btnCambiarEstadoCard)
+        val btnVerDetalle: MaterialButton = view.findViewById(R.id.btnVerDetalle)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
@@ -107,11 +108,6 @@ class PedidosAdapter(
 
         // 3. Lógica de Roles y Acciones
 
-        // A. Acción principal (clic en la tarjeta)
-        holder.itemView.setOnClickListener { onClick(pedido) }
-
-        // B. Botones de Gestión (Visibilidad y Acciones)
-
         // Asignar: Solo Administrador
         if (isAdmin) {
             holder.btnAsignar.visibility = View.VISIBLE
@@ -129,6 +125,9 @@ class PedidosAdapter(
         } else {
             holder.btnCambiarEstado.visibility = View.GONE
         }
+
+        holder.btnVerDetalle.visibility = View.VISIBLE
+        holder.btnVerDetalle.setOnClickListener { onClick(pedido) }
     }
 
     override fun getItemCount(): Int = pedidos.size
