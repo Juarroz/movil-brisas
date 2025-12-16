@@ -22,6 +22,9 @@ data class PedidoDTO(
     @SerializedName("estadoNombre")
     val estadoNombre: String?,
 
+    @SerializedName("perId")
+    val perId: Int?,
+
     @SerializedName("usuIdCliente")
     val usuIdCliente: Int?,
 

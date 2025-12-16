@@ -21,4 +21,11 @@
     <color name="chip_selected">#C8E6C9</color>
     <color name="chip_unselected">#FFFFFF</color>
 
+    <!-- Colores para historial -->
+    <color name="orange_warning">#FF9800</color>
+    <color name="blue_info">#2196F3</color>
+    <color name="production_process">#4CAF50</color>
+    <color name="purple_light">#9C27B0</color>
+    <color name="red_error">#F44336</color>
+
 </resources>
