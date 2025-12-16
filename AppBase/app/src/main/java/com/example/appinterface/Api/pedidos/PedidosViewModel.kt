@@ -107,22 +107,31 @@ class PedidosViewModel(private val repository: PedidoRepository) : ViewModel() {
             StatusDTO(1, "1. Cotización Pendiente"),
             StatusDTO(2, "2. Pago Diseño Pendiente"),
             StatusDTO(3, "3. Diseño en Proceso"),
-            StatusDTO(4, "4. Producción (Tallado)"),
-            StatusDTO(5, "5. Control de Calidad"),
-            StatusDTO(6, "6. Empaque"),
-            StatusDTO(7, "7. En Tránsito"),
-            StatusDTO(8, "8. Revisión Final"),
+            StatusDTO(4, "4. Diseño Aprobado"),
+            StatusDTO(5, "5. Tallado (Producción)"),
+            StatusDTO(6, "6. Engaste (Producción)"),
+            StatusDTO(7, "7. Pulido (Producción)"),
+            StatusDTO(8, "8. Inspección de Calidad"),
             StatusDTO(10, "10. Cancelado")
         )
     }
 
     private fun cargarDisenadores() {
-        // Implementar la llamada a la API que devuelva la lista de EmpleadoDTO (GET /usuarios/empleados)
-        // Por ahora, datos quemados:
-        _disenadores.value = listOf(
-            EmpleadoDTO(6, "Doña Doloritas", "doloritas@brisas.com"),
-            EmpleadoDTO(7, "Miguel Paramo", "miguel@brisas.com"),
-            EmpleadoDTO(8, "Eduviges Dyada", "eduviges@brisas.com")
+        repository.getDisenadores(
+            onSuccess = { listaCompleta ->
+
+                // FILTRADO CRÍTICO: Solo usuarios cuyo rol sea "diseñador"
+                val soloDisenadores = listaCompleta.filter {
+                    it.rolNombre?.equals("diseñador", ignoreCase = true) == true
+                }
+
+                _disenadores.value = soloDisenadores // Guardar lista filtrada
+
+            },
+            onError = { error ->
+                Log.e("PedidosViewModel", "Error al cargar diseñadores: $error")
+                _disenadores.value = emptyList()
+            }
         )
     }
 

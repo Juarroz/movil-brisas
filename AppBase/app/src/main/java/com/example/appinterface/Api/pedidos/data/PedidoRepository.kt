@@ -3,6 +3,7 @@ package com.example.appinterface.Api.pedidos.data
 import android.util.Log
 import com.example.appinterface.Api.pedidos.data.PedidoDTO
 import com.example.appinterface.Api.pedidos.data.PedidoRequestDTO
+import com.example.appinterface.Api.usuarios.data.EmpleadoDTO
 import com.example.appinterface.core.ApiServicesKotlin
 import com.example.appinterface.core.data.SessionManager
 import retrofit2.Call
@@ -149,5 +150,56 @@ class PedidoRepository(
     ): Call<PedidoDTO> {
         val payload = mapOf("usuIdEmpleado" to usuIdEmpleado)
         return api.asignarDisenador(pedidoId, payload)
+    }
+
+    fun getDisenadores(
+        onSuccess: (List<EmpleadoDTO>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        api.getDisenadores().enqueue(object : Callback<List<EmpleadoDTO>> {
+            override fun onResponse(call: Call<List<EmpleadoDTO>>, response: Response<List<EmpleadoDTO>>) {
+                if (response.isSuccessful) {
+                    onSuccess(response.body() ?: emptyList())
+                } else {
+                    onError("Error ${response.code()} al cargar diseñadores.")
+                }
+            }
+            override fun onFailure(call: Call<List<EmpleadoDTO>>, t: Throwable) {
+                onError("Fallo de red al cargar diseñadores: ${t.message}")
+            }
+        })
+    }
+
+    suspend fun getHistorial(pedidoId: Int): Result<List<HistorialDTO>> = suspendCoroutine { continuation ->
+        api.obtenerHistorial(pedidoId).enqueue(object : Callback<List<HistorialDTO>> {
+            override fun onResponse(call: Call<List<HistorialDTO>>, response: Response<List<HistorialDTO>>) {
+                if (response.isSuccessful) {
+                    continuation.resume(Result.success(response.body() ?: emptyList()))
+                } else {
+                    val msg = "Error al cargar historial: ${response.code()}"
+                    continuation.resume(Result.failure(Exception(msg)))
+                }
+            }
+
+            override fun onFailure(call: Call<List<HistorialDTO>>, t: Throwable) {
+                continuation.resume(Result.failure(t))
+            }
+        })
+    }
+
+    suspend fun getPedidoById(pedidoId: Int): Result<PedidoDTO> = suspendCoroutine { continuation ->
+        api.obtenerPedido(pedidoId).enqueue(object : Callback<PedidoDTO> {
+            override fun onResponse(call: Call<PedidoDTO>, response: Response<PedidoDTO>) {
+                if (response.isSuccessful && response.body() != null) {
+                    continuation.resume(Result.success(response.body()!!))
+                } else {
+                    val msg = "Error HTTP ${response.code()} al cargar el pedido."
+                    continuation.resume(Result.failure(Exception(msg)))
+                }
+            }
+            override fun onFailure(call: Call<PedidoDTO>, t: Throwable) {
+                continuation.resume(Result.failure(t))
+            }
+        })
     }
 }
