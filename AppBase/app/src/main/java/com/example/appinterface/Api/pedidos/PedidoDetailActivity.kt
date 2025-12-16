@@ -197,20 +197,9 @@ class PedidoDetailActivity : BaseActivity() {
         // ID del estado es la posición + 1
         val nuevoEstadoId = spinnerEstado.selectedItemPosition + 1
         val nuevosComentarios = etComentarios.text.toString()
-        val pedidoActual = viewModel.pedido.value
 
-        if (pedidoActual == null) return
-
-        val request = PedidoRequestDTO(
-            codigo = pedidoActual.pedCodigo !!,
-            comentarios = nuevosComentarios,
-            estadoId = nuevoEstadoId,
-
-            personaId = pedidoActual.perId,
-            usuarioId = pedidoActual.usuIdCliente
-        )
-
-        viewModel.guardarCambios(request)
+        // 🔥 SIMPLIFICADO - Ya no usa PedidoRequestDTO
+        viewModel.guardarCambios(nuevoEstadoId, nuevosComentarios)
     }
 
     private fun confirmarEliminar() {
